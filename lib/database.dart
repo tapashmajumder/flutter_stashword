@@ -6,7 +6,26 @@ import 'package:flutter_secure_storage/flutter_secure_storage.dart';
 
 import 'item.dart';
 
-interface class C1 {};
+abstract interface class ISecureStorage {
+  Future<String?> read({required String key});
+  Future<void> write({required String key, required String? value});
+}
+
+class ProdSecureStorage implements ISecureStorage {
+  final FlutterSecureStorage _secureStorage = const FlutterSecureStorage();
+
+  const ProdSecureStorage();
+
+  @override
+  Future<String?> read({required String key}) async {
+    return await _secureStorage.read(key: key);
+  }
+
+  @override
+  Future<void> write({required String key, required String? value}) async {
+    await _secureStorage.write(key: key, value: value);
+  }
+}
 
 class Database {
   static const String _itemBoxName = 'items';
@@ -17,7 +36,7 @@ class Database {
     Hive.registerAdapter(ItemAdapter());
   }
 
-  static Future<void> open({FlutterSecureStorage secureStorage = const FlutterSecureStorage()}) async {
+  static Future<void> open({ISecureStorage secureStorage = const ProdSecureStorage()}) async {
     final String encryptionKeyString = await secureStorage.read(key: _encryptionKeyName) ?? await _generateAndStoreEncryptionKey(secureStorage);
     final encryptionKey = base64Url.decode(encryptionKeyString);
     await Hive.openBox<Item>(_itemBoxName, encryptionCipher: HiveAesCipher(encryptionKey));
@@ -31,7 +50,7 @@ class Database {
     await Hive.close();
   }
 
-  static Future<String> _generateAndStoreEncryptionKey(FlutterSecureStorage secureStorage) async {
+  static Future<String> _generateAndStoreEncryptionKey(ISecureStorage secureStorage) async {
     final key = base64Url.encode(Hive.generateSecureKey());
     await secureStorage.write(key: _encryptionKeyName, value: key);
     return key;

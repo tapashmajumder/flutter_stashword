@@ -1,3 +1,5 @@
+import 'dart:collection';
+
 import 'package:flutter_test/flutter_test.dart';
 import 'package:hive_flutter/hive_flutter.dart';
 
@@ -12,7 +14,7 @@ void main() {
     setUpAll(() async {
       PathProviderPlatform.instance = FakePathProviderPlatform();
       await Database.init(subdir: "hive_db_dir");
-      await Database.open();
+      await Database.open(secureStorage: DevSecureStorage());
     });
 
     tearDownAll(() async {
@@ -54,6 +56,23 @@ void main() {
     });
   });
 }
+
+class DevSecureStorage implements ISecureStorage {
+  final Map _map = HashMap<String, String?>();
+
+  DevSecureStorage();
+
+  @override
+  Future<String?> read({required String key}) async {
+    return _map[key];
+  }
+
+  @override
+  Future<void> write({required String key, required String? value}) async {
+    _map[key] = value;
+  }
+}
+
 
 class FakePathProviderPlatform extends Fake
     with MockPlatformInterfaceMixin
