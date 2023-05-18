@@ -12,6 +12,7 @@ import 'package:Stashword/data/item.dart';
 import 'package:Stashword/data/item_delete_info.dart';
 import 'package:Stashword/data/pending_share_info.dart';
 import 'package:Stashword/data/hive_image.dart';
+import 'package:Stashword/data/shared_item.dart';
 
 void main() {
   setUpAll(() async {
@@ -290,6 +291,131 @@ void main() {
         itemId: itemId,
       );
       object.data = data;
+      await tester.runAsync(() => crud.create(object));
+
+      await tester.runAsync(() => crud.delete(id));
+      final found = crud.find(id);
+      expect(found, isNull);
+    });
+  });
+
+  group('SharedItem CRUD Tests', () {
+    testWidgets('Create and Retrieve SharedItem', (WidgetTester tester) async {
+      const crud = Database.sharedItemCrud;
+
+      const itemType = "password";
+      const id = "shared1";
+      const iv = "iv1";
+      const sharer = "sharer@google.com";
+      const sharedSecret = "zee-shared-secret";
+      const addToWatch = true;
+      const colorIndex = 245;
+      const blob = "zee-blob";
+      final created = DateTime.timestamp();
+      final lastUsed = DateTime.timestamp();
+      final modified = DateTime.timestamp();
+      final object = SharedItem(
+        itemType: itemType,
+        id: id,
+        iv: iv,
+        sharer: sharer,
+        sharedSecret: sharedSecret,
+      );
+      object.addToWatch = addToWatch;
+      object.colorIndex = colorIndex;
+      object.blob = blob;
+      object.created = created;
+      object.lastUsed = lastUsed;
+      object.modified = modified;
+      await tester.runAsync(() => crud.create(object));
+
+      final found = crud.find(id);
+      expect(found?.itemType, equals(itemType));
+      expect(found?.id, equals(id));
+      expect(found?.iv, equals(iv));
+      expect(found?.sharer, equals(sharer));
+      expect(found?.sharedSecret, equals(sharedSecret));
+      expect(found?.addToWatch, equals(addToWatch));
+      expect(found?.colorIndex, equals(colorIndex));
+      expect(found?.blob, equals(blob));
+      expect(found?.created, equals(created));
+      expect(found?.lastUsed, equals(lastUsed));
+      expect(found?.modified, equals(modified));
+    });
+
+    testWidgets('Update SharedItem', (WidgetTester tester) async {
+      const crud = Database.sharedItemCrud;
+
+      const itemType = "password";
+      const id = "shared1";
+      const iv = "iv1";
+      const sharer = "sharer@google.com";
+      const sharedSecret = "zee-shared-secret";
+      const addToWatch = true;
+      const colorIndex = 245;
+      const blob = "zee-blob";
+      final created = DateTime.timestamp();
+      final lastUsed = DateTime.timestamp();
+      final modified = DateTime.timestamp();
+      final object = SharedItem(
+        itemType: itemType,
+        id: id,
+        iv: iv,
+        sharer: sharer,
+        sharedSecret: sharedSecret,
+      );
+      object.addToWatch = addToWatch;
+      object.colorIndex = colorIndex;
+      object.blob = blob;
+      object.created = created;
+      object.lastUsed = lastUsed;
+      object.modified = modified;
+      await tester.runAsync(() => crud.create(object));
+
+      final updated = SharedItem(
+        itemType: itemType,
+        id: id,
+        iv: iv,
+        sharer: sharer,
+        sharedSecret: sharedSecret,
+      );
+      updated.lastUsed = DateTime.timestamp();
+      updated.modified = DateTime.timestamp();
+      await tester.runAsync(() => crud.update(updated));
+
+      final found = crud.find(id);
+      expect(found?.id, equals(id));
+      expect(found?.lastUsed, equals(updated.lastUsed));
+      expect(found?.modified, equals(updated.modified));
+    });
+
+    testWidgets('Delete SharedItem', (WidgetTester tester) async {
+      const crud = Database.sharedItemCrud;
+
+      const itemType = "password";
+      const id = "shared1";
+      const iv = "iv1";
+      const sharer = "sharer@google.com";
+      const sharedSecret = "zee-shared-secret";
+      const addToWatch = true;
+      const colorIndex = 245;
+      const blob = "zee-blob";
+      final created = DateTime.timestamp();
+      final lastUsed = DateTime.timestamp();
+      final modified = DateTime.timestamp();
+      final object = SharedItem(
+        itemType: itemType,
+        id: id,
+        iv: iv,
+        sharer: sharer,
+        sharedSecret: sharedSecret,
+      );
+      object.addToWatch = addToWatch;
+      object.colorIndex = colorIndex;
+      object.blob = blob;
+      object.created = created;
+      object.lastUsed = lastUsed;
+      object.modified = modified;
       await tester.runAsync(() => crud.create(object));
 
       await tester.runAsync(() => crud.delete(id));

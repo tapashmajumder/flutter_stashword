@@ -8,6 +8,7 @@ import 'package:flutter_secure_storage/flutter_secure_storage.dart';
 import 'item.dart';
 import 'item_delete_info.dart';
 import 'pending_share_info.dart';
+import 'shared_item.dart';
 
 abstract interface class ISecureStorage {
   Future<String?> read({required String key});
@@ -35,13 +36,16 @@ class Database {
   static const String _itemDeleteInfoBoxName = "item_delete_infos";
   static const String _pendingShareInfoBoxName = "pending_share_infos";
   static const String _imageBoxName = "images";
+  static const String _sharedItemBoxName = 'shared_items';
 
   static const String _encryptionKeyName = 'encryptionKey';
 
   static const imageCrud = HiveImageCrud();
+  static const sharedItemCrud = SharedItemCrud();
 
   static final List<Crud> _cruds = [
     imageCrud,
+    sharedItemCrud,
   ];
 
   static Future<void> init({String? subdir}) async {
@@ -50,7 +54,7 @@ class Database {
     Hive.registerAdapter(ItemDeleteInfoAdapter());
     Hive.registerAdapter(PendingShareInfoAdapter());
     for (var crud in _cruds) {
-      Hive.registerAdapter(crud.adapter);
+       crud.registerAdapter();
     }
   }
 
@@ -165,7 +169,7 @@ abstract class Crud<T extends WithId> {
 
   bool get encrypted;
   String get boxName;
-  TypeAdapter<T> get adapter;
+  void registerAdapter();
 
   Future<void> openBox({required HiveAesCipher encryptionCipher}) async {
     if (encrypted) {
@@ -204,11 +208,28 @@ class HiveImageCrud extends Crud<HiveImage> {
   const HiveImageCrud();
 
   @override
-  TypeAdapter<HiveImage> get adapter => HiveImageAdapter();
-
-  @override
   String get boxName => Database._imageBoxName;
 
   @override
   bool get encrypted => true;
+
+  @override
+  void registerAdapter() {
+    Hive.registerAdapter(HiveImageAdapter());
+  }
+}
+
+class SharedItemCrud extends Crud<SharedItem> {
+  const SharedItemCrud();
+
+  @override
+  String get boxName => Database._sharedItemBoxName;
+
+  @override
+  bool get encrypted => true;
+
+  @override
+  void registerAdapter() {
+    Hive.registerAdapter(SharedItemAdapter());
+  }
 }
