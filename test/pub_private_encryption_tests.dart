@@ -1,4 +1,4 @@
-import 'package:Stashword/pub_private_encryption.dart';
+import 'package:Stashword/encryption/pub_private_encryption.dart';
 import 'package:test/test.dart';
 
 void main() {

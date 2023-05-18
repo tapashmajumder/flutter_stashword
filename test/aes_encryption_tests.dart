@@ -1,4 +1,4 @@
-import 'package:Stashword/aes_encryption.dart';
+import 'package:Stashword/encryption/aes_encryption.dart';
 import 'package:test/test.dart';
 
 void main() {
