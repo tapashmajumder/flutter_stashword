@@ -25,71 +25,107 @@ void main() {
 
   group('Item CRUD Tests', () {
     testWidgets('Create and Retrieve Item', (WidgetTester tester) async {
-      final item = Item(id: "1", itemType: "Password", iv: "iv1");
+      const id = "id1";
+      const addToWatch = true;
+      const blob = "zee-blob";
+      const colorIndex = 22;
       final created = DateTime.timestamp();
-      item.created = created;
-      await tester.runAsync(() => ItemCrud.create(item));
+      const itemType = "password";
+      const iv = "iv1";
+      final lastUsed = DateTime.timestamp();
+      final modified = DateTime.timestamp();
+      const shared = true;
+      const sharedSecret = "zee-shared-secret";
 
-      final found = ItemCrud.find("1");
-      expect(found?.id, equals("1"));
-      expect(found?.itemType, "Password");
+      final object = Item(id: id, itemType: itemType, iv: iv);
+      object.addToWatch = addToWatch;
+      object.blob = blob;
+      object.colorIndex = colorIndex;
+      object.created = created;
+      object.lastUsed = lastUsed;
+      object.modified = modified;
+      object.shared = shared;
+      object.sharedSecret = sharedSecret;
+      await tester.runAsync(() => ItemCrud.create(object));
+
+      final found = ItemCrud.find(id);
+      expect(found?.id, equals(id));
+      expect(found?.itemType, itemType);
       expect(found?.created, created);
+      expect(found?.addToWatch, addToWatch);
+      expect(found?.blob, blob);
+      expect(found?.colorIndex, colorIndex);
+      expect(found?.iv, iv);
+      expect(found?.lastUsed, lastUsed);
+      expect(found?.modified, modified);
+      expect(found?.shared, shared);
+      expect(found?.sharedSecret, sharedSecret);
     });
 
     testWidgets('Update Item', (WidgetTester tester) async {
-      final item = Item(id: '1', itemType: "Password", iv: "iv1");
-      await tester.runAsync(() => ItemCrud.create(item));
+      const id = "id1";
+      const itemType = "password";
+      const iv = "iv1";
+      final object = Item(id: id, itemType: itemType, iv: iv);
+      await tester.runAsync(() => ItemCrud.create(object));
 
-      var updated = Item(id: '1', itemType: "Password", iv: "iv1");
+      var updated = Item(id: id, itemType: itemType, iv: itemType);
       updated.shared = true;
       updated.sharedSecret = "SharedSecret";
       await tester.runAsync(() => ItemCrud.update(updated));
 
-      final found = ItemCrud.find('1');
+      final found = ItemCrud.find(id);
       expect(found?.shared, equals(true));
       expect(found?.sharedSecret, "SharedSecret");
     });
 
     testWidgets('Delete Person', (WidgetTester tester) async {
-      final item = Item(id: '1', iv: 'iv1', itemType: "Password");
-      await tester.runAsync(() => ItemCrud.create(item));
+      const id = "id1";
+      const itemType = "password";
+      const iv = "iv1";
+      final object = Item(id: id, iv: iv, itemType: itemType);
+      await tester.runAsync(() => ItemCrud.create(object));
 
-      await tester.runAsync(() => ItemCrud.delete("1"));
+      await tester.runAsync(() => ItemCrud.delete(id));
 
-      final found = ItemCrud.find('1');
+      final found = ItemCrud.find(id);
       expect(found, isNull);
     });
   });
 
   group('ItemDeleteInfo CRUD Tests', () {
     testWidgets('Create and Retrieve ItemDeleteInfo', (WidgetTester tester) async {
+      const id = "id1";
       final deleteDate = DateTime.timestamp();
-      final itemDeleteInfo = ItemDeleteInfo(id: "1", deleteDate: deleteDate);
-      await tester.runAsync(() => ItemDeleteInfoCrud.create(itemDeleteInfo));
+      final object = ItemDeleteInfo(id: id, deleteDate: deleteDate);
+      await tester.runAsync(() => ItemDeleteInfoCrud.create(object));
 
-      final found = ItemDeleteInfoCrud.find("1");
-      expect(found?.id, equals("1"));
+      final found = ItemDeleteInfoCrud.find(id);
+      expect(found?.id, equals(id));
       expect(found?.deleteDate, deleteDate);
     });
 
     testWidgets('Update ItemDeleteInfo', (WidgetTester tester) async {
+      const id = "id1";
       final deleteDate = DateTime.timestamp();
-      final itemDeleteInfo = ItemDeleteInfo(id: '1', deleteDate: deleteDate);
-      await tester.runAsync(() => ItemDeleteInfoCrud.create(itemDeleteInfo));
+      final object = ItemDeleteInfo(id: id, deleteDate: deleteDate);
+      await tester.runAsync(() => ItemDeleteInfoCrud.create(object));
 
       final newDeleteDate = DateTime.timestamp();
-      final updated = ItemDeleteInfo(id: '1', deleteDate: newDeleteDate);
+      final updated = ItemDeleteInfo(id: id, deleteDate: newDeleteDate);
       await tester.runAsync(() => ItemDeleteInfoCrud.update(updated));
 
-      final found = ItemDeleteInfoCrud.find('1');
+      final found = ItemDeleteInfoCrud.find(id);
       expect(found?.deleteDate, equals(newDeleteDate));
     });
 
     testWidgets('Delete ItemDeleteInfo', (WidgetTester tester) async {
-      final itemDeleteInfo = ItemDeleteInfo(id: '1', deleteDate: DateTime.timestamp());
-      await tester.runAsync(() => ItemDeleteInfoCrud.create(itemDeleteInfo));
+      const id = "id1";
+      final deleteDate = DateTime.timestamp();
+      final object = ItemDeleteInfo(id: id, deleteDate: deleteDate);
+      await tester.runAsync(() => ItemDeleteInfoCrud.create(object));
 
-      await tester.runAsync(() => ItemDeleteInfoCrud.delete("1"));
+      await tester.runAsync(() => ItemDeleteInfoCrud.delete(id));
 
       final found = ItemDeleteInfoCrud.find('1');
       expect(found, isNull);
@@ -181,6 +217,7 @@ void main() {
         shareStatus: shareStatus,
       );
       object.blob = blob;
+      object.sharedSecret = sharedSecret;
       await tester.runAsync(() => PendingShareInfoCrud.create(object));
 
       await tester.runAsync(() => PendingShareInfoCrud.delete(id));
