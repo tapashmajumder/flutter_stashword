@@ -6,8 +6,8 @@ import 'package:hive_flutter/hive_flutter.dart';
 import 'package:path_provider_platform_interface/path_provider_platform_interface.dart';
 import 'package:plugin_platform_interface/plugin_platform_interface.dart';
 
-import 'package:Stashword/database.dart';
-import 'package:Stashword/item.dart';
+import 'package:Stashword/data/database.dart';
+import 'package:Stashword/data/item.dart';
 
 void main() {
   group('Item CRUD Tests', () {
