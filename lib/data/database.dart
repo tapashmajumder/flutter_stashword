@@ -6,6 +6,7 @@ import 'package:flutter_secure_storage/flutter_secure_storage.dart';
 
 import 'item.dart';
 import 'item_delete_info.dart';
+import 'pending_share_info.dart';
 
 abstract interface class ISecureStorage {
   Future<String?> read({required String key});
@@ -31,12 +32,14 @@ class ProdSecureStorage implements ISecureStorage {
 class Database {
   static const String _itemBoxName = 'items';
   static const String _itemDeleteInfoBoxName = "item_delete_infos";
+  static const String _pendingShareInfoBoxName = "pending_share_infos";
   static const String _encryptionKeyName = 'encryptionKey';
 
   static Future<void> init({String? subdir}) async {
     await Hive.initFlutter(subdir);
     Hive.registerAdapter(ItemAdapter());
     Hive.registerAdapter(ItemDeleteInfoAdapter());
+    Hive.registerAdapter(PendingShareInfoAdapter());
   }
 
   static Future<void> open({ISecureStorage secureStorage = const ProdSecureStorage()}) async {
@@ -45,6 +48,7 @@ class Database {
     final encryptionCipher = HiveAesCipher(encryptionKey);
     await Hive.openBox<Item>(_itemBoxName, encryptionCipher: encryptionCipher);
     await Hive.openBox<ItemDeleteInfo>(_itemDeleteInfoBoxName);
+    await Hive.openBox<PendingShareInfo>(_pendingShareInfoBoxName, encryptionCipher: encryptionCipher);
   }
 
   static Box<Item> getItemBox() {
@@ -53,6 +57,10 @@ class Database {
 
   static Box<ItemDeleteInfo> getItemDeleteInfoBox() {
     return Hive.box<ItemDeleteInfo>(_itemDeleteInfoBoxName);
+  }
+
+  static Box<PendingShareInfo> getPendingShareInfoBox() {
+    return Hive.box<PendingShareInfo>(_pendingShareInfoBoxName);
   }
 
   static Future<void> close() async {
@@ -110,3 +118,27 @@ class ItemDeleteInfoCrud {
     await box.delete(id);
   }
 }
+
+class PendingShareInfoCrud {
+  static Future<void> create(PendingShareInfo object) async {
+    final box = Database.getPendingShareInfoBox();
+    await box.put(object.id, object);
+  }
+
+  static PendingShareInfo? find(String id) {
+    final box = Database.getPendingShareInfoBox();
+    return box.get(id);
+  }
+
+  static Future<void> update(PendingShareInfo object) async {
+    final box = Database.getPendingShareInfoBox();
+    await box.put(object.id, object);
+  }
+
+  static Future<void> delete(String id) async {
+    final box = Database.getPendingShareInfoBox();
+    await box.delete(id);
+  }
+}
+
+

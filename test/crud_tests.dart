@@ -9,6 +9,7 @@ import 'package:plugin_platform_interface/plugin_platform_interface.dart';
 import 'package:Stashword/data/database.dart';
 import 'package:Stashword/data/item.dart';
 import 'package:Stashword/data/item_delete_info.dart';
+import 'package:Stashword/data/pending_share_info.dart';
 
 void main() {
   setUpAll(() async {
@@ -91,6 +92,99 @@ void main() {
       await tester.runAsync(() => ItemDeleteInfoCrud.delete("1"));
 
       final found = ItemDeleteInfoCrud.find('1');
+      expect(found, isNull);
+    });
+  });
+
+  group('PendingShareInfo CRUD Tests', () {
+    testWidgets('Create and Retrieve PendingShareInfo', (WidgetTester tester) async {
+      const itemType = "password";
+      const id = "id1";
+      const iv = "iv1";
+      const sharer = "sharer1@gmail.com";
+      const shareStatus = "pendingApproval";
+      const sharedSecret = "zee-shared-secret";
+      final object = PendingShareInfo(
+        itemType: itemType,
+        id: id,
+        iv: iv,
+        sharer: sharer,
+        shareStatus: shareStatus,
+      );
+      object.sharedSecret = sharedSecret;
+      await tester.runAsync(() => PendingShareInfoCrud.create(object));
+
+      final found = PendingShareInfoCrud.find(id);
+      expect(found?.id, equals(id));
+      expect(found?.itemType, equals(itemType));
+      expect(found?.iv, equals(iv));
+      expect(found?.sharer, equals(sharer));
+      expect(found?.shareStatus, equals(shareStatus));
+      expect(found?.sharedSecret, equals(sharedSecret));
+      expect(found?.blob, isNull);
+    });
+
+    testWidgets('Update PendingShareInfo', (WidgetTester tester) async {
+      const itemType = "password";
+      const id = "id1";
+      const iv = "iv1";
+      const sharer = "sharer1@gmail.com";
+      const shareStatus = "pendingApproval";
+      const sharedSecret = "zee-shared-secret";
+      const blob = "zee-blob";
+      final object = PendingShareInfo(
+        itemType: itemType,
+        id: id,
+        iv: iv,
+        sharer: sharer,
+        shareStatus: shareStatus,
+      );
+      object.blob = blob;
+      await tester.runAsync(() => PendingShareInfoCrud.create(object));
+
+      const newShareStatus = "new-share-status";
+      const newBlob = "new-blob";
+      final updated = PendingShareInfo(
+        itemType: itemType,
+        id: id,
+        iv: iv,
+        sharer: sharer,
+        shareStatus: newShareStatus,
+      );
+      updated.blob = newBlob;
+      updated.sharedSecret = sharedSecret;
+      await tester.runAsync(() => PendingShareInfoCrud.update(updated));
+
+      final found = PendingShareInfoCrud.find(id);
+      expect(found?.id, equals(id));
+      expect(found?.blob, equals(newBlob));
+      expect(found?.itemType, equals(itemType));
+      expect(found?.iv, equals(iv));
+      expect(found?.sharedSecret, equals(sharedSecret));
+      expect(found?.sharer, equals(sharer));
+      expect(found?.shareStatus, equals(newShareStatus));
+    });
+
+    testWidgets('Delete PendingShareInfo', (WidgetTester tester) async {
+      const itemType = "password";
+      const id = "id1";
+      const iv = "iv1";
+      const sharer = "sharer1@gmail.com";
+      const shareStatus = "pendingApproval";
+      const sharedSecret = "zee-shared-secret";
+      const blob = "zee-blob";
+      final object = PendingShareInfo(
+        itemType: itemType,
+        id: id,
+        iv: iv,
+        sharer: sharer,
+        shareStatus: shareStatus,
+      );
+      object.blob = blob;
+      await tester.runAsync(() => PendingShareInfoCrud.create(object));
+
+      await tester.runAsync(() => PendingShareInfoCrud.delete(id));
+      final found = PendingShareInfoCrud.find(id);
       expect(found, isNull);
     });
   });
