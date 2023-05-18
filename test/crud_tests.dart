@@ -1,4 +1,5 @@
 import 'dart:collection';
+import 'dart:typed_data';
 
 import 'package:flutter_test/flutter_test.dart';
 import 'package:hive_flutter/hive_flutter.dart';
@@ -10,6 +11,7 @@ import 'package:Stashword/data/database.dart';
 import 'package:Stashword/data/item.dart';
 import 'package:Stashword/data/item_delete_info.dart';
 import 'package:Stashword/data/pending_share_info.dart';
+import 'package:Stashword/data/hive_image.dart';
 
 void main() {
   setUpAll(() async {
@@ -222,6 +224,76 @@ void main() {
 
       await tester.runAsync(() => PendingShareInfoCrud.delete(id));
       final found = PendingShareInfoCrud.find(id);
+      expect(found, isNull);
+    });
+  });
+
+  group('HiveImage CRUD Tests', () {
+    testWidgets('Create and Retrieve HiveImage', (WidgetTester tester) async {
+      const crud = Database.imageCrud;
+
+      const List<int> list = [10, 5, 20, 40];
+      final data = Uint8List.fromList(list);
+      const id = "item1-image1";
+      const itemId = "item1";
+      final object = HiveImage(
+        id: id,
+        itemId: itemId,
+      );
+      object.data = data;
+      await tester.runAsync(() => crud.create(object));
+
+      final found = crud.find(id);
+      expect(found?.id, equals(id));
+      expect(found?.itemId, equals(itemId));
+      expect(found?.data, equals(data));
+    });
+
+    testWidgets('Update HiveImage', (WidgetTester tester) async {
+      const crud = Database.imageCrud;
+
+      const List<int> list = [10, 5, 20, 40];
+      final data = Uint8List.fromList(list);
+      const id = "item1-image1";
+      const itemId = "item1";
+      final object = HiveImage(
+        id: id,
+        itemId: itemId,
+      );
+      object.data = data;
+      await tester.runAsync(() => crud.create(object));
+
+      const List<int> newList = [10, 5, 20, 40, 50, 60];
+      final newData = Uint8List.fromList(newList);
+      final updated = HiveImage(
+        id: id,
+        itemId: itemId,
+      );
+      updated.data = newData;
+      await tester.runAsync(() => crud.update(updated));
+
+      final found = crud.find(id);
+      expect(found?.id, equals(id));
+      expect(found?.itemId, equals(itemId));
+      expect(found?.data, equals(newData));
+    });
+
+    testWidgets('Delete HiveImage', (WidgetTester tester) async {
+      const crud = Database.imageCrud;
+
+      const List<int> list = [10, 5, 20, 40];
+      final data = Uint8List.fromList(list);
+      const id = "item1-image1";
+      const itemId = "item1";
+      final object = HiveImage(
+        id: id,
+        itemId: itemId,
+      );
+      object.data = data;
+      await tester.runAsync(() => crud.create(object));
+
+      await tester.runAsync(() => crud.delete(id));
+      final found = crud.find(id);
       expect(found, isNull);
     });
   });
