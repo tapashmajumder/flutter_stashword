@@ -11,25 +11,25 @@ import 'package:Stashword/data/item.dart';
 import 'package:Stashword/data/item_delete_info.dart';
 
 void main() {
+  setUpAll(() async {
+    PathProviderPlatform.instance = FakePathProviderPlatform();
+    await Database.init(subdir: "hive_db_dir");
+    await Database.open(secureStorage: DevSecureStorage());
+  });
+
+  tearDownAll(() async {
+    await Database.close();
+    await Hive.close();
+  });
+
   group('Item CRUD Tests', () {
-    setUpAll(() async {
-      PathProviderPlatform.instance = FakePathProviderPlatform();
-      await Database.init(subdir: "hive_db_dir");
-      await Database.open(secureStorage: DevSecureStorage());
-    });
-
-    tearDownAll(() async {
-      await Database.close();
-      await Hive.close();
-    });
-
     testWidgets('Create and Retrieve Item', (WidgetTester tester) async {
       final item = Item(id: "1", itemType: "Password", iv: "iv1");
       final created = DateTime.timestamp();
       item.created = created;
-      await tester.runAsync(() => ItemCrud.createItem(item));
+      await tester.runAsync(() => ItemCrud.create(item));
 
-      final found = ItemCrud.findItem("1");
+      final found = ItemCrud.find("1");
       expect(found?.id, equals("1"));
       expect(found?.itemType, "Password");
       expect(found?.created, created);
@@ -37,41 +37,30 @@ void main() {
 
     testWidgets('Update Item', (WidgetTester tester) async {
       final item = Item(id: '1', itemType: "Password", iv: "iv1");
-      await tester.runAsync(() => ItemCrud.createItem(item));
+      await tester.runAsync(() => ItemCrud.create(item));
 
       var updated = Item(id: '1', itemType: "Password", iv: "iv1");
       updated.shared = true;
       updated.sharedSecret = "SharedSecret";
-      await tester.runAsync(() => ItemCrud.updateItem(updated));
+      await tester.runAsync(() => ItemCrud.update(updated));
 
-      final found = ItemCrud.findItem('1');
+      final found = ItemCrud.find('1');
       expect(found?.shared, equals(true));
       expect(found?.sharedSecret, "SharedSecret");
     });
 
     testWidgets('Delete Person', (WidgetTester tester) async {
       final item = Item(id: '1', iv: 'iv1', itemType: "Password");
-      await tester.runAsync(() => ItemCrud.createItem(item));
+      await tester.runAsync(() => ItemCrud.create(item));
 
-      await tester.runAsync(() => ItemCrud.deleteItem("1"));
+      await tester.runAsync(() => ItemCrud.delete("1"));
 
-      final found = ItemCrud.findItem('1');
+      final found = ItemCrud.find('1');
       expect(found, isNull);
     });
   });
 
   group('ItemDeleteInfo CRUD Tests', () {
-    setUpAll(() async {
-      PathProviderPlatform.instance = FakePathProviderPlatform();
-      await Database.init(subdir: "hive_db_dir");
-      await Database.open(secureStorage: DevSecureStorage());
-    });
-
-    tearDownAll(() async {
-      await Database.close();
-      await Hive.close();
-    });
-
     testWidgets('Create and Retrieve ItemDeleteInfo', (WidgetTester tester) async {
       final deleteDate = DateTime.timestamp();
       final itemDeleteInfo = ItemDeleteInfo(id: "1", deleteDate: deleteDate);

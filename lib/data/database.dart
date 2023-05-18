@@ -68,22 +68,22 @@ class Database {
 
 
 class ItemCrud {
-  static Future<void> createItem(Item item) async {
+  static Future<void> create(Item item) async {
     final box = Database.getItemBox();
     await box.put(item.id, item);
   }
 
-  static Item? findItem(String id) {
+  static Item? find(String id) {
     final box = Database.getItemBox();
     return box.get(id);
   }
 
-  static Future<void> updateItem(Item item) async {
+  static Future<void> update(Item item) async {
     final box = Database.getItemBox();
     await box.put(item.id, item);
   }
 
-  static Future<void> deleteItem(String id) async {
+  static Future<void> delete(String id) async {
     final box = Database.getItemBox();
     await box.delete(id);
   }
