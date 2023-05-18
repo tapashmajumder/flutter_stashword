@@ -8,6 +8,7 @@ import 'package:plugin_platform_interface/plugin_platform_interface.dart';
 
 import 'package:Stashword/data/database.dart';
 import 'package:Stashword/data/item.dart';
+import 'package:Stashword/data/item_delete_info.dart';
 
 void main() {
   group('Item CRUD Tests', () {
@@ -24,11 +25,14 @@ void main() {
 
     testWidgets('Create and Retrieve Item', (WidgetTester tester) async {
       final item = Item(id: "1", itemType: "Password", iv: "iv1");
+      final created = DateTime.timestamp();
+      item.created = created;
       await tester.runAsync(() => ItemCrud.createItem(item));
 
       final found = ItemCrud.findItem("1");
       expect(found?.id, equals("1"));
       expect(found?.itemType, "Password");
+      expect(found?.created, created);
     });
 
     testWidgets('Update Item', (WidgetTester tester) async {
@@ -52,6 +56,52 @@ void main() {
       await tester.runAsync(() => ItemCrud.deleteItem("1"));
 
       final found = ItemCrud.findItem('1');
+      expect(found, isNull);
+    });
+  });
+
+  group('ItemDeleteInfo CRUD Tests', () {
+    setUpAll(() async {
+      PathProviderPlatform.instance = FakePathProviderPlatform();
+      await Database.init(subdir: "hive_db_dir");
+      await Database.open(secureStorage: DevSecureStorage());
+    });
+
+    tearDownAll(() async {
+      await Database.close();
+      await Hive.close();
+    });
+
+    testWidgets('Create and Retrieve ItemDeleteInfo', (WidgetTester tester) async {
+      final deleteDate = DateTime.timestamp();
+      final itemDeleteInfo = ItemDeleteInfo(id: "1", deleteDate: deleteDate);
+      await tester.runAsync(() => ItemDeleteInfoCrud.create(itemDeleteInfo));
+
+      final found = ItemDeleteInfoCrud.find("1");
+      expect(found?.id, equals("1"));
+      expect(found?.deleteDate, deleteDate);
+    });
+
+    testWidgets('Update ItemDeleteInfo', (WidgetTester tester) async {
+      final deleteDate = DateTime.timestamp();
+      final itemDeleteInfo = ItemDeleteInfo(id: '1', deleteDate: deleteDate);
+      await tester.runAsync(() => ItemDeleteInfoCrud.create(itemDeleteInfo));
+
+      final newDeleteDate = DateTime.timestamp();
+      final updated = ItemDeleteInfo(id: '1', deleteDate: newDeleteDate);
+      await tester.runAsync(() => ItemDeleteInfoCrud.update(updated));
+
+      final found = ItemDeleteInfoCrud.find('1');
+      expect(found?.deleteDate, equals(newDeleteDate));
+    });
+
+    testWidgets('Delete ItemDeleteInfo', (WidgetTester tester) async {
+      final itemDeleteInfo = ItemDeleteInfo(id: '1', deleteDate: DateTime.timestamp());
+      await tester.runAsync(() => ItemDeleteInfoCrud.create(itemDeleteInfo));
+
+      await tester.runAsync(() => ItemDeleteInfoCrud.delete("1"));
+
+      final found = ItemDeleteInfoCrud.find('1');
       expect(found, isNull);
     });
   });
