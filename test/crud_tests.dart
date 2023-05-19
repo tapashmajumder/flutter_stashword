@@ -28,6 +28,32 @@ void main() {
 
   group('Item CRUD Tests', () {
     const crud = Database.itemCrud;
+    Future<void> addItem({
+      required final WidgetTester tester,
+      final String id = "id1",
+      final bool addToWatch = false,
+      final String? blob = "zee-blob",
+      final int? colorIndex = 22,
+      final DateTime? created,
+      final String itemType = "password",
+      final String iv = "iv1",
+      final DateTime? lastUsed,
+      final DateTime? modified,
+      final bool shared = true,
+      final String? sharedSecret = "zee-shared-secret",
+    }) async {
+      final object = Item(id: id, itemType: itemType, iv: iv);
+      object.addToWatch = addToWatch;
+      object.blob = blob;
+      object.colorIndex = colorIndex;
+      object.created = created;
+      object.lastUsed = lastUsed;
+      object.modified = modified;
+      object.shared = shared;
+      object.sharedSecret = sharedSecret;
+      await tester.runAsync(() => crud.create(object));
+    }
+
     testWidgets('Create and Retrieve Item', (WidgetTester tester) async {
       const id = "id1";
       const addToWatch = true;
@@ -41,16 +67,20 @@ void main() {
       const shared = true;
       const sharedSecret = "zee-shared-secret";
 
-      final object = Item(id: id, itemType: itemType, iv: iv);
-      object.addToWatch = addToWatch;
-      object.blob = blob;
-      object.colorIndex = colorIndex;
-      object.created = created;
-      object.lastUsed = lastUsed;
-      object.modified = modified;
-      object.shared = shared;
-      object.sharedSecret = sharedSecret;
-      await tester.runAsync(() => crud.create(object));
+      await addItem(
+        tester: tester,
+        id: id,
+        addToWatch: addToWatch,
+        blob: blob,
+        colorIndex: colorIndex,
+        created: created,
+        itemType: itemType,
+        iv: iv,
+        lastUsed: lastUsed,
+        modified: modified,
+        shared: shared,
+        sharedSecret: sharedSecret,
+      );
 
       final found = crud.find(id);
       expect(found?.id, equals(id));
@@ -83,7 +113,7 @@ void main() {
       expect(found?.sharedSecret, "SharedSecret");
     });
 
-    testWidgets('Delete Person', (WidgetTester tester) async {
+    testWidgets('Delete Item', (WidgetTester tester) async {
       const id = "id1";
       const itemType = "password";
       const iv = "iv1";
@@ -94,6 +124,31 @@ void main() {
 
       final found = crud.find(id);
       expect(found, isNull);
+    });
+
+    testWidgets('Find All', (WidgetTester tester) async {
+      const List<String> ids = ["1", "2", "3", "4"];
+      for (var id in ids) {
+        await addItem(tester: tester, id: id);
+      }
+      expect(crud.findAll().length, equals(ids.length));
+    });
+
+    testWidgets('Find All with predicate', (WidgetTester tester) async {
+      const itemTypeWallet = "wallet";
+      const List<String> ids = ["1", "2", "3", "4"];
+      for (var id in ids) {
+        await addItem(tester: tester, id: id);
+      }
+      const List<String> walletIds = ["5", "6"];
+      for (var id in walletIds) {
+        await addItem(tester: tester, id: id, itemType: itemTypeWallet);
+      }
+      final wallets = crud.findAll(predicate: (item) => item.itemType == itemTypeWallet);
+      expect(wallets.length, equals(walletIds.length));
+      for (var wallet in wallets) {
+        expect(wallet.itemType, equals(itemTypeWallet));
+      }
     });
   });
 

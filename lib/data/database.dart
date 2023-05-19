@@ -177,6 +177,15 @@ abstract class Crud<T extends WithId> {
     }
   }
 
+  List<T> findAll({bool Function(T)? predicate}) {
+    final box = _getBox();
+    if (predicate == null) {
+      return box.values.toList(growable: false);
+    } else {
+      return box.values.where(predicate).toList(growable: false);
+    }
+  }
+
   Future<void> create(T object) async {
     final box = _getBox();
     await box.put(object.id, object);
