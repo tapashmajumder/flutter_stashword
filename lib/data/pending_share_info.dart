@@ -1,9 +1,10 @@
+import 'package:Stashword/data/database.dart';
 import 'package:hive/hive.dart';
 
 part 'pending_share_info.g.dart';
 
 @HiveType(typeId: 2)
-class PendingShareInfo {
+class PendingShareInfo implements WithId {
   @HiveField(0)
   String id;
 

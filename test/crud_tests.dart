@@ -27,8 +27,8 @@ void main() {
   });
 
   group('Item CRUD Tests', () {
+    const crud = Database.itemCrud;
     testWidgets('Create and Retrieve Item', (WidgetTester tester) async {
-      const crud = Database.itemCrud;
       const id = "id1";
       const addToWatch = true;
       const blob = "zee-blob";
@@ -67,7 +67,6 @@ void main() {
     });
 
     testWidgets('Update Item', (WidgetTester tester) async {
-      const crud = Database.itemCrud;
       const id = "id1";
       const itemType = "password";
       const iv = "iv1";
@@ -85,7 +84,6 @@ void main() {
     });
 
     testWidgets('Delete Person', (WidgetTester tester) async {
-      const crud = Database.itemCrud;
       const id = "id1";
       const itemType = "password";
       const iv = "iv1";
@@ -140,6 +138,7 @@ void main() {
   });
 
   group('PendingShareInfo CRUD Tests', () {
+    const crud = Database.pendingShareInfoCrud;
     testWidgets('Create and Retrieve PendingShareInfo', (WidgetTester tester) async {
       const itemType = "password";
       const id = "id1";
@@ -155,9 +154,9 @@ void main() {
         shareStatus: shareStatus,
       );
       object.sharedSecret = sharedSecret;
-      await tester.runAsync(() => PendingShareInfoCrud.create(object));
+      await tester.runAsync(() => crud.create(object));
 
-      final found = PendingShareInfoCrud.find(id);
+      final found = crud.find(id);
       expect(found?.id, equals(id));
       expect(found?.itemType, equals(itemType));
       expect(found?.iv, equals(iv));
@@ -183,7 +182,7 @@ void main() {
         shareStatus: shareStatus,
       );
       object.blob = blob;
-      await tester.runAsync(() => PendingShareInfoCrud.create(object));
+      await tester.runAsync(() => crud.create(object));
 
       const newShareStatus = "new-share-status";
       const newBlob = "new-blob";
@@ -196,9 +195,9 @@ void main() {
       );
       updated.blob = newBlob;
       updated.sharedSecret = sharedSecret;
-      await tester.runAsync(() => PendingShareInfoCrud.update(updated));
+      await tester.runAsync(() => crud.update(updated));
 
-      final found = PendingShareInfoCrud.find(id);
+      final found = crud.find(id);
       expect(found?.id, equals(id));
       expect(found?.blob, equals(newBlob));
       expect(found?.itemType, equals(itemType));
@@ -225,18 +224,17 @@ void main() {
       );
       object.blob = blob;
       object.sharedSecret = sharedSecret;
-      await tester.runAsync(() => PendingShareInfoCrud.create(object));
+      await tester.runAsync(() => crud.create(object));
 
-      await tester.runAsync(() => PendingShareInfoCrud.delete(id));
-      final found = PendingShareInfoCrud.find(id);
+      await tester.runAsync(() => crud.delete(id));
+      final found = crud.find(id);
       expect(found, isNull);
     });
   });
 
   group('HiveImage CRUD Tests', () {
+    const crud = Database.imageCrud;
     testWidgets('Create and Retrieve HiveImage', (WidgetTester tester) async {
-      const crud = Database.imageCrud;
-
       const List<int> list = [10, 5, 20, 40];
       final data = Uint8List.fromList(list);
       const id = "item1-image1";
@@ -255,8 +253,6 @@ void main() {
     });
 
     testWidgets('Update HiveImage', (WidgetTester tester) async {
-      const crud = Database.imageCrud;
-
       const List<int> list = [10, 5, 20, 40];
       final data = Uint8List.fromList(list);
       const id = "item1-image1";
@@ -284,8 +280,6 @@ void main() {
     });
 
     testWidgets('Delete HiveImage', (WidgetTester tester) async {
-      const crud = Database.imageCrud;
-
       const List<int> list = [10, 5, 20, 40];
       final data = Uint8List.fromList(list);
       const id = "item1-image1";
@@ -304,9 +298,8 @@ void main() {
   });
 
   group('SharedItem CRUD Tests', () {
+    const crud = Database.sharedItemCrud;
     testWidgets('Create and Retrieve SharedItem', (WidgetTester tester) async {
-      const crud = Database.sharedItemCrud;
-
       const itemType = "password";
       const id = "shared1";
       const iv = "iv1";
@@ -348,8 +341,6 @@ void main() {
     });
 
     testWidgets('Update SharedItem', (WidgetTester tester) async {
-      const crud = Database.sharedItemCrud;
-
       const itemType = "password";
       const id = "shared1";
       const iv = "iv1";
@@ -394,8 +385,6 @@ void main() {
     });
 
     testWidgets('Delete SharedItem', (WidgetTester tester) async {
-      const crud = Database.sharedItemCrud;
-
       const itemType = "password";
       const id = "shared1";
       const iv = "iv1";

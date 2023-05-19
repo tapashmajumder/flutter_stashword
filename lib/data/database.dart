@@ -44,17 +44,19 @@ class Database {
   static const imageCrud = HiveImageCrud();
   static const sharedItemCrud = SharedItemCrud();
   static const itemDeleteInfoCrud = ItemDeleteInfoCrud();
+  static const pendingShareInfoCrud = PendingShareInfoCrud();
 
   static final List<Crud> _cruds = [
     itemCrud,
     imageCrud,
     sharedItemCrud,
     itemDeleteInfoCrud,
+    pendingShareInfoCrud,
   ];
 
   static Future<void> init({String? subdir}) async {
     await Hive.initFlutter(subdir);
-    Hive.registerAdapter(PendingShareInfoAdapter());
+
     for (var crud in _cruds) {
        crud.registerAdapter();
     }
@@ -64,22 +66,10 @@ class Database {
     final String encryptionKeyString = await secureStorage.read(key: _encryptionKeyName) ?? await _generateAndStoreEncryptionKey(secureStorage);
     final encryptionKey = base64Url.decode(encryptionKeyString);
     final encryptionCipher = HiveAesCipher(encryptionKey);
-    await Hive.openBox<PendingShareInfo>(_pendingShareInfoBoxName, encryptionCipher: encryptionCipher);
+
     for (var crud in _cruds) {
       await crud.openBox(encryptionCipher: encryptionCipher);
     }
-  }
-
-  static Box<Item> getItemBox() {
-    return Hive.box<Item>(_itemBoxName);
-  }
-
-  static Box<ItemDeleteInfo> getItemDeleteInfoBox() {
-    return Hive.box<ItemDeleteInfo>(_itemDeleteInfoBoxName);
-  }
-
-  static Box<PendingShareInfo> getPendingShareInfoBox() {
-    return Hive.box<PendingShareInfo>(_pendingShareInfoBoxName);
   }
 
   static Future<void> close() async {
@@ -123,25 +113,48 @@ class ItemDeleteInfoCrud extends Crud<ItemDeleteInfo> {
   }
 }
 
-class PendingShareInfoCrud {
-  static Future<void> create(PendingShareInfo object) async {
-    final box = Database.getPendingShareInfoBox();
-    await box.put(object.id, object);
-  }
+class PendingShareInfoCrud extends Crud<PendingShareInfo> {
+  const PendingShareInfoCrud();
 
-  static PendingShareInfo? find(String id) {
-    final box = Database.getPendingShareInfoBox();
-    return box.get(id);
-  }
+  @override
+  String get boxName => Database._pendingShareInfoBoxName;
 
-  static Future<void> update(PendingShareInfo object) async {
-    final box = Database.getPendingShareInfoBox();
-    await box.put(object.id, object);
-  }
+  @override
+  bool get encrypted => true;
 
-  static Future<void> delete(String id) async {
-    final box = Database.getPendingShareInfoBox();
-    await box.delete(id);
+  @override
+  void registerAdapter() {
+    Hive.registerAdapter(PendingShareInfoAdapter());
+  }
+}
+
+class HiveImageCrud extends Crud<HiveImage> {
+  const HiveImageCrud();
+
+  @override
+  String get boxName => Database._imageBoxName;
+
+  @override
+  bool get encrypted => true;
+
+  @override
+  void registerAdapter() {
+    Hive.registerAdapter(HiveImageAdapter());
+  }
+}
+
+class SharedItemCrud extends Crud<SharedItem> {
+  const SharedItemCrud();
+
+  @override
+  String get boxName => Database._sharedItemBoxName;
+
+  @override
+  bool get encrypted => true;
+
+  @override
+  void registerAdapter() {
+    Hive.registerAdapter(SharedItemAdapter());
   }
 }
 
@@ -186,35 +199,5 @@ abstract class Crud<T extends WithId> {
 
   Box<T> _getBox() {
     return Hive.box<T>(boxName);
-  }
-}
-
-class HiveImageCrud extends Crud<HiveImage> {
-  const HiveImageCrud();
-
-  @override
-  String get boxName => Database._imageBoxName;
-
-  @override
-  bool get encrypted => true;
-
-  @override
-  void registerAdapter() {
-    Hive.registerAdapter(HiveImageAdapter());
-  }
-}
-
-class SharedItemCrud extends Crud<SharedItem> {
-  const SharedItemCrud();
-
-  @override
-  String get boxName => Database._sharedItemBoxName;
-
-  @override
-  bool get encrypted => true;
-
-  @override
-  void registerAdapter() {
-    Hive.registerAdapter(SharedItemAdapter());
   }
 }
