@@ -40,17 +40,18 @@ class Database {
 
   static const String _encryptionKeyName = 'encryptionKey';
 
+  static const itemCrud = ItemCrud();
   static const imageCrud = HiveImageCrud();
   static const sharedItemCrud = SharedItemCrud();
 
   static final List<Crud> _cruds = [
+    itemCrud,
     imageCrud,
     sharedItemCrud,
   ];
 
   static Future<void> init({String? subdir}) async {
     await Hive.initFlutter(subdir);
-    Hive.registerAdapter(ItemAdapter());
     Hive.registerAdapter(ItemDeleteInfoAdapter());
     Hive.registerAdapter(PendingShareInfoAdapter());
     for (var crud in _cruds) {
@@ -62,7 +63,6 @@ class Database {
     final String encryptionKeyString = await secureStorage.read(key: _encryptionKeyName) ?? await _generateAndStoreEncryptionKey(secureStorage);
     final encryptionKey = base64Url.decode(encryptionKeyString);
     final encryptionCipher = HiveAesCipher(encryptionKey);
-    await Hive.openBox<Item>(_itemBoxName, encryptionCipher: encryptionCipher);
     await Hive.openBox<ItemDeleteInfo>(_itemDeleteInfoBoxName);
     await Hive.openBox<PendingShareInfo>(_pendingShareInfoBoxName, encryptionCipher: encryptionCipher);
     for (var crud in _cruds) {
@@ -94,25 +94,18 @@ class Database {
 }
 
 
-class ItemCrud {
-  static Future<void> create(Item item) async {
-    final box = Database.getItemBox();
-    await box.put(item.id, item);
-  }
+class ItemCrud extends Crud<Item> {
+  const ItemCrud();
 
-  static Item? find(String id) {
-    final box = Database.getItemBox();
-    return box.get(id);
-  }
+  @override
+  String get boxName => Database._itemBoxName;
 
-  static Future<void> update(Item item) async {
-    final box = Database.getItemBox();
-    await box.put(item.id, item);
-  }
+  @override
+  bool get encrypted => true;
 
-  static Future<void> delete(String id) async {
-    final box = Database.getItemBox();
-    await box.delete(id);
+  @override
+  void registerAdapter() {
+    Hive.registerAdapter(ItemAdapter());
   }
 }
 

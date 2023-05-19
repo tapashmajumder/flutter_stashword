@@ -1,9 +1,10 @@
+import 'package:Stashword/data/database.dart';
 import 'package:hive/hive.dart';
 
 part 'item.g.dart';
 
 @HiveType(typeId: 0)
-class Item {
+class Item implements WithId {
   @HiveField(0)
   String id;
 

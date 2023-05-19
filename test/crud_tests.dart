@@ -28,6 +28,7 @@ void main() {
 
   group('Item CRUD Tests', () {
     testWidgets('Create and Retrieve Item', (WidgetTester tester) async {
+      const crud = Database.itemCrud;
       const id = "id1";
       const addToWatch = true;
       const blob = "zee-blob";
@@ -49,9 +50,9 @@ void main() {
       object.modified = modified;
       object.shared = shared;
       object.sharedSecret = sharedSecret;
-      await tester.runAsync(() => ItemCrud.create(object));
+      await tester.runAsync(() => crud.create(object));
 
-      final found = ItemCrud.find(id);
+      final found = crud.find(id);
       expect(found?.id, equals(id));
       expect(found?.itemType, itemType);
       expect(found?.created, created);
@@ -66,32 +67,34 @@ void main() {
     });
 
     testWidgets('Update Item', (WidgetTester tester) async {
+      const crud = Database.itemCrud;
       const id = "id1";
       const itemType = "password";
       const iv = "iv1";
       final object = Item(id: id, itemType: itemType, iv: iv);
-      await tester.runAsync(() => ItemCrud.create(object));
+      await tester.runAsync(() => crud.create(object));
 
       var updated = Item(id: id, itemType: itemType, iv: itemType);
       updated.shared = true;
       updated.sharedSecret = "SharedSecret";
-      await tester.runAsync(() => ItemCrud.update(updated));
+      await tester.runAsync(() => crud.update(updated));
 
-      final found = ItemCrud.find(id);
+      final found = crud.find(id);
       expect(found?.shared, equals(true));
       expect(found?.sharedSecret, "SharedSecret");
     });
 
     testWidgets('Delete Person', (WidgetTester tester) async {
+      const crud = Database.itemCrud;
       const id = "id1";
       const itemType = "password";
       const iv = "iv1";
       final object = Item(id: id, iv: iv, itemType: itemType);
-      await tester.runAsync(() => ItemCrud.create(object));
+      await tester.runAsync(() => crud.create(object));
 
-      await tester.runAsync(() => ItemCrud.delete(id));
+      await tester.runAsync(() => crud.delete(id));
 
-      final found = ItemCrud.find(id);
+      final found = crud.find(id);
       expect(found, isNull);
     });
   });
