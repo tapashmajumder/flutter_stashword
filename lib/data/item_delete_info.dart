@@ -1,9 +1,10 @@
+import 'package:Stashword/data/database.dart';
 import 'package:hive/hive.dart';
 
 part 'item_delete_info.g.dart';
 
 @HiveType(typeId: 1)
-class ItemDeleteInfo {
+class ItemDeleteInfo implements WithId {
   @HiveField(0)
   String id;
 

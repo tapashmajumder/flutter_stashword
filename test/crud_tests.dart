@@ -100,13 +100,14 @@ void main() {
   });
 
   group('ItemDeleteInfo CRUD Tests', () {
+    const crud = Database.itemDeleteInfoCrud;
     testWidgets('Create and Retrieve ItemDeleteInfo', (WidgetTester tester) async {
       const id = "id1";
       final deleteDate = DateTime.timestamp();
       final object = ItemDeleteInfo(id: id, deleteDate: deleteDate);
-      await tester.runAsync(() => ItemDeleteInfoCrud.create(object));
+      await tester.runAsync(() => crud.create(object));
 
-      final found = ItemDeleteInfoCrud.find(id);
+      final found = crud.find(id);
       expect(found?.id, equals(id));
       expect(found?.deleteDate, deleteDate);
     });
@@ -115,13 +116,13 @@ void main() {
       const id = "id1";
       final deleteDate = DateTime.timestamp();
       final object = ItemDeleteInfo(id: id, deleteDate: deleteDate);
-      await tester.runAsync(() => ItemDeleteInfoCrud.create(object));
+      await tester.runAsync(() => crud.create(object));
 
       final newDeleteDate = DateTime.timestamp();
       final updated = ItemDeleteInfo(id: id, deleteDate: newDeleteDate);
-      await tester.runAsync(() => ItemDeleteInfoCrud.update(updated));
+      await tester.runAsync(() => crud.update(updated));
 
-      final found = ItemDeleteInfoCrud.find(id);
+      final found = crud.find(id);
       expect(found?.deleteDate, equals(newDeleteDate));
     });
 
@@ -129,11 +130,11 @@ void main() {
       const id = "id1";
       final deleteDate = DateTime.timestamp();
       final object = ItemDeleteInfo(id: id, deleteDate: deleteDate);
-      await tester.runAsync(() => ItemDeleteInfoCrud.create(object));
+      await tester.runAsync(() => crud.create(object));
 
-      await tester.runAsync(() => ItemDeleteInfoCrud.delete(id));
+      await tester.runAsync(() => crud.delete(id));
 
-      final found = ItemDeleteInfoCrud.find('1');
+      final found = crud.find('1');
       expect(found, isNull);
     });
   });

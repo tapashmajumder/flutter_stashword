@@ -43,16 +43,17 @@ class Database {
   static const itemCrud = ItemCrud();
   static const imageCrud = HiveImageCrud();
   static const sharedItemCrud = SharedItemCrud();
+  static const itemDeleteInfoCrud = ItemDeleteInfoCrud();
 
   static final List<Crud> _cruds = [
     itemCrud,
     imageCrud,
     sharedItemCrud,
+    itemDeleteInfoCrud,
   ];
 
   static Future<void> init({String? subdir}) async {
     await Hive.initFlutter(subdir);
-    Hive.registerAdapter(ItemDeleteInfoAdapter());
     Hive.registerAdapter(PendingShareInfoAdapter());
     for (var crud in _cruds) {
        crud.registerAdapter();
@@ -63,7 +64,6 @@ class Database {
     final String encryptionKeyString = await secureStorage.read(key: _encryptionKeyName) ?? await _generateAndStoreEncryptionKey(secureStorage);
     final encryptionKey = base64Url.decode(encryptionKeyString);
     final encryptionCipher = HiveAesCipher(encryptionKey);
-    await Hive.openBox<ItemDeleteInfo>(_itemDeleteInfoBoxName);
     await Hive.openBox<PendingShareInfo>(_pendingShareInfoBoxName, encryptionCipher: encryptionCipher);
     for (var crud in _cruds) {
       await crud.openBox(encryptionCipher: encryptionCipher);
@@ -93,7 +93,6 @@ class Database {
   }
 }
 
-
 class ItemCrud extends Crud<Item> {
   const ItemCrud();
 
@@ -109,25 +108,18 @@ class ItemCrud extends Crud<Item> {
   }
 }
 
-class ItemDeleteInfoCrud {
-  static Future<void> create(ItemDeleteInfo deleteInfo) async {
-    final box = Database.getItemDeleteInfoBox();
-    await box.put(deleteInfo.id, deleteInfo);
-  }
+class ItemDeleteInfoCrud extends Crud<ItemDeleteInfo> {
+  const ItemDeleteInfoCrud();
 
-  static ItemDeleteInfo? find(String id) {
-    final box = Database.getItemDeleteInfoBox();
-    return box.get(id);
-  }
+  @override
+  String get boxName => Database._itemDeleteInfoBoxName;
 
-  static Future<void> update(ItemDeleteInfo deleteInfo) async {
-    final box = Database.getItemDeleteInfoBox();
-    await box.put(deleteInfo.id, deleteInfo);
-  }
+  @override
+  bool get encrypted => false;
 
-  static Future<void> delete(String id) async {
-    final box = Database.getItemDeleteInfoBox();
-    await box.delete(id);
+  @override
+  void registerAdapter() {
+    Hive.registerAdapter(ItemDeleteInfoAdapter());
   }
 }
 
