@@ -186,6 +186,10 @@ abstract class Crud<T extends WithId> {
     }
   }
 
+  Future<void> deleteAll() async {
+    await _getBox().clear();
+  }
+
   Future<void> create(T object) async {
     final box = _getBox();
     await box.put(object.id, object);

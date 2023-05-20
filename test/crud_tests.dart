@@ -150,6 +150,17 @@ void main() {
         expect(wallet.itemType, equals(itemTypeWallet));
       }
     });
+
+    testWidgets('Delete All', (WidgetTester tester) async {
+      const List<String> ids = ["1", "2", "3", "4"];
+      for (var id in ids) {
+        await addItem(tester: tester, id: id);
+      }
+      expect(crud.findAll().length, equals(ids.length));
+
+      await tester.runAsync(() => crud.deleteAll());
+      expect(crud.findAll().length, equals(0));
+    });
   });
 
   group('ItemDeleteInfo CRUD Tests', () {
