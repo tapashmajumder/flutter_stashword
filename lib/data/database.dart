@@ -5,6 +5,7 @@ import 'package:Stashword/data/hive_image.dart';
 import 'package:hive_flutter/hive_flutter.dart';
 import 'package:flutter_secure_storage/flutter_secure_storage.dart';
 
+import 'data_utils.dart';
 import 'item.dart';
 import 'item_delete_info.dart';
 import 'pending_share_info.dart';
@@ -156,10 +157,6 @@ class SharedItemCrud extends Crud<SharedItem> {
   void registerAdapter() {
     Hive.registerAdapter(SharedItemAdapter());
   }
-}
-
-abstract class WithId {
-  String get id;
 }
 
 abstract class Crud<T extends WithId> {

@@ -1,5 +1,6 @@
-import 'package:Stashword/data/database.dart';
 import 'package:hive/hive.dart';
+
+import 'data_utils.dart';
 
 part 'shared_item.g.dart';
 

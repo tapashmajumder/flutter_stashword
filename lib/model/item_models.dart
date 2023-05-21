@@ -1,11 +1,32 @@
+import 'package:collection/collection.dart';
+import 'package:json_annotation/json_annotation.dart';
+
+part 'item_models.g.dart';
+
 enum ItemType {
-  password,
-  bankAccount,
-  ff,
-  note,
-  code,
-  card,
-  doc,
+  password(value: "Password"),
+
+  bankAccount(value: "BankAccount"),
+
+  ff(value: "FF"),
+
+  note(value: "Note"),
+
+  code(value: "Code"),
+
+  card(value: "Wallet"),
+
+  doc(value: "Doc");
+
+  final String value;
+
+  const ItemType({required this.value});
+}
+
+extension ItemTypeExtension on ItemType {
+  static ItemType? fromString({required String value}) {
+    return ItemType.values.firstWhereOrNull((element) => element.value == value);
+  }
 }
 
 enum FieldType {
@@ -101,6 +122,7 @@ class DocField {
   });
 }
 
+@JsonSerializable()
 class CustomFieldInfo {
   String name;
   String value;
@@ -111,9 +133,12 @@ class CustomFieldInfo {
     this.value,
     this.type,
   );
+
+  factory CustomFieldInfo.fromJson(Map<String, dynamic> json) => _$CustomFieldInfoFromJson(json);
+  Map<String, dynamic> toJson() => _$CustomFieldInfoToJson(this);
 }
 
-class ItemModel {
+abstract class ItemModel {
   ItemType itemType;
   final String id;
   final String iv;

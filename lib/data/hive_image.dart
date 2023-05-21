@@ -1,6 +1,8 @@
 import 'dart:typed_data';
-import 'package:Stashword/data/database.dart';
+
 import 'package:hive/hive.dart';
+
+import 'data_utils.dart';
 
 part 'hive_image.g.dart';
 
