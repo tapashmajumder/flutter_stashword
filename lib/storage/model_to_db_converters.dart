@@ -9,17 +9,29 @@ void main() {
   model.photoIds = ["1id"];
   model.userName = "zee'user@#\$@\$#%ame";
 
-  Item item = ModelToDbConverter.itemFromPasswordModel(model: model);
+  Item item = PasswordConverter().itemFromItemModel(model: model);
 
-  print("${item.blob}");
+  print("itemBlob: ${item.blob}");
 
-  final foundModel = ModelToDbConverter.passwordModelFromItem(item: item);
+  final foundModel = PasswordConverter().modelFromItem(item: item);
 
   print("${foundModel.userName}");
 }
 
-class ModelToDbConverter {
-  static Item itemFromPasswordModel({required PasswordModel model}) {
+abstract class BaseConverter<Blob extends BaseBlob, Model extends ItemModel> {
+  String get itemType;
+
+  Blob createBlob();
+
+  void setCustomFromModelToBlob(Model model, Blob blob);
+
+  Model createModel({required String id, required String iv});
+
+  Blob? blobFromString(String serialized);
+
+  void setCustomFromBlobToModel(Blob blob, Model model);
+
+  Item itemFromItemModel({required Model model}) {
     final item = Item(
       itemType: ItemType.password.value,
       id: model.id,
@@ -27,35 +39,25 @@ class ModelToDbConverter {
     );
 
     _setBaseValuesInItemFromModel(item, model);
-    PasswordBlob blob = PasswordBlob();
+    Blob blob = createBlob();
     _setBaseValuesInItemBlobFromModel(blob, model);
 
-    // custom values for passwords
-    blob.url = model.url;
-    blob.userName = model.userName;
-    blob.password = model.password;
-    blob.otpToken = model.otpToken;
+    setCustomFromModelToBlob(model, blob);
 
     item.blob = blob.serialized;
     return item;
   }
 
-  static PasswordModel passwordModelFromItem({required Item item}) {
-    final model = PasswordModel(
-      id: item.id,
-      iv: item.iv
-    );
+  Model modelFromItem({required Item item}) {
+    final model = createModel(id: item.id, iv: item.iv);
 
     _setBaseValuesInModelFromItem(model, item);
     final itemBlob = item.blob;
     if (itemBlob != null) {
-      final passwordBlob = PasswordBlob.deserialize(itemBlob);
-      if (passwordBlob != null) {
-        _setBaseValuesInModelFromItemBlob(model, passwordBlob);
-        model.url = passwordBlob.url;
-        model.userName = passwordBlob.userName;
-        model.password = passwordBlob.password;
-        model.otpToken = passwordBlob.otpToken;
+      final blobObject = blobFromString(itemBlob);
+      if (blobObject != null) {
+        _setBaseValuesInModelFromItemBlob(model, blobObject);
+        setCustomFromBlobToModel(blobObject, model);
       }
     }
 
@@ -96,6 +98,42 @@ class ModelToDbConverter {
     model.photoIds = blob.photoIds;
     model.tags = blob.tags;
     model.customFields = blob.customFields;
+  }
+}
+
+class PasswordConverter extends BaseConverter<PasswordBlob, PasswordModel> {
+  @override
+  String get itemType => ItemType.password.value;
+
+  @override
+  PasswordBlob createBlob() {
+    return PasswordBlob();
+  }
+
+  @override
+  void setCustomFromModelToBlob(PasswordModel model, PasswordBlob blob) {
+    blob.url = model.url;
+    blob.userName = model.userName;
+    blob.password = model.password;
+    blob.otpToken = model.otpToken;
+  }
+
+  @override
+  PasswordModel createModel({required String id, required String iv}) {
+    return PasswordModel(id: id, iv: iv);
+  }
+
+  @override
+  PasswordBlob? blobFromString(String serialized) {
+    return PasswordBlob.deserialize(serialized);
+  }
+
+  @override
+  void setCustomFromBlobToModel(PasswordBlob blob, PasswordModel model) {
+    model.url = blob.url;
+    model.userName = blob.userName;
+    model.password = blob.password;
+    model.otpToken = blob.otpToken;
   }
 }
 
