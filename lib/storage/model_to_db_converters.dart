@@ -9,11 +9,11 @@ void main() {
   model.photoIds = ["1id"];
   model.userName = "zee'user@#\$@\$#%ame";
 
-  Item item = PasswordConverter().itemFromItemModel(model: model);
+  Item item = ModelToDbConverter.fromModelToItem(model: model);
 
   print("itemBlob: ${item.blob}");
 
-  final foundModel = PasswordConverter().modelFromItem(item: item);
+  final PasswordModel foundModel = ModelToDbConverter.fromItemToModel(item: item);
 
   print("${foundModel.userName}");
 }
@@ -137,3 +137,34 @@ class PasswordConverter extends BaseConverter<PasswordBlob, PasswordModel> {
   }
 }
 
+class ModelToDbConverter {
+  static Item fromModelToItem<Model extends ItemModel>({required Model model}) {
+    final BaseConverter converter = _getConverterForModel(model: model);
+    return converter.itemFromItemModel(model: model);
+  }
+
+  static T fromItemToModel<T extends ItemModel>({required Item item}) {
+    final BaseConverter converter = _getConverterForItem(item: item);
+    return converter.modelFromItem(item: item) as T;
+  }
+
+  static BaseConverter _getConverterForModel({required ItemModel model}) {
+    if (model is PasswordModel) {
+      return PasswordConverter();
+    }
+
+    else {
+      throw StateError("could not find converter");
+    }
+  }
+
+  static BaseConverter _getConverterForItem({required Item item}) {
+    final ItemType itemType = ItemTypeExtension.fromString(value: item.itemType) ?? ItemType.password;
+    switch (itemType) {
+      case ItemType.password:
+        return PasswordConverter();
+      default:
+        throw StateError("Unknown itemType: $itemType");
+    }
+  }
+}
