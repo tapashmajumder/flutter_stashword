@@ -102,3 +102,99 @@ class FFBlob extends BaseBlob {
     }
   }
 }
+
+@JsonSerializable(includeIfNull: false)
+class NoteBlob extends BaseBlob {
+  NoteBlob();
+
+  // Json Helpers
+  factory NoteBlob.fromJson(Map<String, dynamic> json) =>
+      _$NoteBlobFromJson(json);
+
+  Map<String, dynamic> toJson() => _$NoteBlobToJson(this);
+
+  static NoteBlob? deserialize(String source) {
+    try {
+      final decoded = json.decode(source);
+      return NoteBlob.fromJson(decoded);
+    } catch (e) {
+      return null;
+    }
+  }
+}
+
+@JsonSerializable(includeIfNull: false)
+class CodeBlob extends BaseBlob {
+  String? code;
+
+  CodeBlob();
+
+  // Json Helpers
+  factory CodeBlob.fromJson(Map<String, dynamic> json) =>
+      _$CodeBlobFromJson(json);
+
+  Map<String, dynamic> toJson() => _$CodeBlobToJson(this);
+
+  static CodeBlob? deserialize(String source) {
+    try {
+      final decoded = json.decode(source);
+      return CodeBlob.fromJson(decoded);
+    } catch (e) {
+      return null;
+    }
+  }
+}
+
+@JsonSerializable(includeIfNull: false)
+class CardBlob extends BaseBlob {
+  CardType cardType = CardType.other;
+  String? cardHolderName;
+  String? cardNumber;
+  String? verificationNumber;
+  Month? expirationMonth;
+  Year? expirationYear;
+  String? pinNumber;
+  String? supportNumber;
+
+  CardBlob();
+
+  // Json Helpers
+  factory CardBlob.fromJson(Map<String, dynamic> json) =>
+      _$CardBlobFromJson(json);
+
+  Map<String, dynamic> toJson() => _$CardBlobToJson(this);
+
+  static CardBlob? deserialize(String source) {
+    try {
+      final decoded = json.decode(source);
+      return CardBlob.fromJson(decoded);
+    } catch (e) {
+      return null;
+    }
+  }
+}
+
+@JsonSerializable(includeIfNull: false)
+class DocBlob extends BaseBlob {
+  DocType docType = DocType.other;
+  List<DocField> fields = [];
+
+  DocBlob();
+
+  // Json Helpers
+  factory DocBlob.fromJson(Map<String, dynamic> json) =>
+      _$DocBlobFromJson(json);
+
+  Map<String, dynamic> toJson() => _$DocBlobToJson(this);
+
+  static DocBlob? deserialize(String source) {
+    try {
+      final decoded = json.decode(source);
+      return DocBlob.fromJson(decoded);
+    } catch (e) {
+      return null;
+    }
+  }
+}
+
+

@@ -39,64 +39,167 @@ enum FieldType {
 }
 
 enum CardType {
+  @JsonValue("Visa")
   visa,
+
+  @JsonValue("MasterCard")
   mc,
+
+  @JsonValue("Amex")
   amex,
+
+  @JsonValue("Discover")
   disc,
+
+  @JsonValue("Other")
   other,
 }
 
 enum Month {
+  @JsonValue("January")
   january,
+
+  @JsonValue("February")
   february,
+
+  @JsonValue("March")
   march,
+
+  @JsonValue("April")
   april,
+
+  @JsonValue("May")
   may,
+
+  @JsonValue("June")
   june,
+
+  @JsonValue("July")
   july,
+
+  @JsonValue("August")
   august,
+
+  @JsonValue("September")
   september,
+
+  @JsonValue("October")
   october,
+
+  @JsonValue("November")
   november,
+
+  @JsonValue("December")
   december,
 }
 
 enum Year {
+  @JsonValue("2015")
   y2015,
+
+  @JsonValue("2016")
   y2016,
+
+  @JsonValue("2017")
   y2017,
+
+  @JsonValue("2018")
   y2018,
+
+  @JsonValue("2019")
   y2019,
+
+  @JsonValue("2020")
   y2020,
+
+  @JsonValue("2021")
   y2021,
+
+  @JsonValue("2022")
   y2022,
+
+  @JsonValue("2023")
   y2023,
+
+  @JsonValue("2024")
   y2024,
+
+  @JsonValue("2025")
   y2025,
+
+  @JsonValue("2026")
   y2026,
+
+  @JsonValue("2027")
   y2027,
+
+  @JsonValue("2028")
   y2028,
+
+  @JsonValue("2029")
   y2029,
+
+  @JsonValue("2030")
   y2030,
+
+  @JsonValue("2031")
   y2031,
+
+  @JsonValue("2032")
   y2032,
+
+  @JsonValue("2033")
   y2033,
+
+  @JsonValue("2034")
   y2034,
+
+  @JsonValue("2035")
   y2035,
+
+  @JsonValue("2036")
   y2036,
+
+  @JsonValue("2037")
   y2037,
+
+  @JsonValue("2038")
   y2038,
+
+  @JsonValue("2039")
   y2039,
+
+  @JsonValue("2040")
   y2040,
+
+  @JsonValue("2041")
   y2041,
+
+  @JsonValue("2042")
   y2042,
+
+  @JsonValue("2043")
   y2043,
+
+  @JsonValue("2044")
   y2044,
+
+  @JsonValue("2045")
   y2045,
+
+  @JsonValue("2046")
   y2046,
+
+  @JsonValue("2047")
   y2047,
+
+  @JsonValue("2048")
   y2048,
+
+  @JsonValue("2049")
   y2049,
+
+  @JsonValue("2050")
   y2050,
 }
 
@@ -109,7 +212,8 @@ enum DocType {
   other,
 }
 
-class DocField {
+@JsonSerializable(includeIfNull: false)
+class DocField extends Equatable {
   FieldType fieldType;
   String label;
   String placeHolder;
@@ -121,9 +225,15 @@ class DocField {
     required this.placeHolder,
     this.value,
   });
+
+  factory DocField.fromJson(Map<String, dynamic> json) => _$DocFieldFromJson(json);
+  Map<String, dynamic> toJson() => _$DocFieldToJson(this);
+
+  @override
+  List<Object?> get props => [fieldType, label, placeHolder, value];
 }
 
-@JsonSerializable()
+@JsonSerializable(includeIfNull: false)
 class CustomFieldInfo extends Equatable{
   String name;
   String value;
