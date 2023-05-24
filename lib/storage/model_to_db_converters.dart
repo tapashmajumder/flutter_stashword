@@ -207,6 +207,34 @@ class FFConverter extends BaseConverter<FFBlob, FFModel> {
   }
 }
 
+class NoteConverter extends BaseConverter<NoteBlob, NoteModel> {
+  @override
+  String get itemType => ItemType.note.value;
+
+  @override
+  NoteBlob createBlob() {
+    return NoteBlob();
+  }
+
+  @override
+  void setCustomFromModelToBlob(NoteModel model, NoteBlob blob) {
+  }
+
+  @override
+  NoteModel createModel({required String id, required String iv}) {
+    return NoteModel(id: id, iv: iv);
+  }
+
+  @override
+  NoteBlob? blobFromString(String serialized) {
+    return NoteBlob.deserialize(serialized);
+  }
+
+  @override
+  void setCustomFromBlobToModel(NoteBlob blob, NoteModel model) {
+  }
+}
+
 class ModelToDbConverter {
   static Item fromModelToItem<Model extends ItemModel>({required Model model}) {
     final BaseConverter converter = _getConverterForModel(model: model);
@@ -226,6 +254,9 @@ class ModelToDbConverter {
         return BankAccountConverter();
       case FFModel _:
         return FFConverter();
+      case NoteModel _:
+        return 
+            NoteConverter();
       default:
         throw StateError("could not find converter");
     }
@@ -240,6 +271,8 @@ class ModelToDbConverter {
         return BankAccountConverter();
       case ItemType.ff:
         return FFConverter();
+      case ItemType.note:
+        return NoteConverter();
       default:
         throw StateError("Unknown itemType: $itemType");
     }

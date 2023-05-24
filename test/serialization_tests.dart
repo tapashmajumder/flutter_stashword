@@ -132,4 +132,24 @@ void main() {
     expect(newModel.ffNo, equals(ffNo));
     expect(newModel.supportNo, equals(supportNo));
   });
+
+  test('FF Note Serialization', () {
+    const id = "id1";
+    const iv = "iv1";
+    const notes = "this is some note";
+
+    final model = NoteModel(
+      id: id,
+      iv: iv,
+    );
+    model.notes = notes;
+
+    Item item = ModelToDbConverter.fromModelToItem(model: model);
+    final NoteModel newModel = ModelToDbConverter.fromItemToModel(item: item);
+
+    expect(newModel.id, equals(id));
+    expect(newModel.iv, equals(iv));
+    expect(newModel.itemType, equals(ItemType.note));
+    expect(newModel.notes, notes);
+  });
 }
