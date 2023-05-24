@@ -44,7 +44,7 @@ class PasswordBlob extends BaseBlob {
 
   Map<String, dynamic> toJson() => _$PasswordBlobToJson(this);
 
-  static PasswordBlob? deserialize<T>(String source) {
+  static PasswordBlob? deserialize(String source) {
     try {
       final decoded = json.decode(source);
       return PasswordBlob.fromJson(decoded);
@@ -70,7 +70,7 @@ class BankAccountBlob extends BaseBlob {
 
   Map<String, dynamic> toJson() => _$BankAccountBlobToJson(this);
 
-  static BankAccountBlob? deserialize<T>(String source) {
+  static BankAccountBlob? deserialize(String source) {
     try {
       final decoded = json.decode(source);
       return BankAccountBlob.fromJson(decoded);

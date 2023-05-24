@@ -1,5 +1,6 @@
 import 'package:collection/collection.dart';
 import 'package:json_annotation/json_annotation.dart';
+import 'package:equatable/equatable.dart';
 
 part 'item_models.g.dart';
 
@@ -123,7 +124,7 @@ class DocField {
 }
 
 @JsonSerializable()
-class CustomFieldInfo {
+class CustomFieldInfo extends Equatable{
   String name;
   String value;
   FieldType type;
@@ -136,6 +137,9 @@ class CustomFieldInfo {
 
   factory CustomFieldInfo.fromJson(Map<String, dynamic> json) => _$CustomFieldInfoFromJson(json);
   Map<String, dynamic> toJson() => _$CustomFieldInfoToJson(this);
+
+  @override
+  List<Object?> get props => [name, value, type];
 }
 
 sealed class ItemModel {

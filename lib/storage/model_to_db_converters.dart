@@ -33,7 +33,7 @@ abstract class BaseConverter<Blob extends BaseBlob, Model extends ItemModel> {
 
   Item itemFromItemModel({required Model model}) {
     final item = Item(
-      itemType: ItemType.password.value,
+      itemType: model.itemType.value,
       id: model.id,
       iv: model.iv,
     );
@@ -188,9 +188,9 @@ class ModelToDbConverter {
 
   static BaseConverter _getConverterForModel({required ItemModel model}) {
     switch (model) {
-      case PasswordModel:
+      case PasswordModel _:
         return PasswordConverter();
-      case BankAccountModel:
+      case BankAccountModel _:
         return BankAccountConverter();
       default:
         throw StateError("could not find converter");
