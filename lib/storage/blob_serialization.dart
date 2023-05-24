@@ -79,3 +79,26 @@ class BankAccountBlob extends BaseBlob {
     }
   }
 }
+
+@JsonSerializable(includeIfNull: false)
+class FFBlob extends BaseBlob {
+  String? ffNo;
+  String? supportNo;
+
+  FFBlob();
+
+  // Json Helpers
+  factory FFBlob.fromJson(Map<String, dynamic> json) =>
+      _$FFBlobFromJson(json);
+
+  Map<String, dynamic> toJson() => _$FFBlobToJson(this);
+
+  static FFBlob? deserialize(String source) {
+    try {
+      final decoded = json.decode(source);
+      return FFBlob.fromJson(decoded);
+    } catch (e) {
+      return null;
+    }
+  }
+}

@@ -108,4 +108,28 @@ void main() {
     expect(newModel.supportNo, equals(supportNo));
     expect(newModel.pinNo, equals(pinNo));
   });
+
+  test('FF Model Serialization', () {
+    const id = "id1";
+    const iv = "iv1";
+
+    const ffNo = "ff-no";
+    const supportNo = "support-no";
+
+    final model = FFModel(
+      id: id,
+      iv: iv,
+    );
+    model.ffNo = ffNo;
+    model.supportNo = supportNo;
+
+    Item item = ModelToDbConverter.fromModelToItem(model: model);
+    final FFModel newModel = ModelToDbConverter.fromItemToModel(item: item);
+
+    expect(newModel.id, equals(id));
+    expect(newModel.iv, equals(iv));
+    expect(newModel.itemType, equals(ItemType.ff));
+    expect(newModel.ffNo, equals(ffNo));
+    expect(newModel.supportNo, equals(supportNo));
+  });
 }

@@ -175,6 +175,38 @@ class BankAccountConverter extends BaseConverter<BankAccountBlob, BankAccountMod
   }
 }
 
+class FFConverter extends BaseConverter<FFBlob, FFModel> {
+  @override
+  String get itemType => ItemType.ff.value;
+
+  @override
+  FFBlob createBlob() {
+    return FFBlob();
+  }
+
+  @override
+  void setCustomFromModelToBlob(FFModel model, FFBlob blob) {
+    blob.ffNo = model.ffNo;
+    blob.supportNo = model.supportNo;
+  }
+
+  @override
+  FFModel createModel({required String id, required String iv}) {
+    return FFModel(id: id, iv: iv);
+  }
+
+  @override
+  FFBlob? blobFromString(String serialized) {
+    return FFBlob.deserialize(serialized);
+  }
+
+  @override
+  void setCustomFromBlobToModel(FFBlob blob, FFModel model) {
+    model.ffNo = blob.ffNo;
+    model.supportNo = blob.supportNo;
+  }
+}
+
 class ModelToDbConverter {
   static Item fromModelToItem<Model extends ItemModel>({required Model model}) {
     final BaseConverter converter = _getConverterForModel(model: model);
@@ -192,6 +224,8 @@ class ModelToDbConverter {
         return PasswordConverter();
       case BankAccountModel _:
         return BankAccountConverter();
+      case FFModel _:
+        return FFConverter();
       default:
         throw StateError("could not find converter");
     }
@@ -204,6 +238,8 @@ class ModelToDbConverter {
         return PasswordConverter();
       case ItemType.bankAccount:
         return BankAccountConverter();
+      case ItemType.ff:
+        return FFConverter();
       default:
         throw StateError("Unknown itemType: $itemType");
     }

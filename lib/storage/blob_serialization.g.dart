@@ -108,3 +108,35 @@ Map<String, dynamic> _$BankAccountBlobToJson(BankAccountBlob instance) {
   writeNotNull('swiftCode', instance.swiftCode);
   return val;
 }
+
+FFBlob _$FFBlobFromJson(Map<String, dynamic> json) => FFBlob()
+  ..name = json['name'] as String?
+  ..notes = json['notes'] as String?
+  ..photoIds =
+      (json['photos'] as List<dynamic>).map((e) => e as String).toList()
+  ..tags =
+      (json['categories'] as List<dynamic>).map((e) => e as String).toList()
+  ..customFields = (json['custom'] as List<dynamic>)
+      .map((e) => CustomFieldInfo.fromJson(e as Map<String, dynamic>))
+      .toList()
+  ..ffNo = json['ffNo'] as String?
+  ..supportNo = json['supportNo'] as String?;
+
+Map<String, dynamic> _$FFBlobToJson(FFBlob instance) {
+  final val = <String, dynamic>{};
+
+  void writeNotNull(String key, dynamic value) {
+    if (value != null) {
+      val[key] = value;
+    }
+  }
+
+  writeNotNull('name', instance.name);
+  writeNotNull('notes', instance.notes);
+  val['photos'] = instance.photoIds;
+  val['categories'] = instance.tags;
+  val['custom'] = instance.customFields;
+  writeNotNull('ffNo', instance.ffNo);
+  writeNotNull('supportNo', instance.supportNo);
+  return val;
+}
