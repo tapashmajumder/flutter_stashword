@@ -137,6 +137,44 @@ class PasswordConverter extends BaseConverter<PasswordBlob, PasswordModel> {
   }
 }
 
+class BankAccountConverter extends BaseConverter<BankAccountBlob, BankAccountModel> {
+  @override
+  String get itemType => ItemType.bankAccount.value;
+
+  @override
+  BankAccountBlob createBlob() {
+    return BankAccountBlob();
+  }
+
+  @override
+  void setCustomFromModelToBlob(BankAccountModel model, BankAccountBlob blob) {
+    blob.accountNo = model.accountNo;
+    blob.routingNo = model.routingNo;
+    blob.supportNo = model.supportNo;
+    blob.pinNo = model.pinNo;
+    blob.swiftCode = model.swiftCode;
+  }
+
+  @override
+  BankAccountModel createModel({required String id, required String iv}) {
+    return BankAccountModel(id: id, iv: iv);
+  }
+
+  @override
+  BankAccountBlob? blobFromString(String serialized) {
+    return BankAccountBlob.deserialize(serialized);
+  }
+
+  @override
+  void setCustomFromBlobToModel(BankAccountBlob blob, BankAccountModel model) {
+    model.accountNo = blob.accountNo;
+    model.routingNo = blob.routingNo;
+    model.supportNo = blob.supportNo;
+    model.pinNo = blob.pinNo;
+    model.swiftCode = blob.swiftCode;
+  }
+}
+
 class ModelToDbConverter {
   static Item fromModelToItem<Model extends ItemModel>({required Model model}) {
     final BaseConverter converter = _getConverterForModel(model: model);
@@ -149,12 +187,13 @@ class ModelToDbConverter {
   }
 
   static BaseConverter _getConverterForModel({required ItemModel model}) {
-    if (model is PasswordModel) {
-      return PasswordConverter();
-    }
-
-    else {
-      throw StateError("could not find converter");
+    switch (model) {
+      case PasswordModel:
+        return PasswordConverter();
+      case BankAccountModel:
+        return BankAccountConverter();
+      default:
+        throw StateError("could not find converter");
     }
   }
 
@@ -163,8 +202,11 @@ class ModelToDbConverter {
     switch (itemType) {
       case ItemType.password:
         return PasswordConverter();
+      case ItemType.bankAccount:
+        return BankAccountConverter();
       default:
         throw StateError("Unknown itemType: $itemType");
     }
   }
 }
+

@@ -138,7 +138,7 @@ class CustomFieldInfo {
   Map<String, dynamic> toJson() => _$CustomFieldInfoToJson(this);
 }
 
-abstract class ItemModel {
+sealed class ItemModel {
   ItemType itemType;
   final String id;
   final String iv;

@@ -53,3 +53,29 @@ class PasswordBlob extends BaseBlob {
     }
   }
 }
+
+@JsonSerializable(includeIfNull: false)
+class BankAccountBlob extends BaseBlob {
+  String? accountNo;
+  String? routingNo;
+  String? supportNo;
+  String? pinNo;
+  String? swiftCode;
+
+  BankAccountBlob();
+
+  // Json Helpers
+  factory BankAccountBlob.fromJson(Map<String, dynamic> json) =>
+      _$BankAccountBlobFromJson(json);
+
+  Map<String, dynamic> toJson() => _$BankAccountBlobToJson(this);
+
+  static BankAccountBlob? deserialize<T>(String source) {
+    try {
+      final decoded = json.decode(source);
+      return BankAccountBlob.fromJson(decoded);
+    } catch (e) {
+      return null;
+    }
+  }
+}
