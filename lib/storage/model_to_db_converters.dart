@@ -235,6 +235,36 @@ class NoteConverter extends BaseConverter<NoteBlob, NoteModel> {
   }
 }
 
+class CodeConverter extends BaseConverter<CodeBlob, CodeModel> {
+  @override
+  String get itemType => ItemType.code.value;
+
+  @override
+  CodeBlob createBlob() {
+    return CodeBlob();
+  }
+
+  @override
+  void setCustomFromModelToBlob(CodeModel model, CodeBlob blob) {
+    blob.code = model.code;
+  }
+
+  @override
+  CodeModel createModel({required String id, required String iv}) {
+    return CodeModel(id: id, iv: iv);
+  }
+
+  @override
+  CodeBlob? blobFromString(String serialized) {
+    return CodeBlob.deserialize(serialized);
+  }
+
+  @override
+  void setCustomFromBlobToModel(CodeBlob blob, CodeModel model) {
+    model.code = blob.code;
+  }
+}
+
 class ModelToDbConverter {
   static Item fromModelToItem<Model extends ItemModel>({required Model model}) {
     final BaseConverter converter = _getConverterForModel(model: model);
@@ -257,6 +287,8 @@ class ModelToDbConverter {
       case NoteModel _:
         return 
             NoteConverter();
+      case CodeModel _:
+        return CodeConverter();
       default:
         throw StateError("could not find converter");
     }
@@ -273,6 +305,8 @@ class ModelToDbConverter {
         return FFConverter();
       case ItemType.note:
         return NoteConverter();
+      case ItemType.code:
+        return CodeConverter();
       default:
         throw StateError("Unknown itemType: $itemType");
     }
