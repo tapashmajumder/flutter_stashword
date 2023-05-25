@@ -172,4 +172,47 @@ void main() {
     expect(newModel.itemType, equals(ItemType.code));
     expect(newModel.code, code);
   });
+
+  test('Card Serialization', () {
+    const id = "id1";
+    const iv = "iv1";
+
+    const cardType = CardType.disc;
+    const cardHolderName = "Tapash Majumder";
+    const cardNumber = "123456781334";
+    const verificationNumber = "34534";
+    const expirationMonth = Month.september;
+    const expirationYear = Year.y2029;
+    const pinNumber = "1234";
+    const supportNumber = "1-800-123-4567";
+
+    final model = CardModel(
+      id: id,
+      iv: iv,
+    );
+    model.cardType = cardType;
+    model.cardHolderName = cardHolderName;
+    model.cardNumber = cardNumber;
+    model.verificationNumber = verificationNumber;
+    model.expirationMonth = expirationMonth;
+    model.expirationYear = expirationYear;
+    model.pinNumber = pinNumber;
+    model.supportNumber = supportNumber;
+
+    Item item = ModelToDbConverter.fromModelToItem(model: model);
+    final CardModel newModel = ModelToDbConverter.fromItemToModel(item: item);
+
+    expect(newModel.id, equals(id));
+    expect(newModel.iv, equals(iv));
+    expect(newModel.itemType, equals(ItemType.card));
+
+    expect(newModel.cardType, equals(cardType));
+    expect(newModel.cardHolderName, equals(cardHolderName));
+    expect(newModel.cardNumber, equals(cardNumber));
+    expect(newModel.verificationNumber, equals(verificationNumber));
+    expect(newModel.expirationMonth, equals(expirationMonth));
+    expect(newModel.expirationYear, equals(expirationYear));
+    expect(newModel.pinNumber, equals(pinNumber));
+    expect(newModel.supportNumber, equals(supportNumber));
+  });
 }

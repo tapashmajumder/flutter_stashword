@@ -265,6 +265,50 @@ class CodeConverter extends BaseConverter<CodeBlob, CodeModel> {
   }
 }
 
+class CardConverter extends BaseConverter<CardBlob, CardModel> {
+  @override
+  String get itemType => ItemType.card.value;
+
+  @override
+  CardBlob createBlob() {
+    return CardBlob();
+  }
+
+  @override
+  void setCustomFromModelToBlob(CardModel model, CardBlob blob) {
+    blob.cardType = model.cardType;
+    blob.cardHolderName = model.cardHolderName;
+    blob.cardNumber = model.cardNumber;
+    blob.verificationNumber = model.verificationNumber;
+    blob.expirationMonth = model.expirationMonth;
+    blob.expirationYear = model.expirationYear;
+    blob.pinNumber = model.pinNumber;
+    blob.supportNumber = model.supportNumber;
+  }
+
+  @override
+  CardModel createModel({required String id, required String iv}) {
+    return CardModel(id: id, iv: iv);
+  }
+
+  @override
+  CardBlob? blobFromString(String serialized) {
+    return CardBlob.deserialize(serialized);
+  }
+
+  @override
+  void setCustomFromBlobToModel(CardBlob blob, CardModel model) {
+    model.cardType = blob.cardType;
+    model.cardHolderName = blob.cardHolderName;
+    model.cardNumber = blob.cardNumber;
+    model.verificationNumber = blob.verificationNumber;
+    model.expirationMonth = blob.expirationMonth;
+    model.expirationYear = blob.expirationYear;
+    model.pinNumber = blob.pinNumber;
+    model.supportNumber = blob.supportNumber;
+  }
+}
+
 class ModelToDbConverter {
   static Item fromModelToItem<Model extends ItemModel>({required Model model}) {
     final BaseConverter converter = _getConverterForModel(model: model);
@@ -289,6 +333,8 @@ class ModelToDbConverter {
             NoteConverter();
       case CodeModel _:
         return CodeConverter();
+      case CardModel _:
+        return CardConverter();
       default:
         throw StateError("could not find converter");
     }
@@ -307,6 +353,8 @@ class ModelToDbConverter {
         return NoteConverter();
       case ItemType.code:
         return CodeConverter();
+      case ItemType.card:
+        return CardConverter();
       default:
         throw StateError("Unknown itemType: $itemType");
     }
