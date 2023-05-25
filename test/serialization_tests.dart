@@ -12,8 +12,8 @@ void main() {
     const iv = "iv1";
     const name = "zee-name";
     const notes = "zee-notes";
-    const photoIds = const ["id1", "id2"];
-    const tags = const ["category1", "category2"];
+    const photoIds = ["id1", "id2"];
+    const tags = ["category1", "category2"];
     final customFields = [
       CustomFieldInfo("customFieldName", "CustomFieldValue", FieldType.email)
     ];

@@ -266,6 +266,7 @@ sealed class ItemModel {
   DateTime? created;
   DateTime? lastUsed;
   DateTime? modified;
+  bool sharedItem;
   bool shared;
   String? sharedSecret;
 
@@ -283,6 +284,7 @@ sealed class ItemModel {
     this.created,
     this.lastUsed,
     this.modified,
+    this.sharedItem = false,
     this.shared = false,
     this.sharedSecret,
   });
@@ -307,6 +309,7 @@ class PasswordModel extends ItemModel {
     DateTime? created,
     DateTime? modified,
     DateTime? lastUsed,
+    bool sharedItem = false,
     bool shared = false,
     String? sharedSecret,
     this.url,
@@ -327,6 +330,7 @@ class PasswordModel extends ItemModel {
           created: created,
           modified: modified,
           lastUsed: lastUsed,
+          sharedItem: sharedItem,
           shared: shared,
           sharedSecret: sharedSecret,
         );
@@ -352,6 +356,7 @@ class BankAccountModel extends ItemModel {
     DateTime? created,
     DateTime? modified,
     DateTime? lastUsed,
+    bool sharedItem = false,
     bool shared = false,
     String? sharedSecret,
     this.accountNo,
@@ -373,6 +378,7 @@ class BankAccountModel extends ItemModel {
           created: created,
           modified: modified,
           lastUsed: lastUsed,
+          sharedItem: sharedItem,
           shared: shared,
           sharedSecret: sharedSecret,
         );
@@ -394,6 +400,7 @@ class CodeModel extends ItemModel {
     DateTime? created,
     DateTime? modified,
     DateTime? lastUsed,
+    bool sharedItem = false,
     bool shared = false,
     String? sharedSecret,
     this.code,
@@ -411,6 +418,7 @@ class CodeModel extends ItemModel {
           created: created,
           modified: modified,
           lastUsed: lastUsed,
+          sharedItem: sharedItem,
           shared: shared,
           sharedSecret: sharedSecret,
         );
@@ -433,6 +441,7 @@ class FFModel extends ItemModel {
     DateTime? created,
     DateTime? modified,
     DateTime? lastUsed,
+    bool sharedItem = false,
     bool shared = false,
     String? sharedSecret,
     this.ffNo,
@@ -451,6 +460,7 @@ class FFModel extends ItemModel {
           created: created,
           modified: modified,
           lastUsed: lastUsed,
+          sharedItem: sharedItem,
           shared: shared,
           sharedSecret: sharedSecret,
         );
@@ -470,6 +480,7 @@ class NoteModel extends ItemModel {
     DateTime? created,
     DateTime? modified,
     DateTime? lastUsed,
+    bool sharedItem = false,
     bool shared = false,
     String? sharedSecret,
   }) : super(
@@ -486,6 +497,7 @@ class NoteModel extends ItemModel {
           created: created,
           modified: modified,
           lastUsed: lastUsed,
+          sharedItem: sharedItem,
           shared: shared,
           sharedSecret: sharedSecret,
         );
@@ -514,6 +526,7 @@ class CardModel extends ItemModel {
     DateTime? created,
     DateTime? modified,
     DateTime? lastUsed,
+    bool sharedItem = false,
     bool shared = false,
     String? sharedSecret,
     this.cardType = CardType.other,
@@ -538,6 +551,7 @@ class CardModel extends ItemModel {
           created: created,
           modified: modified,
           lastUsed: lastUsed,
+          sharedItem: sharedItem,
           shared: shared,
           sharedSecret: sharedSecret,
         );
@@ -560,6 +574,7 @@ class DocModel extends ItemModel {
     DateTime? created,
     DateTime? modified,
     DateTime? lastUsed,
+    bool sharedItem = false,
     bool shared = false,
     String? sharedSecret,
     this.docType = DocType.other,
@@ -578,6 +593,7 @@ class DocModel extends ItemModel {
     created: created,
     modified: modified,
     lastUsed: lastUsed,
+    sharedItem: sharedItem,
     shared: shared,
     sharedSecret: sharedSecret,
   );
