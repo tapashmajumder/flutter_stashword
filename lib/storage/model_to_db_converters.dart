@@ -309,6 +309,38 @@ class CardConverter extends BaseConverter<CardBlob, CardModel> {
   }
 }
 
+class DocConverter extends BaseConverter<DocBlob, DocModel> {
+  @override
+  String get itemType => ItemType.doc.value;
+
+  @override
+  DocBlob createBlob() {
+    return DocBlob();
+  }
+
+  @override
+  void setCustomFromModelToBlob(DocModel model, DocBlob blob) {
+    blob.docType = model.docType;
+    blob.fields = model.fields;
+  }
+
+  @override
+  DocModel createModel({required String id, required String iv}) {
+    return DocModel(id: id, iv: iv);
+  }
+
+  @override
+  DocBlob? blobFromString(String serialized) {
+    return DocBlob.deserialize(serialized);
+  }
+
+  @override
+  void setCustomFromBlobToModel(DocBlob blob, DocModel model) {
+    model.docType = blob.docType;
+    model.fields = blob.fields;
+  }
+}
+
 class ModelToDbConverter {
   static Item fromModelToItem<Model extends ItemModel>({required Model model}) {
     final BaseConverter converter = _getConverterForModel(model: model);
@@ -335,8 +367,8 @@ class ModelToDbConverter {
         return CodeConverter();
       case CardModel _:
         return CardConverter();
-      default:
-        throw StateError("could not find converter");
+      case DocModel _:
+        return DocConverter();
     }
   }
 
@@ -355,8 +387,8 @@ class ModelToDbConverter {
         return CodeConverter();
       case ItemType.card:
         return CardConverter();
-      default:
-        throw StateError("Unknown itemType: $itemType");
+      case ItemType.doc:
+        return DocConverter();
     }
   }
 }

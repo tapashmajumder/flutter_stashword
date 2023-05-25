@@ -215,4 +215,33 @@ void main() {
     expect(newModel.pinNumber, equals(pinNumber));
     expect(newModel.supportNumber, equals(supportNumber));
   });
+
+  test('Doc Serialization', () {
+    const id = "id1";
+    const iv = "iv1";
+
+    const docType = DocType.insurance;
+    final List<DocField> fields = [
+      DocField(fieldType: FieldType.email, label: "the email", placeHolder: "the email placeholder"),
+      DocField(fieldType: FieldType.date, label: "the date", placeHolder: "the date placeholder"),
+      DocField(fieldType: FieldType.number, label: "the number", placeHolder: "the number placeholder"),
+    ];
+
+    final model = DocModel(
+      id: id,
+      iv: iv,
+    );
+    model.docType = docType;
+    model.fields = fields;
+
+    Item item = ModelToDbConverter.fromModelToItem(model: model);
+    final DocModel newModel = ModelToDbConverter.fromItemToModel(item: item);
+
+    expect(newModel.id, equals(id));
+    expect(newModel.iv, equals(iv));
+    expect(newModel.itemType, equals(ItemType.doc));
+
+    expect(newModel.docType, equals(docType));
+    expect(newModel.fields, equals(fields));
+  });
 }
