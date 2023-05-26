@@ -46,6 +46,12 @@ class SharedItem implements WithId {
     required this.iv,
     required this.sharer,
     required this.sharedSecret,
+    this.colorIndex,
+    this.addToWatch = false,
+    this.blob,
+    this.created,
+    this.modified,
+    this.lastUsed,
   });
 
   @override

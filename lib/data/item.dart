@@ -40,7 +40,19 @@ class Item implements WithId {
   @HiveField(10)
   String? sharedSecret;
 
-  Item({required this.itemType, required this.id, required this.iv});
+  Item({
+    required this.itemType,
+    required this.id,
+    required this.iv,
+    this.addToWatch = false,
+    this.blob,
+    this.colorIndex,
+    this.created,
+    this.lastUsed,
+    this.modified,
+    this.shared = false,
+    this.sharedSecret,
+  });
 
   @override
   String toString() {

@@ -152,6 +152,8 @@ void main() {
     });
 
     testWidgets('Delete All', (WidgetTester tester) async {
+      await tester.runAsync(() => crud.deleteAll());
+
       const List<String> ids = ["1", "2", "3", "4"];
       for (var id in ids) {
         await addItem(tester: tester, id: id);

@@ -22,13 +22,13 @@ class SharedItemAdapter extends TypeAdapter<SharedItem> {
       iv: fields[6] as String,
       sharer: fields[10] as String,
       sharedSecret: fields[9] as String,
-    )
-      ..addToWatch = fields[1] as bool
-      ..blob = fields[2] as String?
-      ..colorIndex = fields[3] as int?
-      ..created = fields[4] as DateTime?
-      ..lastUsed = fields[7] as DateTime?
-      ..modified = fields[8] as DateTime?;
+      colorIndex: fields[3] as int?,
+      addToWatch: fields[1] as bool,
+      blob: fields[2] as String?,
+      created: fields[4] as DateTime?,
+      modified: fields[8] as DateTime?,
+      lastUsed: fields[7] as DateTime?,
+    );
   }
 
   @override

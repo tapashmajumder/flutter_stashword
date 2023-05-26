@@ -76,7 +76,7 @@ abstract class BaseConverter<Blob extends BaseBlob, Model extends ItemModel> {
 
   static void _setBaseValuesInModelFromItem(ItemModel model, Item item) {
     model.addToWatch = item.addToWatch;
-    model.colorIndex = item.colorIndex ?? 0;
+    model.colorIndex = item.colorIndex;
     model.created = item.created;
     model.lastUsed = item.lastUsed;
     model.modified = item.modified;
