@@ -111,6 +111,8 @@ SharedItemJson _$SharedItemJsonFromJson(Map<String, dynamic> json) =>
       itemType: $enumDecode(_$ItemTypeEnumMap, json['itemType']),
       id: json['id'] as String,
       iv: json['iv'] as String,
+      sharer: json['sharer'] as String,
+      sharedSecret: json['sharedSecret'] as String,
       blob: json['blob'] as String?,
       addToWatch: json['addToWatch'] as bool? ?? false,
       colorIndex: json['colorIndex'] as int?,
@@ -119,8 +121,6 @@ SharedItemJson _$SharedItemJsonFromJson(Map<String, dynamic> json) =>
           AceUtil.nullableMillisecondsToDateTime(json['lastUsed'] as int?),
       modified:
           AceUtil.nullableMillisecondsToDateTime(json['modified'] as int?),
-      sharer: json['sharer'] as String?,
-      sharedSecret: json['sharedSecret'] as String?,
     );
 
 Map<String, dynamic> _$SharedItemJsonToJson(SharedItemJson instance) {
@@ -145,7 +145,7 @@ Map<String, dynamic> _$SharedItemJsonToJson(SharedItemJson instance) {
       'lastUsed', AceUtil.nullableDateTimeToMilliseconds(instance.lastUsed));
   writeNotNull(
       'modified', AceUtil.nullableDateTimeToMilliseconds(instance.modified));
-  writeNotNull('sharer', instance.sharer);
-  writeNotNull('sharedSecret', instance.sharedSecret);
+  val['sharer'] = instance.sharer;
+  val['sharedSecret'] = instance.sharedSecret;
   return val;
 }

@@ -114,21 +114,21 @@ class SharedItemJson {
     fromJson: AceUtil.nullableMillisecondsToDateTime,
   )
   DateTime? modified;
-  String? sharer;
-  String? sharedSecret;
+  String sharer;
+  String sharedSecret;
 
   SharedItemJson({
     required this.itemType,
     required this.id,
     required this.iv,
+    required this.sharer,
+    required this.sharedSecret,
     this.blob,
     this.addToWatch = false,
     this.colorIndex,
     this.created,
     this.lastUsed,
     this.modified,
-    this.sharer,
-    this.sharedSecret,
   });
 
   factory SharedItemJson.fromJson(Map<String, dynamic> json) => _$SharedItemJsonFromJson(json);

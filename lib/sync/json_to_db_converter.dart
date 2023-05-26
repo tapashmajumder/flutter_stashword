@@ -1,6 +1,7 @@
 
 import 'package:Stashword/data/item.dart';
 import 'package:Stashword/data/item_delete_info.dart';
+import 'package:Stashword/data/shared_item.dart';
 import 'package:Stashword/model/item_models.dart';
 import 'package:Stashword/sync/server_jsons.dart';
 
@@ -54,6 +55,44 @@ class JsonToDb {
       id: itemDeleteInfo.id,
       deleteDate: itemDeleteInfo.deleteDate,
     );
+    return json;
+  }
+
+  static SharedItem fromSharedItemJsonToSharedItem(SharedItemJson json) {
+    final sharedItem = SharedItem(
+      itemType: json.itemType.value,
+      id: json.id,
+      iv: json.iv,
+      sharer: json.sharer,
+      sharedSecret: json.sharedSecret,
+    );
+    sharedItem.addToWatch = json.addToWatch;
+    sharedItem.blob = json.blob;
+    sharedItem.colorIndex = json.colorIndex;
+    sharedItem.created = json.created;
+    sharedItem.lastUsed = json.modified;
+    sharedItem.modified = json.modified;
+    sharedItem.sharer = json.sharer;
+    sharedItem.sharedSecret = json.sharedSecret;
+
+    return sharedItem;
+  }
+
+  static SharedItemJson fromSharedItemToSharedItemJson(SharedItem sharedItem) {
+    final json = SharedItemJson(
+      itemType: ItemTypeExtension.fromString(value: sharedItem.itemType) ?? ItemType.password,
+      id: sharedItem.id,
+      iv: sharedItem.iv,
+      sharer: sharedItem.sharer,
+      sharedSecret: sharedItem.sharedSecret,
+    );
+    json.addToWatch = sharedItem.addToWatch;
+    json.blob = sharedItem.blob;
+    json.colorIndex = sharedItem.colorIndex;
+    json.created = sharedItem.created;
+    json.lastUsed = sharedItem.modified;
+    json.modified = sharedItem.modified;
+
     return json;
   }
 }

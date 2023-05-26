@@ -2,6 +2,7 @@ import 'dart:convert';
 
 import 'package:Stashword/data/item.dart';
 import 'package:Stashword/data/item_delete_info.dart';
+import 'package:Stashword/data/shared_item.dart';
 import 'package:Stashword/model/item_models.dart';
 import 'package:Stashword/storage/blob_serialization.dart';
 import 'package:Stashword/sync/json_to_db_converter.dart';
@@ -82,14 +83,14 @@ void main() {
   String createSharedPasswordJsonFromServer({
     required String id,
     required String iv,
+    required String sharer,
+    required String sharedSecret,
     String? name,
     bool addToWatch = false,
     int? colorIndex,
     DateTime? created,
     DateTime? lastUsed,
     DateTime? modified,
-    String? sharer,
-    String? sharedSecret,
     List<String> photoIds = const [],
     List<String> categories = const [],
     List<CustomFieldInfo> customFields = const [],
@@ -111,7 +112,13 @@ void main() {
       otpToken: otpToken,
     );
 
-    final itemJson = SharedItemJson(itemType: ItemType.password, id: id, iv: iv);
+    final itemJson = SharedItemJson(
+      itemType: ItemType.password,
+      id: id,
+      iv: iv,
+      sharer: sharer,
+      sharedSecret: sharedSecret,
+    );
     itemJson.blob = blob;
     itemJson.addToWatch = addToWatch;
     itemJson.colorIndex = colorIndex;
@@ -265,9 +272,9 @@ void main() {
     expect(itemJson.blob, blob);
     expect(itemJson.addToWatch, addToWatch);
     expect(itemJson.colorIndex, colorIndex);
-    expect(itemJson.created, created);
-    expect(itemJson.lastUsed, lastUsed);
-    expect(itemJson.modified, modified);
+    expect(itemJson.created?.millisecondsSinceEpoch, created.millisecondsSinceEpoch);
+    expect(itemJson.lastUsed?.millisecondsSinceEpoch, lastUsed.millisecondsSinceEpoch);
+    expect(itemJson.modified?.millisecondsSinceEpoch, modified.millisecondsSinceEpoch);
     expect(itemJson.shared, shared);
     expect(itemJson.sharedSecret, sharedSecret);
   });
@@ -348,14 +355,14 @@ void main() {
     String passwordJson = createSharedPasswordJsonFromServer(
       id: id,
       iv: iv,
+      sharer: sharer,
+      sharedSecret: sharedSecret,
       name: name,
       addToWatch: addToWatch,
       colorIndex: colorIndex,
       created: created,
       lastUsed: lastUsed,
       modified: modified,
-      sharer: sharer,
-      sharedSecret: sharedSecret,
       photoIds: photoIds,
       categories: categories,
       customFields: customFields,
@@ -379,5 +386,85 @@ void main() {
     expect(decoded.modified?.millisecondsSinceEpoch, modified.millisecondsSinceEpoch);
     expect(decoded.sharer, sharer);
     expect(decoded.sharedSecret, sharedSecret);
+  });
+
+  test("SharedItemJson to SharedItem conversion", () {
+    const id = "id1";
+    const iv = "iv1";
+    const itemType = ItemType.doc;
+    const addToWatch = true;
+    const colorIndex = 23;
+    final created = DateTime.timestamp();
+    final lastUsed = DateTime.timestamp();
+    final modified = DateTime.timestamp();
+    const sharer = "user1@example.com";
+    const sharedSecret = "zee-shared-secret";
+    const blob = "this is some blob";
+    final sharedItemJson = SharedItemJson(
+      itemType: itemType,
+      id: id,
+      iv: iv,
+      sharer: sharer,
+      sharedSecret: sharedSecret,
+      addToWatch: addToWatch,
+      colorIndex: colorIndex,
+      created: created,
+      lastUsed: lastUsed,
+      modified: modified,
+    );
+    sharedItemJson.blob = blob;
+
+    final sharedItem = JsonToDb.fromSharedItemJsonToSharedItem(sharedItemJson);
+    expect(sharedItem.itemType, itemType.value);
+    expect(sharedItem.id, id);
+    expect(sharedItem.iv, iv);
+    expect(sharedItem.sharer, sharer);
+    expect(sharedItem.sharedSecret, sharedSecret);
+    expect(sharedItem.blob, blob);
+    expect(sharedItem.addToWatch, addToWatch);
+    expect(sharedItem.colorIndex, colorIndex);
+    expect(sharedItem.created?.millisecondsSinceEpoch, created.millisecondsSinceEpoch);
+    expect(sharedItem.lastUsed?.millisecondsSinceEpoch, lastUsed.millisecondsSinceEpoch);
+    expect(sharedItem.modified?.millisecondsSinceEpoch, modified.millisecondsSinceEpoch);
+  });
+
+  test("SharedItem to SharedItemJson conversion", () {
+    const id = "id1";
+    const iv = "iv1";
+    const itemType = ItemType.doc;
+    const addToWatch = true;
+    const colorIndex = 23;
+    final created = DateTime.timestamp();
+    final lastUsed = DateTime.timestamp();
+    final modified = DateTime.timestamp();
+    const sharer = "user1@example.com";
+    const sharedSecret = "zee-shared-secret";
+    const blob = "this is some blob";
+    final sharedItem = SharedItem(
+      itemType: itemType.value,
+      id: id,
+      iv: iv,
+      sharer: sharer,
+      sharedSecret: sharedSecret,
+      addToWatch: addToWatch,
+      colorIndex: colorIndex,
+      created: created,
+      lastUsed: lastUsed,
+      modified: modified,
+    );
+    sharedItem.blob = blob;
+
+    final sharedItemJson = JsonToDb.fromSharedItemToSharedItemJson(sharedItem);
+    expect(sharedItemJson.itemType, itemType);
+    expect(sharedItemJson.id, id);
+    expect(sharedItemJson.iv, iv);
+    expect(sharedItemJson.sharer, sharer);
+    expect(sharedItemJson.sharedSecret, sharedSecret);
+    expect(sharedItemJson.blob, blob);
+    expect(sharedItemJson.addToWatch, addToWatch);
+    expect(sharedItemJson.colorIndex, colorIndex);
+    expect(sharedItemJson.created?.millisecondsSinceEpoch, created.millisecondsSinceEpoch);
+    expect(sharedItemJson.lastUsed?.millisecondsSinceEpoch, lastUsed.millisecondsSinceEpoch);
+    expect(sharedItemJson.modified?.millisecondsSinceEpoch, modified.millisecondsSinceEpoch);
   });
 }
