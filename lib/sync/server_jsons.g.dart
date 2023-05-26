@@ -6,6 +6,41 @@ part of 'server_jsons.dart';
 // JsonSerializableGenerator
 // **************************************************************************
 
+SyncInfo _$SyncInfoFromJson(Map<String, dynamic> json) => SyncInfo(
+      lastSyncDate:
+          AceUtil.millisecondsToDateTimeNullable(json['lastSyncDate'] as int?),
+      createdItems: (json['createdItems'] as List<dynamic>?)
+              ?.map((e) => ItemJson.fromJson(e as Map<String, dynamic>))
+              .toList() ??
+          const [],
+      modifiedItems: (json['modifiedItems'] as List<dynamic>?)
+              ?.map((e) => ItemJson.fromJson(e as Map<String, dynamic>))
+              .toList() ??
+          const [],
+      deletedItems: (json['deletedItems'] as List<dynamic>?)
+              ?.map(
+                  (e) => ItemDeleteInfoJson.fromJson(e as Map<String, dynamic>))
+              .toList() ??
+          const [],
+    );
+
+Map<String, dynamic> _$SyncInfoToJson(SyncInfo instance) {
+  final val = <String, dynamic>{};
+
+  void writeNotNull(String key, dynamic value) {
+    if (value != null) {
+      val[key] = value;
+    }
+  }
+
+  writeNotNull('lastSyncDate',
+      AceUtil.dateTimeToMillisecondsNullable(instance.lastSyncDate));
+  val['createdItems'] = instance.createdItems;
+  val['modifiedItems'] = instance.modifiedItems;
+  val['deletedItems'] = instance.deletedItems;
+  return val;
+}
+
 ItemJson _$ItemJsonFromJson(Map<String, dynamic> json) => ItemJson(
       itemType: $enumDecode(_$ItemTypeEnumMap, json['itemType']),
       id: json['id'] as String,
@@ -13,9 +48,11 @@ ItemJson _$ItemJsonFromJson(Map<String, dynamic> json) => ItemJson(
       blob: json['blob'] as String?,
       addToWatch: json['addToWatch'] as bool? ?? false,
       colorIndex: json['colorIndex'] as int?,
-      created: AceUtil.millisecondsToDateTime(json['created'] as int?),
-      lastUsed: AceUtil.millisecondsToDateTime(json['lastUsed'] as int?),
-      modified: AceUtil.millisecondsToDateTime(json['modified'] as int?),
+      created: AceUtil.millisecondsToDateTimeNullable(json['created'] as int?),
+      lastUsed:
+          AceUtil.millisecondsToDateTimeNullable(json['lastUsed'] as int?),
+      modified:
+          AceUtil.millisecondsToDateTimeNullable(json['modified'] as int?),
       shared: json['shared'] as bool? ?? false,
       sharedSecret: json['sharedSecret'] as String?,
     );
@@ -36,9 +73,12 @@ Map<String, dynamic> _$ItemJsonToJson(ItemJson instance) {
   writeNotNull('blob', instance.blob);
   val['addToWatch'] = instance.addToWatch;
   writeNotNull('colorIndex', instance.colorIndex);
-  writeNotNull('created', AceUtil.dateTimeToMilliseconds(instance.created));
-  writeNotNull('lastUsed', AceUtil.dateTimeToMilliseconds(instance.lastUsed));
-  writeNotNull('modified', AceUtil.dateTimeToMilliseconds(instance.modified));
+  writeNotNull(
+      'created', AceUtil.dateTimeToMillisecondsNullable(instance.created));
+  writeNotNull(
+      'lastUsed', AceUtil.dateTimeToMillisecondsNullable(instance.lastUsed));
+  writeNotNull(
+      'modified', AceUtil.dateTimeToMillisecondsNullable(instance.modified));
   val['shared'] = instance.shared;
   writeNotNull('sharedSecret', instance.sharedSecret);
   return val;
@@ -53,3 +93,15 @@ const _$ItemTypeEnumMap = {
   ItemType.card: 'Wallet',
   ItemType.doc: 'Doc',
 };
+
+ItemDeleteInfoJson _$ItemDeleteInfoJsonFromJson(Map<String, dynamic> json) =>
+    ItemDeleteInfoJson(
+      id: json['id'] as String,
+      deleteDate: AceUtil.millisecondsToDateTime(json['deleteDate'] as int),
+    );
+
+Map<String, dynamic> _$ItemDeleteInfoJsonToJson(ItemDeleteInfoJson instance) =>
+    <String, dynamic>{
+      'id': instance.id,
+      'deleteDate': AceUtil.dateTimeToMilliseconds(instance.deleteDate),
+    };

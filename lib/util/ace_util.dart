@@ -1,9 +1,9 @@
 final class AceUtil {
-  static int? dateTimeToMilliseconds(DateTime? dateTime) =>
-      dateTime?.millisecondsSinceEpoch;
+  static int? dateTimeToMillisecondsNullable(DateTime? dateTime) => dateTime?.millisecondsSinceEpoch;
 
-  static DateTime? millisecondsToDateTime(int?milliseconds) =>
-      milliseconds != null
-          ? DateTime.fromMillisecondsSinceEpoch(milliseconds)
-          : null;
+  static DateTime? millisecondsToDateTimeNullable(int? milliseconds) => milliseconds != null ? DateTime.fromMillisecondsSinceEpoch(milliseconds) : null;
+
+  static int dateTimeToMilliseconds(DateTime dateTime) => dateTime.millisecondsSinceEpoch;
+
+  static DateTime millisecondsToDateTime(int milliseconds) => DateTime.fromMillisecondsSinceEpoch(milliseconds);
 }

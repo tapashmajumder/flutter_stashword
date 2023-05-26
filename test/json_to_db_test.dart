@@ -1,6 +1,7 @@
 import 'dart:convert';
 
 import 'package:Stashword/data/item.dart';
+import 'package:Stashword/data/item_delete_info.dart';
 import 'package:Stashword/model/item_models.dart';
 import 'package:Stashword/storage/blob_serialization.dart';
 import 'package:Stashword/sync/json_to_db_converter.dart';
@@ -172,7 +173,7 @@ void main() {
     );
     itemJson.blob = blob;
 
-    final item = JsonToDb.fromJsonToDb(itemJson);
+    final item = JsonToDb.fromItemJsonToItem(itemJson);
     expect(item.itemType, itemType.value);
     expect(item.id, id);
     expect(item.iv, iv);
@@ -212,7 +213,7 @@ void main() {
     );
     item.blob = blob;
 
-    final itemJson = JsonToDb.fromDbToJson(item);
+    final itemJson = JsonToDb.fromItemToItemJson(item);
     expect(itemJson.itemType, itemType);
     expect(itemJson.id, id);
     expect(itemJson.iv, iv);
@@ -224,5 +225,46 @@ void main() {
     expect(itemJson.modified, modified);
     expect(itemJson.shared, shared);
     expect(itemJson.sharedSecret, sharedSecret);
+  });
+
+  test("ItemDeleteInfoJson to ItemDeleteInfo conversion", () {
+    const id = "id1";
+    final deleteDate = DateTime.timestamp();
+    final json = ItemDeleteInfoJson(
+      id: id,
+      deleteDate: deleteDate,
+    );
+
+    final itemDeleteInfo = JsonToDb.fromItemDeleteInfoJsonToItemDeleteInfo(json);
+    expect(itemDeleteInfo.id, id);
+    expect(itemDeleteInfo.deleteDate, deleteDate);
+  });
+
+  test("ItemDeleteInfo to ItemDeleteInfoJson conversion", () {
+    const id = "id1";
+    final deleteDate = DateTime.timestamp();
+    final itemDeleteInfo = ItemDeleteInfo(
+      id: id,
+      deleteDate: deleteDate,
+    );
+
+    final json = JsonToDb.fromItemDeleteInfoToItemDeleteInfoJson(itemDeleteInfo);
+    expect(json.id, id);
+    expect(json.deleteDate, deleteDate);
+  });
+
+  test("create ItemDeleteInfo json from server", () {
+    const id = "id1";
+    final deleteDate = DateTime.timestamp();
+    final itemDeleteInfoJson = ItemDeleteInfoJson(
+      id: id,
+      deleteDate: deleteDate,
+    );
+
+    String encoded = jsonEncode(itemDeleteInfoJson);
+    final decoded = ItemDeleteInfoJson.fromJson(jsonDecode(encoded));
+
+    expect(decoded.id, id);
+    expect(decoded.deleteDate.millisecondsSinceEpoch, deleteDate.millisecondsSinceEpoch);
   });
 }

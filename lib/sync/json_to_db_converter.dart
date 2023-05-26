@@ -1,10 +1,11 @@
 
 import 'package:Stashword/data/item.dart';
+import 'package:Stashword/data/item_delete_info.dart';
 import 'package:Stashword/model/item_models.dart';
 import 'package:Stashword/sync/server_jsons.dart';
 
 class JsonToDb {
-  static Item fromJsonToDb(ItemJson json) {
+  static Item fromItemJsonToItem(ItemJson json) {
     final item = Item(
       itemType: json.itemType.value,
       id: json.id,
@@ -22,7 +23,7 @@ class JsonToDb {
     return item;
   }
 
-  static ItemJson fromDbToJson(Item item) {
+  static ItemJson fromItemToItemJson(Item item) {
     final json = ItemJson(
       itemType: ItemTypeExtension.fromString(value: item.itemType) ?? ItemType.password,
       id: item.id,
@@ -37,6 +38,22 @@ class JsonToDb {
     json.shared = item.shared;
     json.sharedSecret = item.sharedSecret;
 
+    return json;
+  }
+
+  static ItemDeleteInfo fromItemDeleteInfoJsonToItemDeleteInfo(ItemDeleteInfoJson json) {
+    final itemDeleteInfo = ItemDeleteInfo(
+        id: json.id,
+        deleteDate: json.deleteDate,
+    );
+    return itemDeleteInfo;
+  }
+
+  static ItemDeleteInfoJson fromItemDeleteInfoToItemDeleteInfoJson(ItemDeleteInfo itemDeleteInfo) {
+    final json = ItemDeleteInfoJson(
+      id: itemDeleteInfo.id,
+      deleteDate: itemDeleteInfo.deleteDate,
+    );
     return json;
   }
 }

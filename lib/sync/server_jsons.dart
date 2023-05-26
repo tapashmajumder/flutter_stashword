@@ -6,6 +6,28 @@ import 'package:Stashword/util/ace_util.dart';
 part 'server_jsons.g.dart';
 
 @JsonSerializable(includeIfNull: false)
+class SyncInfo {
+  @JsonKey(
+    toJson: AceUtil.dateTimeToMillisecondsNullable,
+    fromJson: AceUtil.millisecondsToDateTimeNullable,
+  )
+  DateTime? lastSyncDate;
+  List<ItemJson> createdItems;
+  List<ItemJson> modifiedItems;
+  List<ItemDeleteInfoJson> deletedItems;
+
+  SyncInfo({
+    this.lastSyncDate,
+    this.createdItems = const [],
+    this.modifiedItems = const [],
+    this.deletedItems = const [],
+  });
+
+  factory SyncInfo.fromJson(Map<String, dynamic> json) => _$SyncInfoFromJson(json);
+  Map<String, dynamic> toJson() => _$SyncInfoToJson(this);
+}
+
+@JsonSerializable(includeIfNull: false)
 class ItemJson {
   ItemType itemType;
   String id;
@@ -14,18 +36,18 @@ class ItemJson {
   bool addToWatch;
   int? colorIndex;
   @JsonKey(
-    toJson: AceUtil.dateTimeToMilliseconds,
-    fromJson: AceUtil.millisecondsToDateTime,
+    toJson: AceUtil.dateTimeToMillisecondsNullable,
+    fromJson: AceUtil.millisecondsToDateTimeNullable,
   )
   DateTime? created;
   @JsonKey(
-    toJson: AceUtil.dateTimeToMilliseconds,
-    fromJson: AceUtil.millisecondsToDateTime,
+    toJson: AceUtil.dateTimeToMillisecondsNullable,
+    fromJson: AceUtil.millisecondsToDateTimeNullable,
   )
   DateTime? lastUsed;
   @JsonKey(
-    toJson: AceUtil.dateTimeToMilliseconds,
-    fromJson: AceUtil.millisecondsToDateTime,
+    toJson: AceUtil.dateTimeToMillisecondsNullable,
+    fromJson: AceUtil.millisecondsToDateTimeNullable,
   )
   DateTime? modified;
   bool shared;
@@ -45,8 +67,26 @@ class ItemJson {
     this.sharedSecret,
   });
 
-  factory ItemJson.fromJson(Map<String, dynamic> json) =>
-      _$ItemJsonFromJson(json);
+  factory ItemJson.fromJson(Map<String, dynamic> json) => _$ItemJsonFromJson(json);
 
   Map<String, dynamic> toJson() => _$ItemJsonToJson(this);
+}
+
+@JsonSerializable(includeIfNull: false)
+class ItemDeleteInfoJson {
+  String id;
+  @JsonKey(
+    toJson: AceUtil.dateTimeToMilliseconds,
+    fromJson: AceUtil.millisecondsToDateTime,
+  )
+  DateTime deleteDate;
+
+  ItemDeleteInfoJson({
+    required this.id,
+    required this.deleteDate,
+  });
+
+  factory ItemDeleteInfoJson.fromJson(Map<String, dynamic> json) => _$ItemDeleteInfoJsonFromJson(json);
+
+  Map<String, dynamic> toJson() => _$ItemDeleteInfoJsonToJson(this);
 }
