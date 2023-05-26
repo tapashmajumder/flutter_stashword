@@ -8,8 +8,8 @@ part 'server_jsons.g.dart';
 @JsonSerializable(includeIfNull: false)
 class SyncInfo {
   @JsonKey(
-    toJson: AceUtil.dateTimeToMillisecondsNullable,
-    fromJson: AceUtil.millisecondsToDateTimeNullable,
+    toJson: AceUtil.nullableDateTimeToMilliseconds,
+    fromJson: AceUtil.nullableMillisecondsToDateTime,
   )
   DateTime? lastSyncDate;
   List<ItemJson> createdItems;
@@ -36,18 +36,18 @@ class ItemJson {
   bool addToWatch;
   int? colorIndex;
   @JsonKey(
-    toJson: AceUtil.dateTimeToMillisecondsNullable,
-    fromJson: AceUtil.millisecondsToDateTimeNullable,
+    toJson: AceUtil.nullableDateTimeToMilliseconds,
+    fromJson: AceUtil.nullableMillisecondsToDateTime,
   )
   DateTime? created;
   @JsonKey(
-    toJson: AceUtil.dateTimeToMillisecondsNullable,
-    fromJson: AceUtil.millisecondsToDateTimeNullable,
+    toJson: AceUtil.nullableDateTimeToMilliseconds,
+    fromJson: AceUtil.nullableMillisecondsToDateTime,
   )
   DateTime? lastUsed;
   @JsonKey(
-    toJson: AceUtil.dateTimeToMillisecondsNullable,
-    fromJson: AceUtil.millisecondsToDateTimeNullable,
+    toJson: AceUtil.nullableDateTimeToMilliseconds,
+    fromJson: AceUtil.nullableMillisecondsToDateTime,
   )
   DateTime? modified;
   bool shared;
@@ -89,4 +89,49 @@ class ItemDeleteInfoJson {
   factory ItemDeleteInfoJson.fromJson(Map<String, dynamic> json) => _$ItemDeleteInfoJsonFromJson(json);
 
   Map<String, dynamic> toJson() => _$ItemDeleteInfoJsonToJson(this);
+}
+
+@JsonSerializable(includeIfNull: false)
+class SharedItemJson {
+  ItemType itemType;
+  String id;
+  String iv;
+  String? blob;
+  bool addToWatch;
+  int? colorIndex;
+  @JsonKey(
+    toJson: AceUtil.nullableDateTimeToMilliseconds,
+    fromJson: AceUtil.nullableMillisecondsToDateTime,
+  )
+  DateTime? created;
+  @JsonKey(
+    toJson: AceUtil.nullableDateTimeToMilliseconds,
+    fromJson: AceUtil.nullableMillisecondsToDateTime,
+  )
+  DateTime? lastUsed;
+  @JsonKey(
+    toJson: AceUtil.nullableDateTimeToMilliseconds,
+    fromJson: AceUtil.nullableMillisecondsToDateTime,
+  )
+  DateTime? modified;
+  String? sharer;
+  String? sharedSecret;
+
+  SharedItemJson({
+    required this.itemType,
+    required this.id,
+    required this.iv,
+    this.blob,
+    this.addToWatch = false,
+    this.colorIndex,
+    this.created,
+    this.lastUsed,
+    this.modified,
+    this.sharer,
+    this.sharedSecret,
+  });
+
+  factory SharedItemJson.fromJson(Map<String, dynamic> json) => _$SharedItemJsonFromJson(json);
+
+  Map<String, dynamic> toJson() => _$SharedItemJsonToJson(this);
 }

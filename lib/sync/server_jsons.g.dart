@@ -8,7 +8,7 @@ part of 'server_jsons.dart';
 
 SyncInfo _$SyncInfoFromJson(Map<String, dynamic> json) => SyncInfo(
       lastSyncDate:
-          AceUtil.millisecondsToDateTimeNullable(json['lastSyncDate'] as int?),
+          AceUtil.nullableMillisecondsToDateTime(json['lastSyncDate'] as int?),
       createdItems: (json['createdItems'] as List<dynamic>?)
               ?.map((e) => ItemJson.fromJson(e as Map<String, dynamic>))
               .toList() ??
@@ -34,7 +34,7 @@ Map<String, dynamic> _$SyncInfoToJson(SyncInfo instance) {
   }
 
   writeNotNull('lastSyncDate',
-      AceUtil.dateTimeToMillisecondsNullable(instance.lastSyncDate));
+      AceUtil.nullableDateTimeToMilliseconds(instance.lastSyncDate));
   val['createdItems'] = instance.createdItems;
   val['modifiedItems'] = instance.modifiedItems;
   val['deletedItems'] = instance.deletedItems;
@@ -48,11 +48,11 @@ ItemJson _$ItemJsonFromJson(Map<String, dynamic> json) => ItemJson(
       blob: json['blob'] as String?,
       addToWatch: json['addToWatch'] as bool? ?? false,
       colorIndex: json['colorIndex'] as int?,
-      created: AceUtil.millisecondsToDateTimeNullable(json['created'] as int?),
+      created: AceUtil.nullableMillisecondsToDateTime(json['created'] as int?),
       lastUsed:
-          AceUtil.millisecondsToDateTimeNullable(json['lastUsed'] as int?),
+          AceUtil.nullableMillisecondsToDateTime(json['lastUsed'] as int?),
       modified:
-          AceUtil.millisecondsToDateTimeNullable(json['modified'] as int?),
+          AceUtil.nullableMillisecondsToDateTime(json['modified'] as int?),
       shared: json['shared'] as bool? ?? false,
       sharedSecret: json['sharedSecret'] as String?,
     );
@@ -74,11 +74,11 @@ Map<String, dynamic> _$ItemJsonToJson(ItemJson instance) {
   val['addToWatch'] = instance.addToWatch;
   writeNotNull('colorIndex', instance.colorIndex);
   writeNotNull(
-      'created', AceUtil.dateTimeToMillisecondsNullable(instance.created));
+      'created', AceUtil.nullableDateTimeToMilliseconds(instance.created));
   writeNotNull(
-      'lastUsed', AceUtil.dateTimeToMillisecondsNullable(instance.lastUsed));
+      'lastUsed', AceUtil.nullableDateTimeToMilliseconds(instance.lastUsed));
   writeNotNull(
-      'modified', AceUtil.dateTimeToMillisecondsNullable(instance.modified));
+      'modified', AceUtil.nullableDateTimeToMilliseconds(instance.modified));
   val['shared'] = instance.shared;
   writeNotNull('sharedSecret', instance.sharedSecret);
   return val;
@@ -105,3 +105,47 @@ Map<String, dynamic> _$ItemDeleteInfoJsonToJson(ItemDeleteInfoJson instance) =>
       'id': instance.id,
       'deleteDate': AceUtil.dateTimeToMilliseconds(instance.deleteDate),
     };
+
+SharedItemJson _$SharedItemJsonFromJson(Map<String, dynamic> json) =>
+    SharedItemJson(
+      itemType: $enumDecode(_$ItemTypeEnumMap, json['itemType']),
+      id: json['id'] as String,
+      iv: json['iv'] as String,
+      blob: json['blob'] as String?,
+      addToWatch: json['addToWatch'] as bool? ?? false,
+      colorIndex: json['colorIndex'] as int?,
+      created: AceUtil.nullableMillisecondsToDateTime(json['created'] as int?),
+      lastUsed:
+          AceUtil.nullableMillisecondsToDateTime(json['lastUsed'] as int?),
+      modified:
+          AceUtil.nullableMillisecondsToDateTime(json['modified'] as int?),
+      sharer: json['sharer'] as String?,
+      sharedSecret: json['sharedSecret'] as String?,
+    );
+
+Map<String, dynamic> _$SharedItemJsonToJson(SharedItemJson instance) {
+  final val = <String, dynamic>{
+    'itemType': _$ItemTypeEnumMap[instance.itemType]!,
+    'id': instance.id,
+    'iv': instance.iv,
+  };
+
+  void writeNotNull(String key, dynamic value) {
+    if (value != null) {
+      val[key] = value;
+    }
+  }
+
+  writeNotNull('blob', instance.blob);
+  val['addToWatch'] = instance.addToWatch;
+  writeNotNull('colorIndex', instance.colorIndex);
+  writeNotNull(
+      'created', AceUtil.nullableDateTimeToMilliseconds(instance.created));
+  writeNotNull(
+      'lastUsed', AceUtil.nullableDateTimeToMilliseconds(instance.lastUsed));
+  writeNotNull(
+      'modified', AceUtil.nullableDateTimeToMilliseconds(instance.modified));
+  writeNotNull('sharer', instance.sharer);
+  writeNotNull('sharedSecret', instance.sharedSecret);
+  return val;
+}

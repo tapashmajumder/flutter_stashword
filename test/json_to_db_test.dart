@@ -79,6 +79,51 @@ void main() {
     return json.encode(itemJson);
   }
 
+  String createSharedPasswordJsonFromServer({
+    required String id,
+    required String iv,
+    String? name,
+    bool addToWatch = false,
+    int? colorIndex,
+    DateTime? created,
+    DateTime? lastUsed,
+    DateTime? modified,
+    String? sharer,
+    String? sharedSecret,
+    List<String> photoIds = const [],
+    List<String> categories = const [],
+    List<CustomFieldInfo> customFields = const [],
+    String? notes,
+    String? url,
+    String? userName,
+    String? password,
+    String? otpToken,
+  }) {
+    final blob = createPasswordBlob(
+      name: name,
+      notes: notes,
+      photoIds: photoIds,
+      categories: categories,
+      customFields: customFields,
+      url: url,
+      userName: userName,
+      password: password,
+      otpToken: otpToken,
+    );
+
+    final itemJson = SharedItemJson(itemType: ItemType.password, id: id, iv: iv);
+    itemJson.blob = blob;
+    itemJson.addToWatch = addToWatch;
+    itemJson.colorIndex = colorIndex;
+    itemJson.created = created;
+    itemJson.lastUsed = lastUsed;
+    itemJson.modified = modified;
+    itemJson.sharer = sharer;
+    itemJson.sharedSecret = sharedSecret;
+
+    return json.encode(itemJson);
+  }
+
   test("create item json from server", () {
     const id = "id1";
     const iv = "iv1";
@@ -266,5 +311,73 @@ void main() {
 
     expect(decoded.id, id);
     expect(decoded.deleteDate.millisecondsSinceEpoch, deleteDate.millisecondsSinceEpoch);
+  });
+
+  test("create shared item json from server", () {
+    const id = "id1";
+    const iv = "iv1";
+    const name = "zee-name";
+    const addToWatch = true;
+    const colorIndex = 23;
+    final created = DateTime.timestamp();
+    final lastUsed = DateTime.timestamp();
+    final modified = DateTime.timestamp();
+    const sharer = "user2@example.com";
+    const sharedSecret = "zee-shared-secret";
+    final photoIds = ["1", "2", "3"];
+    final categories = ["cat1", "cat2"];
+    final customFields = [CustomFieldInfo("name", "value", FieldType.number)];
+    const notes = "this is some random notes";
+    const url = "zee-url";
+    const userName = "zee-user-name";
+    const password = "zee-password";
+    const otpToken = "zee-otp-token";
+
+    final String passwordBlob = createPasswordBlob(
+      name: name,
+      notes: notes,
+      photoIds: photoIds,
+      categories: categories,
+      customFields: customFields,
+      url: url,
+      userName: userName,
+      password: password,
+      otpToken: otpToken,
+    );
+
+    String passwordJson = createSharedPasswordJsonFromServer(
+      id: id,
+      iv: iv,
+      name: name,
+      addToWatch: addToWatch,
+      colorIndex: colorIndex,
+      created: created,
+      lastUsed: lastUsed,
+      modified: modified,
+      sharer: sharer,
+      sharedSecret: sharedSecret,
+      photoIds: photoIds,
+      categories: categories,
+      customFields: customFields,
+      notes: notes,
+      url: url,
+      userName: userName,
+      password: password,
+      otpToken: otpToken,
+    );
+
+    final decoded = SharedItemJson.fromJson(json.decode(passwordJson));
+
+    expect(decoded.itemType, ItemType.password);
+    expect(decoded.id, id);
+    expect(decoded.iv, iv);
+    expect(decoded.blob, passwordBlob);
+    expect(decoded.addToWatch, addToWatch);
+    expect(decoded.colorIndex, colorIndex);
+    expect(decoded.created?.millisecondsSinceEpoch, created.millisecondsSinceEpoch);
+    expect(decoded.lastUsed?.millisecondsSinceEpoch, lastUsed.millisecondsSinceEpoch);
+    expect(decoded.modified?.millisecondsSinceEpoch, modified.millisecondsSinceEpoch);
+    expect(decoded.sharer, sharer);
+    expect(decoded.sharedSecret, sharedSecret);
   });
 }
