@@ -1,8 +1,10 @@
 
 import 'package:Stashword/data/item.dart';
 import 'package:Stashword/data/item_delete_info.dart';
+import 'package:Stashword/data/pending_share_info.dart';
 import 'package:Stashword/data/shared_item.dart';
 import 'package:Stashword/model/item_models.dart';
+import 'package:Stashword/model/pending_share_info_model.dart';
 import 'package:Stashword/sync/server_jsons.dart';
 
 class JsonToDb {
@@ -94,5 +96,29 @@ class JsonToDb {
     json.modified = sharedItem.modified;
 
     return json;
+  }
+
+  static PendingShareInfo fromPendingShareInfoJsonToPendingShareInfo(PendingShareInfoJson json) {
+    return PendingShareInfo(
+      itemType: json.itemType.value,
+      id: json.id,
+      iv: json.iv,
+      shareStatus: json.shareStatus.value,
+      sharer: json.sharer,
+      sharedSecret: json.sharedSecret,
+      blob: json.blob,
+    );
+  }
+
+  static PendingShareInfoJson fromPendingShareInfoToPendingShareInfoJson(PendingShareInfo shareInfo) {
+    return PendingShareInfoJson(
+      itemType: ItemTypeExtension.fromString(value: shareInfo.itemType),
+      id: shareInfo.id,
+      iv: shareInfo.iv,
+      shareStatus: ShareStatusExtension.fromString(value: shareInfo.shareStatus),
+      sharer: shareInfo.sharer,
+      sharedSecret: shareInfo.sharedSecret,
+      blob: shareInfo.blob,
+    );
   }
 }

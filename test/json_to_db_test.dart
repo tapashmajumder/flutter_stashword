@@ -2,8 +2,10 @@ import 'dart:convert';
 
 import 'package:Stashword/data/item.dart';
 import 'package:Stashword/data/item_delete_info.dart';
+import 'package:Stashword/data/pending_share_info.dart';
 import 'package:Stashword/data/shared_item.dart';
 import 'package:Stashword/model/item_models.dart';
+import 'package:Stashword/model/pending_share_info_model.dart';
 import 'package:Stashword/storage/blob_serialization.dart';
 import 'package:Stashword/sync/json_to_db_converter.dart';
 import 'package:Stashword/sync/server_jsons.dart';
@@ -466,5 +468,88 @@ void main() {
     expect(sharedItemJson.created?.millisecondsSinceEpoch, created.millisecondsSinceEpoch);
     expect(sharedItemJson.lastUsed?.millisecondsSinceEpoch, lastUsed.millisecondsSinceEpoch);
     expect(sharedItemJson.modified?.millisecondsSinceEpoch, modified.millisecondsSinceEpoch);
+  });
+
+  test('PendingShareInfoJson from server', () {
+    const itemType = ItemType.doc;
+    const id = "id1";
+    const iv = "iv1";
+    const shareStatus = ShareStatus.pending;
+    const sharer = "user1@example.com";
+    const sharedSecret = "zee-shared-secret";
+    const blob = "this is some blob";
+    final shareInfoJson = PendingShareInfoJson(
+      itemType: ItemTypeExtension.fromString(value: itemType.value),
+      id: id,
+      iv: iv,
+      shareStatus: shareStatus,
+      sharer: sharer,
+      sharedSecret: sharedSecret,
+      blob: blob,
+    );
+
+    String encoded = json.encode(shareInfoJson);
+    final decoded = PendingShareInfoJson.fromJson(json.decode(encoded));
+    expect(decoded.itemType, itemType);
+    expect(decoded.id, id);
+    expect(decoded.iv, iv);
+    expect(decoded.blob, blob);
+    expect(decoded.shareStatus, shareStatus);
+    expect(decoded.sharer, sharer);
+    expect(decoded.sharedSecret, sharedSecret);
+  });
+
+  test("PendingShareInfoJson to PendingShareInfo conversion", () {
+    const itemType = ItemType.doc;
+    const id = "id1";
+    const iv = "iv1";
+    const shareStatus = ShareStatus.pending;
+    const sharer = "user1@example.com";
+    const sharedSecret = "zee-shared-secret";
+    const blob = "this is some blob";
+    final shareInfoJson = PendingShareInfoJson(
+      itemType: ItemTypeExtension.fromString(value: itemType.value),
+      id: id,
+      iv: iv,
+      shareStatus: shareStatus,
+      sharer: sharer,
+      sharedSecret: sharedSecret,
+      blob: blob,
+    );
+    final shareInfo = JsonToDb.fromPendingShareInfoJsonToPendingShareInfo(shareInfoJson);
+    expect(shareInfo.itemType, itemType.value);
+    expect(shareInfo.id, id);
+    expect(shareInfo.iv, iv);
+    expect(shareInfo.blob, blob);
+    expect(shareInfo.shareStatus, shareStatus.value);
+    expect(shareInfo.sharer, sharer);
+    expect(shareInfo.sharedSecret, sharedSecret);
+  });
+
+  test("PendingShareInfo to PendingShareInfoJson conversion", () {
+    const itemType = ItemType.doc;
+    const id = "id1";
+    const iv = "iv1";
+    const shareStatus = ShareStatus.pending;
+    const sharer = "user1@example.com";
+    const sharedSecret = "zee-shared-secret";
+    const blob = "this is some blob";
+    final shareInfo = PendingShareInfo(
+      itemType: itemType.value,
+      id: id,
+      iv: iv,
+      shareStatus: shareStatus.value,
+      sharer: sharer,
+      sharedSecret: sharedSecret,
+      blob: blob,
+    );
+    final shareInfoJson = JsonToDb.fromPendingShareInfoToPendingShareInfoJson(shareInfo);
+    expect(shareInfoJson.itemType, itemType);
+    expect(shareInfoJson.id, id);
+    expect(shareInfoJson.iv, iv);
+    expect(shareInfoJson.blob, blob);
+    expect(shareInfoJson.shareStatus, shareStatus);
+    expect(shareInfoJson.sharer, sharer);
+    expect(shareInfoJson.sharedSecret, sharedSecret);
   });
 }
