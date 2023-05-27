@@ -10,12 +10,15 @@ BaseBlob _$BaseBlobFromJson(Map<String, dynamic> json) => BaseBlob()
   ..name = json['name'] as String?
   ..notes = json['notes'] as String?
   ..photoIds =
-      (json['photos'] as List<dynamic>).map((e) => e as String).toList()
-  ..tags =
-      (json['categories'] as List<dynamic>).map((e) => e as String).toList()
-  ..customFields = (json['custom'] as List<dynamic>)
-      .map((e) => CustomFieldInfo.fromJson(e as Map<String, dynamic>))
-      .toList();
+      (json['photos'] as List<dynamic>?)?.map((e) => e as String).toList() ?? []
+  ..tags = (json['categories'] as List<dynamic>?)
+          ?.map((e) => e as String)
+          .toList() ??
+      []
+  ..customFields = (json['custom'] as List<dynamic>?)
+          ?.map((e) => CustomFieldInfo.fromJson(e as Map<String, dynamic>))
+          .toList() ??
+      [];
 
 Map<String, dynamic> _$BaseBlobToJson(BaseBlob instance) {
   final val = <String, dynamic>{};
@@ -38,12 +41,15 @@ PasswordBlob _$PasswordBlobFromJson(Map<String, dynamic> json) => PasswordBlob()
   ..name = json['name'] as String?
   ..notes = json['notes'] as String?
   ..photoIds =
-      (json['photos'] as List<dynamic>).map((e) => e as String).toList()
-  ..tags =
-      (json['categories'] as List<dynamic>).map((e) => e as String).toList()
-  ..customFields = (json['custom'] as List<dynamic>)
-      .map((e) => CustomFieldInfo.fromJson(e as Map<String, dynamic>))
-      .toList()
+      (json['photos'] as List<dynamic>?)?.map((e) => e as String).toList() ?? []
+  ..tags = (json['categories'] as List<dynamic>?)
+          ?.map((e) => e as String)
+          .toList() ??
+      []
+  ..customFields = (json['custom'] as List<dynamic>?)
+          ?.map((e) => CustomFieldInfo.fromJson(e as Map<String, dynamic>))
+          .toList() ??
+      []
   ..url = json['url'] as String?
   ..userName = json['userName'] as String?
   ..password = json['password'] as String?
@@ -74,13 +80,18 @@ BankAccountBlob _$BankAccountBlobFromJson(Map<String, dynamic> json) =>
     BankAccountBlob()
       ..name = json['name'] as String?
       ..notes = json['notes'] as String?
-      ..photoIds =
-          (json['photos'] as List<dynamic>).map((e) => e as String).toList()
-      ..tags =
-          (json['categories'] as List<dynamic>).map((e) => e as String).toList()
-      ..customFields = (json['custom'] as List<dynamic>)
-          .map((e) => CustomFieldInfo.fromJson(e as Map<String, dynamic>))
-          .toList()
+      ..photoIds = (json['photos'] as List<dynamic>?)
+              ?.map((e) => e as String)
+              .toList() ??
+          []
+      ..tags = (json['categories'] as List<dynamic>?)
+              ?.map((e) => e as String)
+              .toList() ??
+          []
+      ..customFields = (json['custom'] as List<dynamic>?)
+              ?.map((e) => CustomFieldInfo.fromJson(e as Map<String, dynamic>))
+              .toList() ??
+          []
       ..accountNo = json['accountNo'] as String?
       ..routingNo = json['routingNo'] as String?
       ..supportNo = json['supportNo'] as String?
@@ -113,12 +124,15 @@ FFBlob _$FFBlobFromJson(Map<String, dynamic> json) => FFBlob()
   ..name = json['name'] as String?
   ..notes = json['notes'] as String?
   ..photoIds =
-      (json['photos'] as List<dynamic>).map((e) => e as String).toList()
-  ..tags =
-      (json['categories'] as List<dynamic>).map((e) => e as String).toList()
-  ..customFields = (json['custom'] as List<dynamic>)
-      .map((e) => CustomFieldInfo.fromJson(e as Map<String, dynamic>))
-      .toList()
+      (json['photos'] as List<dynamic>?)?.map((e) => e as String).toList() ?? []
+  ..tags = (json['categories'] as List<dynamic>?)
+          ?.map((e) => e as String)
+          .toList() ??
+      []
+  ..customFields = (json['custom'] as List<dynamic>?)
+          ?.map((e) => CustomFieldInfo.fromJson(e as Map<String, dynamic>))
+          .toList() ??
+      []
   ..ffNo = json['ffNo'] as String?
   ..supportNo = json['supportNo'] as String?;
 
@@ -145,12 +159,15 @@ NoteBlob _$NoteBlobFromJson(Map<String, dynamic> json) => NoteBlob()
   ..name = json['name'] as String?
   ..notes = json['notes'] as String?
   ..photoIds =
-      (json['photos'] as List<dynamic>).map((e) => e as String).toList()
-  ..tags =
-      (json['categories'] as List<dynamic>).map((e) => e as String).toList()
-  ..customFields = (json['custom'] as List<dynamic>)
-      .map((e) => CustomFieldInfo.fromJson(e as Map<String, dynamic>))
-      .toList();
+      (json['photos'] as List<dynamic>?)?.map((e) => e as String).toList() ?? []
+  ..tags = (json['categories'] as List<dynamic>?)
+          ?.map((e) => e as String)
+          .toList() ??
+      []
+  ..customFields = (json['custom'] as List<dynamic>?)
+          ?.map((e) => CustomFieldInfo.fromJson(e as Map<String, dynamic>))
+          .toList() ??
+      [];
 
 Map<String, dynamic> _$NoteBlobToJson(NoteBlob instance) {
   final val = <String, dynamic>{};
@@ -173,12 +190,15 @@ CodeBlob _$CodeBlobFromJson(Map<String, dynamic> json) => CodeBlob()
   ..name = json['name'] as String?
   ..notes = json['notes'] as String?
   ..photoIds =
-      (json['photos'] as List<dynamic>).map((e) => e as String).toList()
-  ..tags =
-      (json['categories'] as List<dynamic>).map((e) => e as String).toList()
-  ..customFields = (json['custom'] as List<dynamic>)
-      .map((e) => CustomFieldInfo.fromJson(e as Map<String, dynamic>))
-      .toList()
+      (json['photos'] as List<dynamic>?)?.map((e) => e as String).toList() ?? []
+  ..tags = (json['categories'] as List<dynamic>?)
+          ?.map((e) => e as String)
+          .toList() ??
+      []
+  ..customFields = (json['custom'] as List<dynamic>?)
+          ?.map((e) => CustomFieldInfo.fromJson(e as Map<String, dynamic>))
+          .toList() ??
+      []
   ..code = json['code'] as String?;
 
 Map<String, dynamic> _$CodeBlobToJson(CodeBlob instance) {
@@ -203,13 +223,17 @@ CardBlob _$CardBlobFromJson(Map<String, dynamic> json) => CardBlob()
   ..name = json['name'] as String?
   ..notes = json['notes'] as String?
   ..photoIds =
-      (json['photos'] as List<dynamic>).map((e) => e as String).toList()
-  ..tags =
-      (json['categories'] as List<dynamic>).map((e) => e as String).toList()
-  ..customFields = (json['custom'] as List<dynamic>)
-      .map((e) => CustomFieldInfo.fromJson(e as Map<String, dynamic>))
-      .toList()
-  ..cardType = $enumDecode(_$CardTypeEnumMap, json['cardType'])
+      (json['photos'] as List<dynamic>?)?.map((e) => e as String).toList() ?? []
+  ..tags = (json['categories'] as List<dynamic>?)
+          ?.map((e) => e as String)
+          .toList() ??
+      []
+  ..customFields = (json['custom'] as List<dynamic>?)
+          ?.map((e) => CustomFieldInfo.fromJson(e as Map<String, dynamic>))
+          .toList() ??
+      []
+  ..cardType =
+      $enumDecodeNullable(_$CardTypeEnumMap, json['cardType']) ?? CardType.other
   ..cardHolderName = json['cardHolderName'] as String?
   ..cardNumber = json['cardNumber'] as String?
   ..verificationNumber = json['verificationNumber'] as String?
@@ -310,16 +334,21 @@ DocBlob _$DocBlobFromJson(Map<String, dynamic> json) => DocBlob()
   ..name = json['name'] as String?
   ..notes = json['notes'] as String?
   ..photoIds =
-      (json['photos'] as List<dynamic>).map((e) => e as String).toList()
-  ..tags =
-      (json['categories'] as List<dynamic>).map((e) => e as String).toList()
-  ..customFields = (json['custom'] as List<dynamic>)
-      .map((e) => CustomFieldInfo.fromJson(e as Map<String, dynamic>))
-      .toList()
-  ..docType = $enumDecode(_$DocTypeEnumMap, json['docType'])
-  ..fields = (json['fields'] as List<dynamic>)
-      .map((e) => DocField.fromJson(e as Map<String, dynamic>))
-      .toList();
+      (json['photos'] as List<dynamic>?)?.map((e) => e as String).toList() ?? []
+  ..tags = (json['categories'] as List<dynamic>?)
+          ?.map((e) => e as String)
+          .toList() ??
+      []
+  ..customFields = (json['custom'] as List<dynamic>?)
+          ?.map((e) => CustomFieldInfo.fromJson(e as Map<String, dynamic>))
+          .toList() ??
+      []
+  ..docType =
+      $enumDecodeNullable(_$DocTypeEnumMap, json['docType']) ?? DocType.other
+  ..fields = (json['fields'] as List<dynamic>?)
+          ?.map((e) => DocField.fromJson(e as Map<String, dynamic>))
+          .toList() ??
+      [];
 
 Map<String, dynamic> _$DocBlobToJson(DocBlob instance) {
   final val = <String, dynamic>{};

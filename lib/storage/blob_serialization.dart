@@ -10,11 +10,11 @@ part 'blob_serialization.g.dart';
 class BaseBlob {
   String? name;
   String? notes;
-  @JsonKey(name: "photos")
+  @JsonKey(name: "photos", defaultValue: [])
   List<String> photoIds = [];
-  @JsonKey(name: "categories")
+  @JsonKey(name: "categories", defaultValue: [])
   List<String> tags = [];
-  @JsonKey(name: "custom")
+  @JsonKey(name: "custom", defaultValue: [])
   List<CustomFieldInfo> customFields = [];
 
   BaseBlob();
@@ -147,6 +147,7 @@ class CodeBlob extends BaseBlob {
 
 @JsonSerializable(includeIfNull: false)
 class CardBlob extends BaseBlob {
+  @JsonKey(defaultValue: CardType.other)
   CardType cardType = CardType.other;
   String? cardHolderName;
   String? cardNumber;
@@ -176,7 +177,10 @@ class CardBlob extends BaseBlob {
 
 @JsonSerializable(includeIfNull: false)
 class DocBlob extends BaseBlob {
+  @JsonKey(defaultValue: DocType.other)
   DocType docType = DocType.other;
+
+  @JsonKey(defaultValue: [])
   List<DocField> fields = [];
 
   DocBlob();

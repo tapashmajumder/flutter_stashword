@@ -26,7 +26,7 @@ class JsonToDb {
 
   static ItemJson fromItemToItemJson(Item item) {
     final json = ItemJson(
-      itemType: ItemTypeExtension.fromString(value: item.itemType) ?? ItemType.password,
+      itemType: ItemTypeExtension.fromString(value: item.itemType),
       id: item.id,
       iv: item.iv,
     );
@@ -80,7 +80,7 @@ class JsonToDb {
 
   static SharedItemJson fromSharedItemToSharedItemJson(SharedItem sharedItem) {
     final json = SharedItemJson(
-      itemType: ItemTypeExtension.fromString(value: sharedItem.itemType) ?? ItemType.password,
+      itemType: ItemTypeExtension.fromString(value: sharedItem.itemType),
       id: sharedItem.id,
       iv: sharedItem.iv,
       sharer: sharedItem.sharer,

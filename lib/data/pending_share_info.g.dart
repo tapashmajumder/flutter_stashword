@@ -22,9 +22,9 @@ class PendingShareInfoAdapter extends TypeAdapter<PendingShareInfo> {
       iv: fields[3] as String,
       sharer: fields[5] as String,
       shareStatus: fields[6] as String,
-    )
-      ..blob = fields[1] as String?
-      ..sharedSecret = fields[4] as String?;
+      blob: fields[1] as String?,
+      sharedSecret: fields[4] as String?,
+    );
   }
 
   @override

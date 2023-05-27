@@ -7,9 +7,10 @@ part of 'item_models.dart';
 // **************************************************************************
 
 DocField _$DocFieldFromJson(Map<String, dynamic> json) => DocField(
-      fieldType: $enumDecode(_$FieldTypeEnumMap, json['fieldType']),
+      fieldType: $enumDecodeNullable(_$FieldTypeEnumMap, json['fieldType']) ??
+          FieldType.string,
       label: json['label'] as String,
-      placeHolder: json['placeHolder'] as String,
+      placeHolder: json['placeHolder'] as String?,
       value: json['value'] as String?,
     );
 
@@ -17,7 +18,6 @@ Map<String, dynamic> _$DocFieldToJson(DocField instance) {
   final val = <String, dynamic>{
     'fieldType': _$FieldTypeEnumMap[instance.fieldType]!,
     'label': instance.label,
-    'placeHolder': instance.placeHolder,
   };
 
   void writeNotNull(String key, dynamic value) {
@@ -26,6 +26,7 @@ Map<String, dynamic> _$DocFieldToJson(DocField instance) {
     }
   }
 
+  writeNotNull('placeHolder', instance.placeHolder);
   writeNotNull('value', instance.value);
   return val;
 }
@@ -40,14 +41,15 @@ const _$FieldTypeEnumMap = {
 
 CustomFieldInfo _$CustomFieldInfoFromJson(Map<String, dynamic> json) =>
     CustomFieldInfo(
-      json['name'] as String,
-      json['value'] as String,
-      $enumDecode(_$FieldTypeEnumMap, json['type']),
+      type: $enumDecodeNullable(_$FieldTypeEnumMap, json['type']) ??
+          FieldType.string,
+      name: json['name'] as String,
+      value: json['value'] as String,
     );
 
 Map<String, dynamic> _$CustomFieldInfoToJson(CustomFieldInfo instance) =>
     <String, dynamic>{
+      'type': _$FieldTypeEnumMap[instance.type]!,
       'name': instance.name,
       'value': instance.value,
-      'type': _$FieldTypeEnumMap[instance.type]!,
     };

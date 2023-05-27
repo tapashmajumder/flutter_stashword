@@ -1,5 +1,7 @@
 import 'package:Stashword/data/item.dart';
+import 'package:Stashword/data/pending_share_info.dart';
 import 'package:Stashword/model/item_models.dart';
+import 'package:Stashword/model/pending_share_info_model.dart';
 import 'package:Stashword/storage/blob_serialization.dart';
 
 void main() {
@@ -21,11 +23,11 @@ void main() {
 abstract class BaseConverter<Blob extends BaseBlob, Model extends ItemModel> {
   String get itemType;
 
-  Blob createBlob();
+  Blob instantiateBlob();
 
   void setCustomFromModelToBlob(Model model, Blob blob);
 
-  Model createModel({required String id, required String iv});
+  Model instantiateModel({required String id, required String iv});
 
   Blob? blobFromString(String serialized);
 
@@ -39,7 +41,7 @@ abstract class BaseConverter<Blob extends BaseBlob, Model extends ItemModel> {
     );
 
     _setBaseValuesInItemFromModel(item, model);
-    Blob blob = createBlob();
+    Blob blob = instantiateBlob();
     _setBaseValuesInItemBlobFromModel(blob, model);
 
     setCustomFromModelToBlob(model, blob);
@@ -49,7 +51,7 @@ abstract class BaseConverter<Blob extends BaseBlob, Model extends ItemModel> {
   }
 
   Model modelFromItem({required Item item}) {
-    final model = createModel(id: item.id, iv: item.iv);
+    final model = instantiateModel(id: item.id, iv: item.iv);
 
     _setBaseValuesInModelFromItem(model, item);
     final itemBlob = item.blob;
@@ -106,7 +108,7 @@ class PasswordConverter extends BaseConverter<PasswordBlob, PasswordModel> {
   String get itemType => ItemType.password.value;
 
   @override
-  PasswordBlob createBlob() {
+  PasswordBlob instantiateBlob() {
     return PasswordBlob();
   }
 
@@ -119,7 +121,7 @@ class PasswordConverter extends BaseConverter<PasswordBlob, PasswordModel> {
   }
 
   @override
-  PasswordModel createModel({required String id, required String iv}) {
+  PasswordModel instantiateModel({required String id, required String iv}) {
     return PasswordModel(id: id, iv: iv);
   }
 
@@ -142,7 +144,7 @@ class BankAccountConverter extends BaseConverter<BankAccountBlob, BankAccountMod
   String get itemType => ItemType.bankAccount.value;
 
   @override
-  BankAccountBlob createBlob() {
+  BankAccountBlob instantiateBlob() {
     return BankAccountBlob();
   }
 
@@ -156,7 +158,7 @@ class BankAccountConverter extends BaseConverter<BankAccountBlob, BankAccountMod
   }
 
   @override
-  BankAccountModel createModel({required String id, required String iv}) {
+  BankAccountModel instantiateModel({required String id, required String iv}) {
     return BankAccountModel(id: id, iv: iv);
   }
 
@@ -180,7 +182,7 @@ class FFConverter extends BaseConverter<FFBlob, FFModel> {
   String get itemType => ItemType.ff.value;
 
   @override
-  FFBlob createBlob() {
+  FFBlob instantiateBlob() {
     return FFBlob();
   }
 
@@ -191,7 +193,7 @@ class FFConverter extends BaseConverter<FFBlob, FFModel> {
   }
 
   @override
-  FFModel createModel({required String id, required String iv}) {
+  FFModel instantiateModel({required String id, required String iv}) {
     return FFModel(id: id, iv: iv);
   }
 
@@ -212,16 +214,15 @@ class NoteConverter extends BaseConverter<NoteBlob, NoteModel> {
   String get itemType => ItemType.note.value;
 
   @override
-  NoteBlob createBlob() {
+  NoteBlob instantiateBlob() {
     return NoteBlob();
   }
 
   @override
-  void setCustomFromModelToBlob(NoteModel model, NoteBlob blob) {
-  }
+  void setCustomFromModelToBlob(NoteModel model, NoteBlob blob) {}
 
   @override
-  NoteModel createModel({required String id, required String iv}) {
+  NoteModel instantiateModel({required String id, required String iv}) {
     return NoteModel(id: id, iv: iv);
   }
 
@@ -231,8 +232,7 @@ class NoteConverter extends BaseConverter<NoteBlob, NoteModel> {
   }
 
   @override
-  void setCustomFromBlobToModel(NoteBlob blob, NoteModel model) {
-  }
+  void setCustomFromBlobToModel(NoteBlob blob, NoteModel model) {}
 }
 
 class CodeConverter extends BaseConverter<CodeBlob, CodeModel> {
@@ -240,7 +240,7 @@ class CodeConverter extends BaseConverter<CodeBlob, CodeModel> {
   String get itemType => ItemType.code.value;
 
   @override
-  CodeBlob createBlob() {
+  CodeBlob instantiateBlob() {
     return CodeBlob();
   }
 
@@ -250,7 +250,7 @@ class CodeConverter extends BaseConverter<CodeBlob, CodeModel> {
   }
 
   @override
-  CodeModel createModel({required String id, required String iv}) {
+  CodeModel instantiateModel({required String id, required String iv}) {
     return CodeModel(id: id, iv: iv);
   }
 
@@ -270,7 +270,7 @@ class CardConverter extends BaseConverter<CardBlob, CardModel> {
   String get itemType => ItemType.card.value;
 
   @override
-  CardBlob createBlob() {
+  CardBlob instantiateBlob() {
     return CardBlob();
   }
 
@@ -287,7 +287,7 @@ class CardConverter extends BaseConverter<CardBlob, CardModel> {
   }
 
   @override
-  CardModel createModel({required String id, required String iv}) {
+  CardModel instantiateModel({required String id, required String iv}) {
     return CardModel(id: id, iv: iv);
   }
 
@@ -314,7 +314,7 @@ class DocConverter extends BaseConverter<DocBlob, DocModel> {
   String get itemType => ItemType.doc.value;
 
   @override
-  DocBlob createBlob() {
+  DocBlob instantiateBlob() {
     return DocBlob();
   }
 
@@ -325,7 +325,7 @@ class DocConverter extends BaseConverter<DocBlob, DocModel> {
   }
 
   @override
-  DocModel createModel({required String id, required String iv}) {
+  DocModel instantiateModel({required String id, required String iv}) {
     return DocModel(id: id, iv: iv);
   }
 
@@ -343,37 +343,54 @@ class DocConverter extends BaseConverter<DocBlob, DocModel> {
 
 class ModelToDbConverter {
   static Item fromModelToItem<Model extends ItemModel>({required Model model}) {
-    final BaseConverter converter = _getConverterForModel(model: model);
+    final BaseConverter converter = _getConverterForItemType(itemType: model.itemType);
     return converter.itemFromItemModel(model: model);
   }
 
   static T fromItemToModel<T extends ItemModel>({required Item item}) {
-    final BaseConverter converter = _getConverterForItem(item: item);
+    final ItemType itemType = ItemTypeExtension.fromString(value: item.itemType);
+    final BaseConverter converter = _getConverterForItemType(itemType: itemType);
     return converter.modelFromItem(item: item) as T;
   }
 
-  static BaseConverter _getConverterForModel({required ItemModel model}) {
-    switch (model) {
-      case PasswordModel _:
-        return PasswordConverter();
-      case BankAccountModel _:
-        return BankAccountConverter();
-      case FFModel _:
-        return FFConverter();
-      case NoteModel _:
-        return 
-            NoteConverter();
-      case CodeModel _:
-        return CodeConverter();
-      case CardModel _:
-        return CardConverter();
-      case DocModel _:
-        return DocConverter();
+  static PendingShareInfoModel fromPendingShareInfoToPendingShareInfoModel({required PendingShareInfo shareInfo}) {
+    final itemType = ItemTypeExtension.fromString(value: shareInfo.itemType);
+    final model = PendingShareInfoModel(
+      itemType: itemType,
+      id: shareInfo.id,
+      iv: shareInfo.iv,
+      name: _nameFromPendingShareBlob(itemType: itemType, blob: shareInfo.blob),
+      sharer: shareInfo.sharer,
+      shareStatus: ShareStatusExtension.fromString(value: shareInfo.shareStatus),
+      sharedSecret: shareInfo.sharedSecret,
+    );
+    return model;
+  }
+
+  static String? _nameFromPendingShareBlob({required ItemType itemType, required String? blob}) {
+    if (blob == null) {
+      return null;
+    } else {
+      switch (itemType) {
+        case ItemType.password:
+          return PasswordBlob.deserialize(blob)?.name;
+        case ItemType.bankAccount:
+          return BankAccountBlob.deserialize(blob)?.name;
+        case ItemType.ff:
+          return FFBlob.deserialize(blob)?.name;
+        case ItemType.note:
+          return "Note";
+        case ItemType.code:
+          return CodeBlob.deserialize(blob)?.name;
+        case ItemType.card:
+          return CardBlob.deserialize(blob)?.name;
+        case ItemType.doc:
+          return DocBlob.deserialize(blob)?.name;
+      }
     }
   }
 
-  static BaseConverter _getConverterForItem({required Item item}) {
-    final ItemType itemType = ItemTypeExtension.fromString(value: item.itemType) ?? ItemType.password;
+  static BaseConverter _getConverterForItemType({required ItemType itemType}) {
     switch (itemType) {
       case ItemType.password:
         return PasswordConverter();
@@ -392,4 +409,3 @@ class ModelToDbConverter {
     }
   }
 }
-

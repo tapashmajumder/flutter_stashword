@@ -34,6 +34,8 @@ class PendingShareInfo implements WithId {
     required this.iv,
     required this.sharer,
     required this.shareStatus,
+    this.blob,
+    this.sharedSecret,
   });
 
   @override

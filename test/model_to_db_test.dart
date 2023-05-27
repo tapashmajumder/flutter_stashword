@@ -1,7 +1,9 @@
 import 'dart:convert';
 
 import 'package:Stashword/data/item.dart';
+import 'package:Stashword/data/pending_share_info.dart';
 import 'package:Stashword/model/item_models.dart';
+import 'package:Stashword/model/pending_share_info_model.dart';
 import 'package:test/test.dart';
 
 import 'package:Stashword/storage/model_to_db_converters.dart';
@@ -15,7 +17,7 @@ void main() {
     const photoIds = ["id1", "id2"];
     const tags = ["category1", "category2"];
     final customFields = [
-      CustomFieldInfo("customFieldName", "CustomFieldValue", FieldType.email)
+      CustomFieldInfo(name: "customFieldName", value: "CustomFieldValue", type: FieldType.email)
     ];
     const addToWatch = true;
     const colorIndex = 24;
@@ -243,5 +245,36 @@ void main() {
 
     expect(newModel.docType, equals(docType));
     expect(newModel.fields, equals(fields));
+  });
+
+  test('PendingShareInfo Serialization', () {
+    const itemType = ItemType.card;
+    const id = "id1";
+    const iv = "iv1";
+    const sharer = "user1@example.com";
+    const shareStatus = ShareStatus.needToResend;
+    const sharedSecret = "zee-shared-secret";
+    const name = "zee-name";
+    const blob = '{"name": "$name"}';
+
+    final shareInfo = PendingShareInfo(
+      itemType: itemType.value,
+      id: id,
+      iv: iv,
+      sharer: sharer,
+      shareStatus: shareStatus.value,
+      sharedSecret: sharedSecret,
+      blob: blob,
+    );
+
+    final PendingShareInfoModel newModel = ModelToDbConverter.fromPendingShareInfoToPendingShareInfoModel(shareInfo: shareInfo);
+
+    expect(newModel.itemType, itemType);
+    expect(newModel.id, equals(id));
+    expect(newModel.iv, equals(iv));
+    expect(newModel.sharer, equals(sharer));
+    expect(newModel.shareStatus, equals(shareStatus));
+    expect(newModel.sharedSecret, equals(sharedSecret));
+    expect(newModel.name, equals(name));
   });
 }

@@ -1,4 +1,5 @@
 import 'package:Stashword/model/item_models.dart';
+import 'package:Stashword/model/pending_share_info_model.dart';
 import 'package:json_annotation/json_annotation.dart';
 
 import 'package:Stashword/util/ace_util.dart';
@@ -24,6 +25,7 @@ class SyncInfo {
   });
 
   factory SyncInfo.fromJson(Map<String, dynamic> json) => _$SyncInfoFromJson(json);
+
   Map<String, dynamic> toJson() => _$SyncInfoToJson(this);
 }
 
@@ -134,4 +136,29 @@ class SharedItemJson {
   factory SharedItemJson.fromJson(Map<String, dynamic> json) => _$SharedItemJsonFromJson(json);
 
   Map<String, dynamic> toJson() => _$SharedItemJsonToJson(this);
+}
+
+@JsonSerializable(includeIfNull: false)
+class PendingShareInfoJson {
+  ItemType itemType;
+  String id;
+  String iv;
+  ShareStatus shareStatus;
+  String sharer;
+  String? sharedSecret;
+  String? blob;
+
+  PendingShareInfoJson({
+    required this.itemType,
+    required this.id,
+    required this.iv,
+    required this.shareStatus,
+    required this.sharer,
+    this.sharedSecret,
+    this.blob,
+  });
+
+  factory PendingShareInfoJson.fromJson(Map<String, dynamic> json) => _$PendingShareInfoJsonFromJson(json);
+
+  Map<String, dynamic> toJson() => _$PendingShareInfoJsonToJson(this);
 }

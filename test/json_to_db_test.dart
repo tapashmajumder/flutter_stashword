@@ -144,7 +144,7 @@ void main() {
     const sharedSecret = "zee-shared-secret";
     final photoIds = ["1", "2", "3"];
     final categories = ["cat1", "cat2"];
-    final customFields = [CustomFieldInfo("name", "value", FieldType.number)];
+    final customFields = [CustomFieldInfo(name: "name", value: "value", type: FieldType.number)];
     const notes = "this is some random notes";
     const url = "zee-url";
     const userName = "zee-user-name";
@@ -333,7 +333,7 @@ void main() {
     const sharedSecret = "zee-shared-secret";
     final photoIds = ["1", "2", "3"];
     final categories = ["cat1", "cat2"];
-    final customFields = [CustomFieldInfo("name", "value", FieldType.number)];
+    final customFields = [CustomFieldInfo(name: "name", value: "value", type: FieldType.number)];
     const notes = "this is some random notes";
     const url = "zee-url";
     const userName = "zee-user-name";

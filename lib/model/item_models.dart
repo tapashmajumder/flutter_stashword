@@ -26,9 +26,8 @@ enum ItemType {
 }
 
 extension ItemTypeExtension on ItemType {
-  static ItemType? fromString({required String value}) {
-    return ItemType.values
-        .firstWhereOrNull((element) => element.value == value);
+  static ItemType fromString({required String value}) {
+    return ItemType.values.firstWhereOrNull((element) => element.value == value) ?? ItemType.password;
   }
 }
 
@@ -166,20 +165,20 @@ enum DocType {
 
 @JsonSerializable(includeIfNull: false)
 class DocField extends Equatable {
+  @JsonKey(defaultValue: FieldType.string)
   FieldType fieldType;
   String label;
-  String placeHolder;
+  String? placeHolder;
   String? value;
 
   DocField({
     required this.fieldType,
     required this.label,
-    required this.placeHolder,
+    this.placeHolder,
     this.value,
   });
 
-  factory DocField.fromJson(Map<String, dynamic> json) =>
-      _$DocFieldFromJson(json);
+  factory DocField.fromJson(Map<String, dynamic> json) => _$DocFieldFromJson(json);
 
   Map<String, dynamic> toJson() => _$DocFieldToJson(this);
 
@@ -189,18 +188,18 @@ class DocField extends Equatable {
 
 @JsonSerializable(includeIfNull: false)
 class CustomFieldInfo extends Equatable {
+  @JsonKey(defaultValue: FieldType.string)
+  FieldType type;
   String name;
   String value;
-  FieldType type;
 
-  CustomFieldInfo(
-    this.name,
-    this.value,
-    this.type,
-  );
+  CustomFieldInfo({
+    required this.type,
+    required this.name,
+    required this.value,
+  });
 
-  factory CustomFieldInfo.fromJson(Map<String, dynamic> json) =>
-      _$CustomFieldInfoFromJson(json);
+  factory CustomFieldInfo.fromJson(Map<String, dynamic> json) => _$CustomFieldInfoFromJson(json);
 
   Map<String, dynamic> toJson() => _$CustomFieldInfoToJson(this);
 
