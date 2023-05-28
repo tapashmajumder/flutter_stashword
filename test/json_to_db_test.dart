@@ -234,9 +234,9 @@ void main() {
     expect(item.blob, blob);
     expect(item.addToWatch, addToWatch);
     expect(item.colorIndex, colorIndex);
-    expect(item.created, created);
-    expect(item.lastUsed, lastUsed);
-    expect(item.modified, modified);
+    expect(item.created?.millisecondsSinceEpoch, created.millisecondsSinceEpoch);
+    expect(item.lastUsed?.millisecondsSinceEpoch, lastUsed.millisecondsSinceEpoch);
+    expect(item.modified?.millisecondsSinceEpoch, modified.millisecondsSinceEpoch);
     expect(item.shared, shared);
     expect(item.sharedSecret, sharedSecret);
   });

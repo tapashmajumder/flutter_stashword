@@ -1,5 +1,6 @@
 import 'package:Stashword/data/item.dart';
 import 'package:Stashword/data/pending_share_info.dart';
+import 'package:Stashword/data/shared_item.dart';
 import 'package:Stashword/model/item_models.dart';
 import 'package:Stashword/model/pending_share_info_model.dart';
 import 'package:Stashword/storage/blob_serialization.dart';
@@ -33,50 +34,91 @@ abstract class BaseConverter<Blob extends BaseBlob, Model extends ItemModel> {
 
   void setCustomFromBlobToModel(Blob blob, Model model);
 
-  Item itemFromItemModel({required Model model}) {
-    final item = Item(
-      itemType: model.itemType.value,
-      id: model.id,
-      iv: model.iv,
-    );
-
-    _setBaseValuesInItemFromModel(item, model);
-    Blob blob = instantiateBlob();
-    _setBaseValuesInItemBlobFromModel(blob, model);
-
-    setCustomFromModelToBlob(model, blob);
-
-    item.blob = blob.serialized;
+  Item fromModelToItem({required Model model}) {
+    final item = _createItemWithBaseValuesFromModel(model);
+    item.blob = _createBlobFromModel(model: model)?.serialized;
     return item;
   }
 
-  Model modelFromItem({required Item item}) {
-    final model = instantiateModel(id: item.id, iv: item.iv);
+  SharedItem fromModelToSharedItem({required Model model}) {
+      final sharedItem = _createSharedItemWithBaseValuesFromModel(model);
+      sharedItem.blob = _createBlobFromModel(model: model)?.serialized;
+      return sharedItem;
+  }
 
+  Model fromItemToModel({required Item item}) {
+    final model = _createModelWithBaseValuesFromItem(item);
+    _copyValuesFromBlobToModel(item.blob, model);
+    return model;
+  }
+
+  Model fromSharedItemToModel({required SharedItem sharedItem}) {
+    final model = _createModelWithBaseValuesFromSharedItem(sharedItem);
+    _copyValuesFromBlobToModel(sharedItem.blob, model);
+    return model;
+  }
+
+  Blob? _createBlobFromModel({required Model model}) {
+    Blob blob = instantiateBlob();
+    _setBaseValuesInItemBlobFromModel(blob, model);
+    setCustomFromModelToBlob(model, blob);
+    return blob;
+  }
+
+  Model _createModelWithBaseValuesFromItem(Item item) {
+    final model = instantiateModel(id: item.id, iv: item.iv);
     _setBaseValuesInModelFromItem(model, item);
-    final itemBlob = item.blob;
-    if (itemBlob != null) {
-      final blobObject = blobFromString(itemBlob);
+    return model;
+  }
+
+  Model _createModelWithBaseValuesFromSharedItem(final SharedItem sharedItem) {
+    final model = instantiateModel(id: sharedItem.id, iv: sharedItem.iv);
+    _setBaseValuesInModelFromSharedItem(model, sharedItem);
+    return model;
+  }
+
+  void _copyValuesFromBlobToModel(String? blob, Model model) {
+    if (blob != null) {
+      final blobObject = blobFromString(blob);
       if (blobObject != null) {
         _setBaseValuesInModelFromItemBlob(model, blobObject);
         setCustomFromBlobToModel(blobObject, model);
       }
     }
-
-    return model;
   }
 
-  static void _setBaseValuesInItemFromModel(Item item, ItemModel model) {
-    item.addToWatch = model.addToWatch;
-    item.colorIndex = model.colorIndex;
-    item.created = model.created;
-    item.lastUsed = model.lastUsed;
-    item.modified = model.modified;
-    item.shared = model.shared;
-    item.sharedSecret = model.sharedSecret;
+  static Item _createItemWithBaseValuesFromModel(ItemModel model) {
+    return Item(
+      itemType: model.itemType.value,
+      id: model.id,
+      iv: model.iv,
+      shared: model.shared,
+      sharedSecret: model.sharedSecret ?? "",
+      created: model.created,
+      lastUsed: model.lastUsed,
+      modified: model.modified,
+      addToWatch: model.addToWatch,
+      colorIndex: model.colorIndex,
+    );
+  }
+
+  static SharedItem _createSharedItemWithBaseValuesFromModel(ItemModel model) {
+    return SharedItem(
+      itemType: model.itemType.value,
+      id: model.id,
+      iv: model.iv,
+      sharer: model.sharer ?? "",
+      sharedSecret: model.sharedSecret ?? "",
+      created: model.created,
+      lastUsed: model.lastUsed,
+      modified: model.modified,
+      addToWatch: model.addToWatch,
+      colorIndex: model.colorIndex,
+    );
   }
 
   static void _setBaseValuesInModelFromItem(ItemModel model, Item item) {
+    model.sharedItem = false;
     model.addToWatch = item.addToWatch;
     model.colorIndex = item.colorIndex;
     model.created = item.created;
@@ -84,6 +126,18 @@ abstract class BaseConverter<Blob extends BaseBlob, Model extends ItemModel> {
     model.modified = item.modified;
     model.shared = item.shared;
     model.sharedSecret = item.sharedSecret;
+  }
+
+  static void _setBaseValuesInModelFromSharedItem(ItemModel model, SharedItem sharedItem) {
+    model.sharedItem = true;
+    model.shared = true;
+    model.addToWatch = sharedItem.addToWatch;
+    model.colorIndex = sharedItem.colorIndex;
+    model.created = sharedItem.created;
+    model.lastUsed = sharedItem.lastUsed;
+    model.modified = sharedItem.modified;
+    model.sharer = sharedItem.sharer;
+    model.sharedSecret = sharedItem.sharedSecret;
   }
 
   static void _setBaseValuesInItemBlobFromModel(BaseBlob blob, ItemModel model) {
@@ -344,13 +398,24 @@ class DocConverter extends BaseConverter<DocBlob, DocModel> {
 class ModelToDbConverter {
   static Item fromModelToItem<Model extends ItemModel>({required Model model}) {
     final BaseConverter converter = _getConverterForItemType(itemType: model.itemType);
-    return converter.itemFromItemModel(model: model);
+    return converter.fromModelToItem(model: model);
+  }
+
+  static SharedItem fromModelToSharedItem<Model extends ItemModel>({required Model model}) {
+    final BaseConverter converter = _getConverterForItemType(itemType: model.itemType);
+    return converter.fromModelToSharedItem(model: model);
   }
 
   static T fromItemToModel<T extends ItemModel>({required Item item}) {
     final ItemType itemType = ItemTypeExtension.fromString(value: item.itemType);
     final BaseConverter converter = _getConverterForItemType(itemType: itemType);
-    return converter.modelFromItem(item: item) as T;
+    return converter.fromItemToModel(item: item) as T;
+  }
+
+  static T fromSharedItemToModel<T extends ItemModel>({required SharedItem sharedItem}) {
+    final ItemType itemType = ItemTypeExtension.fromString(value: sharedItem.itemType);
+    final BaseConverter converter = _getConverterForItemType(itemType: itemType);
+    return converter.fromSharedItemToModel(sharedItem: sharedItem) as T;
   }
 
   static PendingShareInfoModel fromPendingShareInfoToPendingShareInfoModel({required PendingShareInfo shareInfo}) {

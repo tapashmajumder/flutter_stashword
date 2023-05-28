@@ -2,6 +2,7 @@ import 'dart:convert';
 
 import 'package:Stashword/data/item.dart';
 import 'package:Stashword/data/pending_share_info.dart';
+import 'package:Stashword/data/shared_item.dart';
 import 'package:Stashword/model/item_models.dart';
 import 'package:Stashword/model/pending_share_info_model.dart';
 import 'package:test/test.dart';
@@ -69,6 +70,79 @@ void main() {
     expect(newModel.created, equals(created));
     expect(newModel.modified, equals(modified));
     expect(newModel.lastUsed, equals(lastUsed));
+    expect(newModel.shared, equals(shared));
+    expect(newModel.sharedSecret, equals(sharedSecret));
+
+    expect(newModel.itemType, equals(ItemType.password));
+    expect(newModel.url, equals(url));
+    expect(newModel.userName, equals(userName));
+    expect(newModel.password, equals(password));
+    expect(newModel.otpToken, equals(otpToken));
+  });
+
+  test('Shared Password Model Serialization', () {
+    const id = "id1";
+    const iv = "iv1";
+    const name = "zee-name";
+    const notes = "zee-notes";
+    const photoIds = ["id1", "id2"];
+    const tags = ["category1", "category2"];
+    final customFields = [
+      CustomFieldInfo(name: "customFieldName", value: "CustomFieldValue", type: FieldType.email)
+    ];
+    const addToWatch = true;
+    const colorIndex = 24;
+    final created = DateTime.timestamp();
+    final lastUsed = DateTime.timestamp();
+    final modified = DateTime.timestamp();
+    const isSharedItem = true;
+    const shared = true;
+    const sharedSecret = "zee-shared-secret";
+
+
+    const url = "https://somewhere.com";
+    const userName = "user@example.com";
+    const password = "zee'user@#\$@\$#%ame";
+    const otpToken = "zee-otp";
+
+    final model = PasswordModel(
+      id: id,
+      iv: iv,
+      sharedItem: isSharedItem,
+      name: name,
+      notes: notes,
+      photoIds: photoIds,
+      tags: tags,
+      customFields: customFields,
+      addToWatch: addToWatch,
+      colorIndex: colorIndex,
+      created: created,
+      lastUsed: lastUsed,
+      modified: modified,
+      shared: shared,
+      sharedSecret: sharedSecret,
+    );
+    model.url = url;
+    model.userName = userName;
+    model.password = password;
+    model.otpToken = otpToken;
+
+    SharedItem sharedItem = ModelToDbConverter.fromModelToSharedItem(model: model);
+    final PasswordModel newModel = ModelToDbConverter.fromSharedItemToModel(sharedItem: sharedItem);
+
+    expect(newModel.id, equals(id));
+    expect(newModel.iv, equals(iv));
+    expect(newModel.name, equals(name));
+    expect(newModel.notes, equals(notes));
+    expect(newModel.photoIds, equals(photoIds));
+    expect(newModel.tags, equals(tags));
+    expect(newModel.customFields, equals(customFields));
+    expect(newModel.addToWatch, equals(addToWatch));
+    expect(newModel.colorIndex, equals(colorIndex));
+    expect(newModel.created, equals(created));
+    expect(newModel.modified, equals(modified));
+    expect(newModel.lastUsed, equals(lastUsed));
+    expect(newModel.sharedItem, equals(isSharedItem));
     expect(newModel.shared, equals(shared));
     expect(newModel.sharedSecret, equals(sharedSecret));
 
