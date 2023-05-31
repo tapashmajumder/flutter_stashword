@@ -7,8 +7,6 @@ part of 'server_jsons.dart';
 // **************************************************************************
 
 SyncInfo _$SyncInfoFromJson(Map<String, dynamic> json) => SyncInfo(
-      lastSyncDate:
-          AceUtil.nullableMillisecondsToDateTime(json['lastSyncDate'] as int?),
       createdItems: (json['createdItems'] as List<dynamic>?)
               ?.map((e) => ItemJson.fromJson(e as Map<String, dynamic>))
               .toList() ??
@@ -22,10 +20,27 @@ SyncInfo _$SyncInfoFromJson(Map<String, dynamic> json) => SyncInfo(
                   (e) => ItemDeleteInfoJson.fromJson(e as Map<String, dynamic>))
               .toList() ??
           const [],
+      sharedItems: (json['sharedItems'] as List<dynamic>?)
+              ?.map((e) => SharedItemJson.fromJson(e as Map<String, dynamic>))
+              .toList() ??
+          const [],
+      pendingShares: (json['pendingShares'] as List<dynamic>?)
+              ?.map((e) =>
+                  PendingShareInfoJson.fromJson(e as Map<String, dynamic>))
+              .toList() ??
+          const [],
+      lastSyncDate:
+          AceUtil.nullableMillisecondsToDateTime(json['lastSyncDate'] as int?),
     );
 
 Map<String, dynamic> _$SyncInfoToJson(SyncInfo instance) {
-  final val = <String, dynamic>{};
+  final val = <String, dynamic>{
+    'createdItems': instance.createdItems,
+    'modifiedItems': instance.modifiedItems,
+    'deletedItems': instance.deletedItems,
+    'sharedItems': instance.sharedItems,
+    'pendingShares': instance.pendingShares,
+  };
 
   void writeNotNull(String key, dynamic value) {
     if (value != null) {
@@ -35,9 +50,6 @@ Map<String, dynamic> _$SyncInfoToJson(SyncInfo instance) {
 
   writeNotNull('lastSyncDate',
       AceUtil.nullableDateTimeToMilliseconds(instance.lastSyncDate));
-  val['createdItems'] = instance.createdItems;
-  val['modifiedItems'] = instance.modifiedItems;
-  val['deletedItems'] = instance.deletedItems;
   return val;
 }
 

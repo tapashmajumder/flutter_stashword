@@ -8,20 +8,24 @@ part 'server_jsons.g.dart';
 
 @JsonSerializable(includeIfNull: false)
 class SyncInfo {
+  List<ItemJson> createdItems = [];
+  List<ItemJson> modifiedItems = [];
+  List<ItemDeleteInfoJson> deletedItems = [];
+  List<SharedItemJson> sharedItems = [];
+  List<PendingShareInfoJson> pendingShares = [];
   @JsonKey(
     toJson: AceUtil.nullableDateTimeToMilliseconds,
     fromJson: AceUtil.nullableMillisecondsToDateTime,
   )
   DateTime? lastSyncDate;
-  List<ItemJson> createdItems;
-  List<ItemJson> modifiedItems;
-  List<ItemDeleteInfoJson> deletedItems;
 
   SyncInfo({
-    this.lastSyncDate,
     this.createdItems = const [],
     this.modifiedItems = const [],
     this.deletedItems = const [],
+    this.sharedItems = const [],
+    this.pendingShares = const [],
+    this.lastSyncDate,
   });
 
   factory SyncInfo.fromJson(Map<String, dynamic> json) => _$SyncInfoFromJson(json);
