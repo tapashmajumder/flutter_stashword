@@ -40,7 +40,7 @@ class ItemJson {
   String iv;
   String? blob;
   bool addToWatch;
-  int? colorIndex;
+  int? rgbInt;
   @JsonKey(
     toJson: AceUtil.nullableDateTimeToMilliseconds,
     fromJson: AceUtil.nullableMillisecondsToDateTime,
@@ -65,7 +65,7 @@ class ItemJson {
     required this.iv,
     this.blob,
     this.addToWatch = false,
-    this.colorIndex,
+    this.rgbInt,
     this.created,
     this.lastUsed,
     this.modified,
@@ -104,7 +104,7 @@ class SharedItemJson {
   String iv;
   String? blob;
   bool addToWatch;
-  int? colorIndex;
+  int? rgbInt;
   @JsonKey(
     toJson: AceUtil.nullableDateTimeToMilliseconds,
     fromJson: AceUtil.nullableMillisecondsToDateTime,
@@ -131,7 +131,7 @@ class SharedItemJson {
     required this.sharedSecret,
     this.blob,
     this.addToWatch = false,
-    this.colorIndex,
+    this.rgbInt,
     this.created,
     this.lastUsed,
     this.modified,

@@ -42,7 +42,7 @@ void main() {
     required String iv,
     String? name,
     bool addToWatch = false,
-    int? colorIndex,
+    int? rgbInt,
     DateTime? created,
     DateTime? lastUsed,
     DateTime? modified,
@@ -72,7 +72,7 @@ void main() {
     final itemJson = ItemJson(itemType: ItemType.password, id: id, iv: iv);
     itemJson.blob = blob;
     itemJson.addToWatch = addToWatch;
-    itemJson.colorIndex = colorIndex;
+    itemJson.rgbInt = rgbInt;
     itemJson.created = created;
     itemJson.lastUsed = lastUsed;
     itemJson.modified = modified;
@@ -89,7 +89,7 @@ void main() {
     required String sharedSecret,
     String? name,
     bool addToWatch = false,
-    int? colorIndex,
+    int? rgbInt,
     DateTime? created,
     DateTime? lastUsed,
     DateTime? modified,
@@ -123,7 +123,7 @@ void main() {
     );
     itemJson.blob = blob;
     itemJson.addToWatch = addToWatch;
-    itemJson.colorIndex = colorIndex;
+    itemJson.rgbInt = rgbInt;
     itemJson.created = created;
     itemJson.lastUsed = lastUsed;
     itemJson.modified = modified;
@@ -138,7 +138,7 @@ void main() {
     const iv = "iv1";
     const name = "zee-name";
     const addToWatch = true;
-    const colorIndex = 23;
+    const rgbInt = 23;
     final created = DateTime.timestamp();
     final lastUsed = DateTime.timestamp();
     final modified = DateTime.timestamp();
@@ -170,7 +170,7 @@ void main() {
       iv: iv,
       name: name,
       addToWatch: addToWatch,
-      colorIndex: colorIndex,
+      rgbInt: rgbInt,
       created: created,
       lastUsed: lastUsed,
       modified: modified,
@@ -193,7 +193,7 @@ void main() {
     expect(decoded.iv, iv);
     expect(decoded.blob, passwordBlob);
     expect(decoded.addToWatch, addToWatch);
-    expect(decoded.colorIndex, colorIndex);
+    expect(decoded.rgbInt, rgbInt);
     expect(decoded.created?.millisecondsSinceEpoch, created.millisecondsSinceEpoch);
     expect(decoded.lastUsed?.millisecondsSinceEpoch, lastUsed.millisecondsSinceEpoch);
     expect(decoded.modified?.millisecondsSinceEpoch, modified.millisecondsSinceEpoch);
@@ -206,7 +206,8 @@ void main() {
     const iv = "iv1";
     const itemType = ItemType.doc;
     const addToWatch = true;
-    const colorIndex = 23;
+    const rgbInt = 13910382;
+    const colorIndex = 4;
     final created = DateTime.timestamp();
     final lastUsed = DateTime.timestamp();
     final modified = DateTime.timestamp();
@@ -218,7 +219,7 @@ void main() {
       id: id,
       iv: iv,
       addToWatch: addToWatch,
-      colorIndex: colorIndex,
+      rgbInt: rgbInt,
       created: created,
       lastUsed: lastUsed,
       modified: modified,
@@ -246,7 +247,8 @@ void main() {
     const iv = "iv1";
     const itemType = ItemType.doc;
     const addToWatch = true;
-    const colorIndex = 23;
+    const colorIndex = 4;
+    const rgbInt = 13910382;
     final created = DateTime.timestamp();
     final lastUsed = DateTime.timestamp();
     final modified = DateTime.timestamp();
@@ -273,7 +275,7 @@ void main() {
     expect(itemJson.iv, iv);
     expect(itemJson.blob, blob);
     expect(itemJson.addToWatch, addToWatch);
-    expect(itemJson.colorIndex, colorIndex);
+    expect(itemJson.rgbInt, rgbInt);
     expect(itemJson.created?.millisecondsSinceEpoch, created.millisecondsSinceEpoch);
     expect(itemJson.lastUsed?.millisecondsSinceEpoch, lastUsed.millisecondsSinceEpoch);
     expect(itemJson.modified?.millisecondsSinceEpoch, modified.millisecondsSinceEpoch);
@@ -327,7 +329,7 @@ void main() {
     const iv = "iv1";
     const name = "zee-name";
     const addToWatch = true;
-    const colorIndex = 23;
+    const rgbInt = 23;
     final created = DateTime.timestamp();
     final lastUsed = DateTime.timestamp();
     final modified = DateTime.timestamp();
@@ -361,7 +363,7 @@ void main() {
       sharedSecret: sharedSecret,
       name: name,
       addToWatch: addToWatch,
-      colorIndex: colorIndex,
+      rgbInt: rgbInt,
       created: created,
       lastUsed: lastUsed,
       modified: modified,
@@ -382,7 +384,7 @@ void main() {
     expect(decoded.iv, iv);
     expect(decoded.blob, passwordBlob);
     expect(decoded.addToWatch, addToWatch);
-    expect(decoded.colorIndex, colorIndex);
+    expect(decoded.rgbInt, rgbInt);
     expect(decoded.created?.millisecondsSinceEpoch, created.millisecondsSinceEpoch);
     expect(decoded.lastUsed?.millisecondsSinceEpoch, lastUsed.millisecondsSinceEpoch);
     expect(decoded.modified?.millisecondsSinceEpoch, modified.millisecondsSinceEpoch);
@@ -395,7 +397,8 @@ void main() {
     const iv = "iv1";
     const itemType = ItemType.doc;
     const addToWatch = true;
-    const colorIndex = 23;
+    const colorIndex = 4;
+    const rgbInt = 13910382;
     final created = DateTime.timestamp();
     final lastUsed = DateTime.timestamp();
     final modified = DateTime.timestamp();
@@ -409,7 +412,7 @@ void main() {
       sharer: sharer,
       sharedSecret: sharedSecret,
       addToWatch: addToWatch,
-      colorIndex: colorIndex,
+      rgbInt: rgbInt,
       created: created,
       lastUsed: lastUsed,
       modified: modified,
@@ -435,7 +438,8 @@ void main() {
     const iv = "iv1";
     const itemType = ItemType.doc;
     const addToWatch = true;
-    const colorIndex = 23;
+    const colorIndex = 4;
+    const rgbInt = 13910382;
     final created = DateTime.timestamp();
     final lastUsed = DateTime.timestamp();
     final modified = DateTime.timestamp();
@@ -464,7 +468,7 @@ void main() {
     expect(sharedItemJson.sharedSecret, sharedSecret);
     expect(sharedItemJson.blob, blob);
     expect(sharedItemJson.addToWatch, addToWatch);
-    expect(sharedItemJson.colorIndex, colorIndex);
+    expect(sharedItemJson.rgbInt, rgbInt);
     expect(sharedItemJson.created?.millisecondsSinceEpoch, created.millisecondsSinceEpoch);
     expect(sharedItemJson.lastUsed?.millisecondsSinceEpoch, lastUsed.millisecondsSinceEpoch);
     expect(sharedItemJson.modified?.millisecondsSinceEpoch, modified.millisecondsSinceEpoch);

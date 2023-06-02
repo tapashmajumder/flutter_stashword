@@ -1,13 +1,12 @@
 import 'package:Stashword/data/data_service.dart';
 import 'package:Stashword/data/item.dart';
 import 'package:Stashword/data/item_delete_info.dart';
+import 'package:Stashword/sync/color_index.dart';
 import 'package:Stashword/sync/json_to_db_converter.dart';
 import 'package:Stashword/sync/sync_server_jsons.dart';
 import 'package:Stashword/util/ace_util.dart';
 
 final class SyncIncoming {
-  static const _maxColorIndex = 6;
-
   static Future<void> process({
     required SyncInfo syncInfo,
     required DateTime currentDate,
@@ -180,7 +179,7 @@ final class SyncIncoming {
     final Item item = JsonToDb.fromItemJsonToItem(json);
     item.created ??= currentDate;
     item.lastUsed ??= currentDate;
-    item.colorIndex ??= AceUtil.nextRandom(max: _maxColorIndex);
+    item.colorIndex ??= ColorIndexHelper.randomColorIndex;
     await dataService.createItem(item: item);
   }
 }

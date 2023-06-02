@@ -59,7 +59,7 @@ ItemJson _$ItemJsonFromJson(Map<String, dynamic> json) => ItemJson(
       iv: json['iv'] as String,
       blob: json['blob'] as String?,
       addToWatch: json['addToWatch'] as bool? ?? false,
-      colorIndex: json['colorIndex'] as int?,
+      rgbInt: json['rgbInt'] as int?,
       created: AceUtil.nullableMillisecondsToDateTime(json['created'] as int?),
       lastUsed:
           AceUtil.nullableMillisecondsToDateTime(json['lastUsed'] as int?),
@@ -84,7 +84,7 @@ Map<String, dynamic> _$ItemJsonToJson(ItemJson instance) {
 
   writeNotNull('blob', instance.blob);
   val['addToWatch'] = instance.addToWatch;
-  writeNotNull('colorIndex', instance.colorIndex);
+  writeNotNull('rgbInt', instance.rgbInt);
   writeNotNull(
       'created', AceUtil.nullableDateTimeToMilliseconds(instance.created));
   writeNotNull(
@@ -127,7 +127,7 @@ SharedItemJson _$SharedItemJsonFromJson(Map<String, dynamic> json) =>
       sharedSecret: json['sharedSecret'] as String,
       blob: json['blob'] as String?,
       addToWatch: json['addToWatch'] as bool? ?? false,
-      colorIndex: json['colorIndex'] as int?,
+      rgbInt: json['rgbInt'] as int?,
       created: AceUtil.nullableMillisecondsToDateTime(json['created'] as int?),
       lastUsed:
           AceUtil.nullableMillisecondsToDateTime(json['lastUsed'] as int?),
@@ -150,7 +150,7 @@ Map<String, dynamic> _$SharedItemJsonToJson(SharedItemJson instance) {
 
   writeNotNull('blob', instance.blob);
   val['addToWatch'] = instance.addToWatch;
-  writeNotNull('colorIndex', instance.colorIndex);
+  writeNotNull('rgbInt', instance.rgbInt);
   writeNotNull(
       'created', AceUtil.nullableDateTimeToMilliseconds(instance.created));
   writeNotNull(

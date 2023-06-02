@@ -5,6 +5,7 @@ import 'package:Stashword/data/pending_share_info.dart';
 import 'package:Stashword/data/shared_item.dart';
 import 'package:Stashword/model/item_models.dart';
 import 'package:Stashword/model/pending_share_info_model.dart';
+import 'package:Stashword/sync/color_index.dart';
 import 'package:Stashword/sync/sync_server_jsons.dart';
 
 class JsonToDb {
@@ -16,7 +17,10 @@ class JsonToDb {
     );
     item.addToWatch = json.addToWatch;
     item.blob = json.blob;
-    item.colorIndex = json.colorIndex;
+    final rgbInt = json.rgbInt;
+    if (rgbInt != null) {
+      item.colorIndex = ColorIndexHelper.rgb(rgbInt).colorIndex;
+    }
     item.created = json.created;
     item.lastUsed = json.modified;
     item.modified = json.modified;
@@ -34,7 +38,10 @@ class JsonToDb {
     );
     json.addToWatch = item.addToWatch;
     json.blob = item.blob;
-    json.colorIndex = item.colorIndex;
+    final colorIndex = item.colorIndex;
+    if (colorIndex != null) {
+      json.rgbInt = ColorIndexHelper.colorIndex(colorIndex).rgbInt;
+    }
     json.created = item.created;
     json.lastUsed = item.modified;
     json.modified = item.modified;
@@ -70,7 +77,10 @@ class JsonToDb {
     );
     sharedItem.addToWatch = json.addToWatch;
     sharedItem.blob = json.blob;
-    sharedItem.colorIndex = json.colorIndex;
+    final rgbInt = json.rgbInt;
+    if (rgbInt != null) {
+      sharedItem.colorIndex = ColorIndexHelper.rgb(rgbInt).colorIndex;
+    }
     sharedItem.created = json.created;
     sharedItem.lastUsed = json.modified;
     sharedItem.modified = json.modified;
@@ -90,7 +100,10 @@ class JsonToDb {
     );
     json.addToWatch = sharedItem.addToWatch;
     json.blob = sharedItem.blob;
-    json.colorIndex = sharedItem.colorIndex;
+    final colorIndex = sharedItem.colorIndex;
+    if (colorIndex != null) {
+      json.rgbInt = ColorIndexHelper.colorIndex(colorIndex).rgbInt;
+    }
     json.created = sharedItem.created;
     json.lastUsed = sharedItem.modified;
     json.modified = sharedItem.modified;
