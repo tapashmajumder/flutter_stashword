@@ -4,7 +4,7 @@ import 'package:json_annotation/json_annotation.dart';
 
 import 'package:Stashword/util/ace_util.dart';
 
-part 'server_jsons.g.dart';
+part 'sync_server_jsons.g.dart';
 
 @JsonSerializable(includeIfNull: false)
 class SyncInfo {

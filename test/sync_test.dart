@@ -5,7 +5,7 @@ import 'package:Stashword/data/pending_share_info.dart';
 import 'package:Stashword/data/shared_item.dart';
 import 'package:Stashword/model/item_models.dart';
 import 'package:Stashword/model/pending_share_info_model.dart';
-import 'package:Stashword/sync/server_jsons.dart';
+import 'package:Stashword/sync/sync_server_jsons.dart';
 import 'package:Stashword/sync/sync_incoming.dart';
 import 'package:Stashword/sync/sync_outgoing.dart';
 import 'package:collection/collection.dart';

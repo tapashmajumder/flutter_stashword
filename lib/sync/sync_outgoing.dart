@@ -2,7 +2,7 @@ import 'package:Stashword/data/data_service.dart';
 import 'package:Stashword/data/item.dart';
 import 'package:Stashword/data/item_delete_info.dart';
 import 'package:Stashword/sync/json_to_db_converter.dart';
-import 'package:Stashword/sync/server_jsons.dart';
+import 'package:Stashword/sync/sync_server_jsons.dart';
 
 final class SyncOutgoing {
   static SyncInfo create({required final IDataService dataService, required final DateTime? lastSyncDate}) {

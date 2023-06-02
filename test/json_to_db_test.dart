@@ -8,7 +8,7 @@ import 'package:Stashword/model/item_models.dart';
 import 'package:Stashword/model/pending_share_info_model.dart';
 import 'package:Stashword/storage/blob_serialization.dart';
 import 'package:Stashword/sync/json_to_db_converter.dart';
-import 'package:Stashword/sync/server_jsons.dart';
+import 'package:Stashword/sync/sync_server_jsons.dart';
 import 'package:test/test.dart';
 
 void main() {
