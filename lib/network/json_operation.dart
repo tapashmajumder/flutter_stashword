@@ -5,12 +5,25 @@ import 'package:Stashword/network/server_jsons.dart';
 import 'package:Stashword/sync/sync_server_jsons.dart';
 import 'package:dio/dio.dart';
 
-void main() async {
-  final jsonOperation = JsonOperation<SyncConfirmCodeResult>(
+Future<void> withReturnType() async {
+  final jsonOperation = JsonOperation(
+    requestMethod: RequestMethod.post,
+    baseUrl: "https://api2.stashword.com",
+    path: "/app/csc",
+  );
+  jsonOperation.headers = {
+    HeaderParam.login: "tapash.majumder+1@gmail.com",
+    HeaderParam.securityCode: "123",
+  };
+
+  SyncConfirmCodeResult result = await jsonOperation.fetchAndDeserialize(SyncConfirmCodeResult.fromJson);
+}
+
+Future<void> withoutReturnType() async {
+  final jsonOperation = JsonOperation(
     requestMethod: RequestMethod.post,
     baseUrl: "https://api2.stashword.com",
     path: "/app/updateItem",
-    fromJson: SyncConfirmCodeResult.fromJson,
   );
   jsonOperation.headers = {
     HeaderParam.login: "tapash.majumder+3@gmail.com",
@@ -26,9 +39,12 @@ void main() async {
     rgbInt: 10065516,
   );
   jsonOperation.jsonBody = itemJson.toJson();
+  await jsonOperation.fetchResponse();
+}
 
-  SyncConfirmCodeResult result = await jsonOperation.fetchAndDeserialize();
-  print(result);
+Future<void> main() async {
+  await withReturnType();
+  await withoutReturnType();
 }
 
 enum RequestMethod {
@@ -74,11 +90,10 @@ class NetworkError implements Exception {
   }
 }
 
-final class JsonOperation<T> {
+final class JsonOperation {
   final RequestMethod requestMethod;
   final String baseUrl;
   final String path;
-  final T Function(Map<String, dynamic>) fromJson;
   Map<HeaderParam, String>? headers;
   Map<QueryParam, String>? queryParams;
   Map<String, dynamic>? jsonBody;
@@ -87,21 +102,24 @@ final class JsonOperation<T> {
     required this.requestMethod,
     required this.baseUrl,
     required this.path,
-    required this.fromJson,
   });
 
-  Future<T> fetchAndDeserialize() async {
+  Future<T> fetchAndDeserialize<T>(T Function(Map<String, dynamic>) fromJson) async {
+    final jsonResponse = await fetchResponse();
+    try {
+      return fromJson(jsonResponse);
+    } catch (e) {
+      throw NetworkError("Deserialization to type $T failed: $e");
+    }
+  }
+
+  Future<Map<String, dynamic>> fetchResponse() async {
     try {
       final dio = Dio();
       final response = await _sendRequest(dio);
 
       if (response.statusCode == 200) {
-        final jsonResponse = response.data as Map<String, dynamic>;
-        try {
-          return fromJson(jsonResponse);
-        } catch (e) {
-          throw NetworkError("Deserialization to type $T failed: $e");
-        }
+        return response.data as Map<String, dynamic>;
       } else {
         throw NetworkError(_getInvalidResponseMessage(response));
       }
@@ -121,6 +139,7 @@ final class JsonOperation<T> {
       }
     }
   }
+
 
   Future<Response> _sendRequest(Dio dio) async {
     final url = _createUrl(baseUrl: baseUrl, path: path);
@@ -154,7 +173,7 @@ final class JsonOperation<T> {
   }
 
   Map<String, String> _createHeaderParams() {
-    final userAddedHeaders = this.headers;
+    final userAddedHeaders = headers;
     final Map<HeaderParam, String> toAdd = {HeaderParam.contentType: "application/json"};
     if (userAddedHeaders != null) {
       toAdd.addAll(userAddedHeaders);
