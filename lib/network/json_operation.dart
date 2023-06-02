@@ -1,28 +1,44 @@
 import 'dart:core';
 
+import 'package:Stashword/model/item_models.dart';
 import 'package:Stashword/network/server_jsons.dart';
+import 'package:Stashword/sync/sync_server_jsons.dart';
 import 'package:dio/dio.dart';
 
 void main() async {
   final jsonOperation = JsonOperation<SyncConfirmCodeResult>(
     requestMethod: RequestMethod.post,
     baseUrl: "https://api2.stashword.com",
-    path: "/app/csc",
+    path: "/app/updateItem",
     fromJson: SyncConfirmCodeResult.fromJson,
   );
   jsonOperation.headers = {
-    HeaderParam.login: "tapash.majumder+1@gmail.com",
-    HeaderParam.securityCode: "123",
+    HeaderParam.login: "tapash.majumder+3@gmail.com",
+    HeaderParam.token: "5a882dee04084a3ab4d4f5772ec5a288",
+    HeaderParam.encryptedSanity: "zcjlsWuXyqjm7QmNNa9qVPt6njvwGFZImGda3KEbPn4=",
   };
+  final itemJson = ItemJson(
+    itemType: ItemType.password,
+    id: "1a23a8634f1640319ccd30841a4e316a",
+    iv: "QzoBSlvF29T9eKxNjvWGhw==",
+    shared: true,
+    sharedSecret: "wxZVajDLmR2Gkb3xffGJTdGUlg9zn1zsqausf6aga0mmC3OSPhkmGz2wrcjO5k1x",
+    rgbInt: 10065516,
+  );
+  jsonOperation.jsonBody = itemJson.toJson();
 
   SyncConfirmCodeResult result = await jsonOperation.fetchAndDeserialize();
   print(result);
 }
 
 enum RequestMethod {
-  get,
-  post,
+  get("GET"),
+  post("POST"),
   ;
+
+  final String value;
+
+  const RequestMethod(this.value);
 }
 
 enum QueryParam {
@@ -38,6 +54,8 @@ enum HeaderParam {
   contentType("Content-Type"),
   login("login"),
   securityCode("sc"),
+  token("token"),
+  encryptedSanity("ec"),
   ;
 
   final String value;
@@ -63,6 +81,7 @@ final class JsonOperation<T> {
   final T Function(Map<String, dynamic>) fromJson;
   Map<HeaderParam, String>? headers;
   Map<QueryParam, String>? queryParams;
+  Map<String, dynamic>? jsonBody;
 
   JsonOperation({
     required this.requestMethod,
@@ -104,19 +123,14 @@ final class JsonOperation<T> {
   }
 
   Future<Response> _sendRequest(Dio dio) async {
-    final options = Options(
-      responseType: ResponseType.json,
-      headers: _createHeaderParams(),
-    );
     final url = _createUrl(baseUrl: baseUrl, path: path);
-
-    if (requestMethod == RequestMethod.get) {
-      return dio.get(url, options: options, queryParameters: _createQueryParams());
-    } else if (requestMethod == RequestMethod.post) {
-      return dio.post(url, options: options, queryParameters: _createQueryParams());
-    } else {
-      throw NetworkError("Unsupported request method");
-    }
+    return dio.fetch(RequestOptions(
+      path: url,
+      method: requestMethod.value,
+      queryParameters: _createQueryParams(),
+      headers: _createHeaderParams(),
+      data: jsonBody,
+    ));
   }
 
   static String _createUrl({required String baseUrl, required String path}) {
@@ -132,15 +146,11 @@ final class JsonOperation<T> {
       final errorMessage = _extractErrorMessageFromJson(errorResponse);
 
       if (errorMessage != null) {
-        return statusCode != null
-            ? "Invalid status code: $statusCode: $errorMessage"
-            : "Invalid response from server: $errorMessage";
+        return statusCode != null ? "Invalid status code: $statusCode: $errorMessage" : "Invalid response from server: $errorMessage";
       }
     }
 
-    return statusCode != null
-        ? "Invalid status code: $statusCode"
-        : "Invalid response from server";
+    return statusCode != null ? "Invalid status code: $statusCode" : "Invalid response from server";
   }
 
   Map<String, String> _createHeaderParams() {
