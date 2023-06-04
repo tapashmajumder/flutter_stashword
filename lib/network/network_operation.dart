@@ -187,10 +187,6 @@ final class NetworkOperation {
 }
 
 class NetworkUtil {
-  static String createUrl({required String baseUrl, required String path}) {
-    return Uri.parse(baseUrl).resolve(path).toString();
-  }
-
   static Map<String, String> createHeaderParams({
     required NetworkRequestType requestType,
     required Map<HeaderParam, String>? headers,
