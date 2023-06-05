@@ -1,4 +1,5 @@
 import 'package:Stashword/ui/split_view/example/first_page.dart';
+import 'package:Stashword/ui/split_view/split_view.dart';
 import 'package:flutter/material.dart';
 
 void main() {
@@ -15,8 +16,7 @@ class MyApp extends StatelessWidget {
       theme: ThemeData(
         primarySwatch: Colors.indigo,
       ),
-      // just return `FirstPage` for now. We'll change this later
-      home: const FirstPage(),
+      home: SplitView(),
     );
   }
 }
