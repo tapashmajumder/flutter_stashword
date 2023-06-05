@@ -1,7 +1,7 @@
 import 'package:Stashword/ui/split_view/example/first_page.dart';
 import 'package:Stashword/ui/split_view/example/second_page.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:hooks_riverpod/hooks_riverpod.dart';
 
 // a map of ("page name", WidgetBuilder) pairs
 final _availablePages = <String, WidgetBuilder>{

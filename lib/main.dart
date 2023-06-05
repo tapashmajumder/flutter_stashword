@@ -1,7 +1,7 @@
 import 'package:Stashword/ui/split_view/app_menu.dart';
 import 'package:Stashword/ui/split_view/split_view.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:hooks_riverpod/hooks_riverpod.dart';
 
 void main() {
   runApp(const ProviderScope(child: MyApp()));
