@@ -10,7 +10,7 @@ class FirstPage extends StatelessWidget {
     return PageScaffold(
       title: 'First Page',
       body: Center(
-        child: Text('First Page', style: Theme.of(context).textTheme.headline4),
+        child: Text('First Page', style: Theme.of(context).textTheme.headlineLarge),
       ),
     );
   }
