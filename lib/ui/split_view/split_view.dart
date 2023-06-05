@@ -1,5 +1,3 @@
-import 'package:Stashword/ui/split_view/app_menu.dart';
-import 'package:Stashword/ui/split_view/example/first_page.dart';
 import 'package:flutter/material.dart';
 
 class SplitView extends StatelessWidget {
