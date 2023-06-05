@@ -1,3 +1,4 @@
+import 'package:Stashword/ui/split_view/app_menu.dart';
 import 'package:Stashword/ui/split_view/example/first_page.dart';
 import 'package:Stashword/ui/split_view/split_view.dart';
 import 'package:flutter/material.dart';
@@ -16,7 +17,10 @@ class MyApp extends StatelessWidget {
       theme: ThemeData(
         primarySwatch: Colors.indigo,
       ),
-      home: SplitView(),
+      home: const SplitView(
+        menu: AppMenu(),
+        content: FirstPage(),
+      ),
     );
   }
 }
