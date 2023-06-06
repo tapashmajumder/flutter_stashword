@@ -1,14 +1,12 @@
-// Just a simple placeholder widget page (this would be something more useful in a real app)
-import 'package:Stashword/ui/split_view/page_scaffold.dart';
 import 'package:flutter/material.dart';
+import 'package:hooks_riverpod/hooks_riverpod.dart';
 
-class FirstPage extends StatelessWidget {
+class FirstPage extends HookConsumerWidget {
   const FirstPage({super.key});
 
   @override
-  Widget build(BuildContext context) {
-    return PageScaffold(
-      title: 'First Page',
+  Widget build(BuildContext context, WidgetRef ref) {
+    return Scaffold(
       body: Center(
         child: Text('First Page', style: Theme.of(context).textTheme.headlineLarge),
       ),
