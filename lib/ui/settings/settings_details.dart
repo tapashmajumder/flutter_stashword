@@ -7,8 +7,9 @@ class SettingsDetailsWidget extends HookConsumerWidget {
   @override
   Widget build(BuildContext context, WidgetRef ref) {
     return Scaffold(
+      appBar: AppBar(title: const Text("Setting Details"),),
       body: Center(
-        child: Text('Settings', style: Theme.of(context).textTheme.headlineLarge),
+        child: Text('Setting Details', style: Theme.of(context).textTheme.headlineLarge),
       ),
     );
   }
