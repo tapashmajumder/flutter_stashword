@@ -1,26 +1,35 @@
-import 'package:Stashword/ui/split_view/example/first_page.dart';
-import 'package:Stashword/ui/split_view/example/second_page.dart';
-import 'package:Stashword/ui/split_view/responsive_widget.dart';
+import 'package:Stashword/ui/card/cards.dart';
+import 'package:Stashword/ui/doc/docs.dart';
+import 'package:Stashword/ui/item/items.dart';
+import 'package:Stashword/ui/responsive/responsive_widget.dart';
+import 'package:Stashword/ui/settings/settings.dart';
 import 'package:flutter/material.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 
-// a map of ("page name", WidgetBuilder) pairs
-final availablePages = <String, WidgetBuilder>{
-  'F I R S T': (_) => const FirstPage(),
-  'S E C O N D': (_) => const SecondPage(),
+class PageInfo {
+  final int index;
+  final String name;
+  final WidgetBuilder builder;
+
+  PageInfo({
+    required this.index,
+    required this.name,
+    required this.builder,
+  });
+}
+
+final pages = <int, PageInfo>{
+  0: PageInfo(index: 0, name: "Items", builder: (_) => const ItemsWidget()),
+  1: PageInfo(index: 1, name: "Cards", builder: (_) => const CardsWidget()),
+  2: PageInfo(index: 2, name: "Docs", builder: (_) => const DocsWidget()),
+  3: PageInfo(index: 3, name: "Settings", builder: (_) => const SettingsWidget()),
 };
 
-// this is a `StateProvider` so we can change its value
-final selectedPageNameProvider = StateProvider<String>((ref) {
-  // default value
-  return availablePages.keys.first;
-});
+final selectedPageIndexProvider = StateProvider<int>((ref) => 0);
 
 final selectedPageBuilderProvider = Provider<WidgetBuilder>((ref) {
-  // watch for state changes inside selectedPageNameProvider
-  final selectedPageKey = ref.watch(selectedPageNameProvider);
-  // return the WidgetBuilder using the key as index
-  return availablePages[selectedPageKey]!;
+  final selectedPageIndex = ref.watch(selectedPageIndexProvider);
+  return pages[selectedPageIndex]!.builder;
 });
 
 
