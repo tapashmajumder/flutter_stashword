@@ -6,7 +6,7 @@ class ResponsiveWidget extends StatelessWidget {
   const ResponsiveWidget({
     Key? key,
     this.breakpoint = 600,
-    this.menuWidth = 290,
+    this.menuWidth = 300,
   }) : super(key: key);
   final double breakpoint;
   final double menuWidth;
