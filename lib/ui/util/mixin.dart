@@ -1,7 +1,29 @@
 import 'package:flutter/material.dart';
 
 mixin CustomDialogMixin on Widget {
-  void showCustomDialog(final BuildContext context, final Widget contentWidget) {
+  List<Widget> _createActions({
+    required final BuildContext context,
+    required final void Function()? onClose
+  }) {
+    return [
+      IconButton(
+        icon: const Icon(Icons.cancel),
+        onPressed: () {
+          if (onClose != null) {
+            onClose();
+          }
+          Navigator.of(context).pop();
+        },
+      ),
+    ];
+  }
+
+  void showCustomDialog({
+    required final BuildContext context,
+    required final Widget contentWidget,
+    final String? title,
+    final void Function()? onClose,
+  }) {
     showGeneralDialog(
       context: context,
       barrierDismissible: false,
@@ -27,15 +49,8 @@ mixin CustomDialogMixin on Widget {
                       ),
                     ),
                     automaticallyImplyLeading: false,
-                    title: const Text('Add Item'),
-                    actions: [
-                      IconButton(
-                        icon: const Icon(Icons.cancel),
-                        onPressed: () {
-                          Navigator.of(context).pop();
-                        },
-                      ),
-                    ],
+                    title: Text(title ?? ""),
+                    actions: _createActions(context: context, onClose: onClose),
                   ),
                   Expanded(
                     child: Container(

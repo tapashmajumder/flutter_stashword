@@ -28,7 +28,7 @@ enum ItemViewState {
   view,
 }
 
-final itemViewStateProvider = Provider<ItemViewState>((ref) => ItemViewState.view);
+final itemViewStateProvider = StateProvider<ItemViewState>((ref) => ItemViewState.view);
 
 final searchQueryProvider = Provider<String>((ref) => '');
 

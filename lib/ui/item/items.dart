@@ -27,17 +27,28 @@ class ItemsWidget extends HookConsumerWidget with CustomDialogMixin {
   @override
   Widget build(BuildContext context, WidgetRef ref) {
     final items = ref.watch(itemsProvider);
+    final itemViewState = ref.watch(itemViewStateProvider);
+
+    if (itemViewState == ItemViewState.add) {
+      WidgetsBinding.instance.addPostFrameCallback((_) {
+        showCustomDialog(
+          context: context,
+          contentWidget: const AddItemWidget(),
+          title: "Add Item",
+          onClose: () => ref.read(itemViewStateProvider.notifier).state = ItemViewState.view,
+        );
+      });
+    }
 
     return Scaffold(
       body: ListView(
         children: [
-          for (var item in items)
-            _fromModelToCell(item: item),
+          for (var item in items) _fromModelToCell(item: item),
         ],
       ),
       floatingActionButton: FloatingActionButton(
         onPressed: () {
-          showCustomDialog(context, const AddItemWidget());
+          ref.read(itemViewStateProvider.notifier).state = ItemViewState.add;
         },
         child: const Icon(Icons.add),
       ),
