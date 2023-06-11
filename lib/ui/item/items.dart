@@ -1,3 +1,5 @@
+import 'package:Stashword/model/item_models.dart';
+import 'package:Stashword/state/providers.dart';
 import 'package:Stashword/ui/item/add_item.dart';
 import 'package:Stashword/ui/util/mixin.dart';
 import 'package:flutter/cupertino.dart';
@@ -9,22 +11,28 @@ class ItemsWidget extends HookConsumerWidget with CustomDialogMixin {
     super.key,
   });
 
+  static ItemCell _fromModelToCell({required ItemModel item}) {
+    PasswordModel passwordModel = item as PasswordModel;
+    return ItemCell(
+      title: passwordModel.name ?? "",
+      subtitle: passwordModel.userName ?? "",
+      icon: item.sharedItem
+          ? CupertinoIcons.square_arrow_down
+          : item.shared
+              ? CupertinoIcons.square_arrow_up
+              : null,
+    );
+  }
+
   @override
   Widget build(BuildContext context, WidgetRef ref) {
+    final items = ref.watch(itemsProvider);
+
     return Scaffold(
       body: ListView(
-        children: const [
-          ItemCell(
-            title: 'iCloud',
-            subtitle: 'user@example.com',
-            icon: CupertinoIcons.square_arrow_up,
-          ),
-          ItemCell(
-            title: 'Amazon AWS',
-            subtitle: 'user@example.com',
-            icon: CupertinoIcons.square_arrow_down,
-          ),
-          // Add more cells as needed
+        children: [
+          for (var item in items)
+            _fromModelToCell(item: item),
         ],
       ),
       floatingActionButton: FloatingActionButton(
@@ -40,7 +48,7 @@ class ItemsWidget extends HookConsumerWidget with CustomDialogMixin {
 class ItemCell extends StatelessWidget {
   final String title;
   final String subtitle;
-  final IconData icon;
+  final IconData? icon;
 
   const ItemCell({
     super.key,
