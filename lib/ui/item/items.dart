@@ -1,9 +1,10 @@
 import 'package:Stashword/ui/item/add_item.dart';
+import 'package:Stashword/ui/util/mixin.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 
-class ItemsWidget extends HookConsumerWidget {
+class ItemsWidget extends HookConsumerWidget with CustomDialogMixin {
   const ItemsWidget({
     super.key,
   });
@@ -28,54 +29,7 @@ class ItemsWidget extends HookConsumerWidget {
       ),
       floatingActionButton: FloatingActionButton(
         onPressed: () {
-          showGeneralDialog(
-            context: context,
-            barrierDismissible: false,
-            barrierColor: Colors.black.withOpacity(0.5),
-            transitionDuration: const Duration(milliseconds: 400),
-            pageBuilder: (BuildContext buildContext, Animation<double> animation, Animation<double> secondaryAnimation) {
-              return Center(
-                child: SizedBox(
-                  width: MediaQuery.of(context).size.width * 0.8,
-                  height: MediaQuery.of(context).size.height * 0.8,
-                  child: Material(
-                    elevation: 5,
-                    shape: RoundedRectangleBorder(
-                      borderRadius: BorderRadius.circular(10),
-                    ),
-                    child: Column(
-                      children: [
-                        AppBar(
-                          shape: const RoundedRectangleBorder(
-                            borderRadius: BorderRadius.only(
-                              topLeft: Radius.circular(10),
-                              topRight: Radius.circular(10),
-                            ),
-                          ),
-                          automaticallyImplyLeading: false,
-                          title: const Text('Add Item'),
-                          actions: [
-                            IconButton(
-                              icon: const Icon(Icons.cancel),
-                              onPressed: () {
-                                Navigator.of(context).pop();
-                              },
-                            ),
-                          ],
-                        ),
-                        Expanded(
-                          child: Container(
-                            padding: const EdgeInsets.all(16),
-                            child: AddItemWidget(), // Your dialog content goes here,
-                          ),
-                        ),
-                      ],
-                    ),
-                  ),
-                ),
-              );
-            },
-          );
+          showCustomDialog(context, const AddItemWidget());
         },
         child: const Icon(Icons.add),
       ),
