@@ -1,6 +1,6 @@
 import 'package:Stashword/model/item_models.dart';
 import 'package:Stashword/state/providers.dart';
-import 'package:Stashword/ui/item/add_item.dart';
+import 'package:Stashword/ui/item/add_password.dart';
 import 'package:Stashword/ui/util/mixin.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
@@ -29,7 +29,7 @@ class ItemsWidget extends HookConsumerWidget with CustomDialogMixin {
     final items = ref.watch(itemsProvider);
     final itemViewState = ref.watch(itemViewStateProvider);
 
-    const addItemWidget = AddItemWidget();
+    final addItemWidget = AddPasswordWidget();
 
     if (itemViewState == ItemViewState.add) {
       WidgetsBinding.instance.addPostFrameCallback((_) {
