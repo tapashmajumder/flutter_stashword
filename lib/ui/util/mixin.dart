@@ -1,28 +1,10 @@
 import 'package:flutter/material.dart';
 
 mixin CustomDialogMixin on Widget {
-  List<Widget> _createActions({
-    required final BuildContext context,
-    required final void Function()? onClose
-  }) {
-    return [
-      IconButton(
-        icon: const Icon(Icons.cancel),
-        onPressed: () {
-          if (onClose != null) {
-            onClose();
-          }
-          Navigator.of(context).pop();
-        },
-      ),
-    ];
-  }
-
   void showCustomDialog({
     required final BuildContext context,
     required final Widget contentWidget,
-    final String? title,
-    final void Function()? onClose,
+    required final AppBar appBar,
   }) {
     showGeneralDialog(
       context: context,
@@ -41,17 +23,7 @@ mixin CustomDialogMixin on Widget {
               ),
               child: Column(
                 children: [
-                  AppBar(
-                    shape: const RoundedRectangleBorder(
-                      borderRadius: BorderRadius.only(
-                        topLeft: Radius.circular(10),
-                        topRight: Radius.circular(10),
-                      ),
-                    ),
-                    automaticallyImplyLeading: false,
-                    title: Text(title ?? ""),
-                    actions: _createActions(context: context, onClose: onClose),
-                  ),
+                  appBar,
                   Expanded(
                     child: Container(
                       padding: const EdgeInsets.all(16),

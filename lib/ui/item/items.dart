@@ -29,13 +29,14 @@ class ItemsWidget extends HookConsumerWidget with CustomDialogMixin {
     final items = ref.watch(itemsProvider);
     final itemViewState = ref.watch(itemViewStateProvider);
 
+    const addItemWidget = AddItemWidget();
+
     if (itemViewState == ItemViewState.add) {
       WidgetsBinding.instance.addPostFrameCallback((_) {
         showCustomDialog(
           context: context,
-          contentWidget: const AddItemWidget(),
-          title: "Add Item",
-          onClose: () => ref.read(itemViewStateProvider.notifier).state = ItemViewState.view,
+          contentWidget: addItemWidget,
+          appBar: addItemWidget.createAppBar(context, ref),
         );
       });
     }

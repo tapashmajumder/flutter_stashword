@@ -1,10 +1,41 @@
+import 'package:Stashword/state/providers.dart';
 import 'package:flutter/material.dart';
+import 'package:hooks_riverpod/hooks_riverpod.dart';
 
-class AddItemWidget extends StatelessWidget {
+class AddItemWidget extends HookConsumerWidget {
   const AddItemWidget({super.key});
 
+  AppBar createAppBar(BuildContext context, WidgetRef ref) {
+    return AppBar(
+      shape: const RoundedRectangleBorder(
+        borderRadius: BorderRadius.only(
+          topLeft: Radius.circular(10),
+          topRight: Radius.circular(10),
+        ),
+      ),
+      automaticallyImplyLeading: false,
+      leading: IconButton(
+        icon: const Icon(Icons.cancel),
+        onPressed: () {
+          ref.read(itemViewStateProvider.notifier).state = ItemViewState.view;
+          Navigator.of(context).pop();
+        },
+      ),
+      title: const Text("Add Item"),
+      actions: [
+        TextButton(
+          onPressed: () {
+            ref.read(itemViewStateProvider.notifier).state = ItemViewState.view;
+            Navigator.of(context).pop();
+          },
+          child: const Text("Add", style: TextStyle(color: Colors.white)),
+        ),
+      ],
+    );
+  }
+
   @override
-  Widget build(BuildContext context) {
+  Widget build(BuildContext context, WidgetRef ref) {
     return Scaffold(
       body: GridView.builder(
         itemCount: 15, // Set the total number of items
