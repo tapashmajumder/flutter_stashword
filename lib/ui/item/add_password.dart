@@ -68,22 +68,51 @@ class AddPasswordWidget extends HookConsumerWidget with CustomDialogMixin {
           children: [
             const SizedBox(height: 8),
             Column(
-              children: List.generate(fieldNames.length, (index) {
-                return Row(
+              children: [
+                Row(
                   children: [
-                    Expanded(child: Text(fieldNames[index].$1)),
+                    const Expanded(child: Text("Name")),
                     Expanded(
-                      flex: 2,
+                      flex: 3,
                       child: TextFormField(
                         controller: TextEditingController(),
-                        decoration: InputDecoration(
-                          hintText: 'Enter ${fieldNames[index].$1}',
+                        decoration: const InputDecoration(
+                          hintText: 'Example Site',
                         ),
                       ),
                     ),
                   ],
-                );
-              }),
+                ),
+                Row(
+                  children: [
+                    const Expanded(child: Text("Website")),
+                    Expanded(
+                      flex: 3,
+                      child: TextFormField(
+                        controller: TextEditingController(),
+                        decoration: const InputDecoration(
+                          hintText: 'www.example.com',
+                        ),
+                      ),
+                    ),
+                  ],
+                ),
+                Row(
+                  children: [
+                    const Expanded(child: Text("Username")),
+                    Expanded(
+                      flex: 3,
+                      child: TextFormField(
+                        controller: TextEditingController(),
+                        decoration: const InputDecoration(
+                          hintText: 'user@example.com',
+                        ),
+                      ),
+                    ),
+                  ],
+                ),
+                PasswordFormFieldWidget(),
+              ],
             ),
             const SizedBox(height: 16),
             const Text(
@@ -111,6 +140,94 @@ class AddPasswordWidget extends HookConsumerWidget with CustomDialogMixin {
           ],
         ),
       ),
+    );
+  }
+}
+
+class PasswordFormFieldWidget extends StatefulWidget {
+  PasswordFormFieldWidget({super.key});
+
+  @override
+  State<StatefulWidget> createState() => _PasswordFormFieldState();
+
+  String? password;
+}
+
+class _PasswordFormFieldState extends State<PasswordFormFieldWidget> {
+  double progressValue = 0.0;
+  String strengthText = "It Sucks!";
+  TextEditingController textEditingController = TextEditingController();
+
+  void _onPasswordChanged(String? value) {
+    setState(() {
+      _updatePasswordStrength(value);
+    });
+  }
+
+  void _updatePasswordStrength(final String? password) {
+    if (password == null) {
+      progressValue = 0.0;
+      strengthText = "It Sucks!";
+      widget.password = null;
+      return;
+    }
+
+    if (password.isEmpty) {
+      progressValue = 0.0;
+      strengthText = "It Sucks!";
+    } else if (password.length == 1) {
+      progressValue = 0.5;
+      strengthText = "OK";
+    } else {
+      progressValue = 0.8;
+      strengthText = "Awesome!";
+    }
+    widget.password = password;
+  }
+  
+  @override
+  Widget build(BuildContext context) {
+    return Row(
+      crossAxisAlignment: CrossAxisAlignment.center,
+      children: [
+        const Expanded(
+            child: Text(
+          "Password",
+        )),
+        Expanded(
+            flex: 3,
+            child: Column(
+              children: [
+                TextFormField(
+                    controller: textEditingController,
+                    onChanged: _onPasswordChanged,
+                    decoration: const InputDecoration(
+                      hintText: '\$password',
+                    )),
+                const SizedBox(height: 8),
+                Row(children: [
+                  Expanded(child: LinearProgressIndicator(value: progressValue)),
+                  const SizedBox(
+                    width: 8,
+                  ),
+                  const ElevatedButton(
+                    onPressed: null,
+                    child: Text('Generate'),
+                  )
+                ]),
+                Row(
+                  children: [
+                    Expanded(
+                        child: Text(
+                      strengthText,
+                      textAlign: TextAlign.left,
+                    )),
+                    const Expanded(child: Text(""))
+                  ],
+                )
+              ],
+            )),
+      ],
     );
   }
 }
