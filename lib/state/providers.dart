@@ -1,8 +1,8 @@
 import 'package:Stashword/model/item_models.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 
-final itemsProvider = Provider<List<ItemModel>>((ref) {
-  return [
+class ItemsListNotifier extends StateNotifier<List<ItemModel>> {
+  ItemsListNotifier() : super([
     PasswordModel(
       id: "id1",
       iv: "iv1",
@@ -17,8 +17,26 @@ final itemsProvider = Provider<List<ItemModel>>((ref) {
       userName: "user@example.com",
       sharedItem: true,
     ),
-  ];
-});
+  ]);
+
+  static final provider = StateNotifierProvider<ItemsListNotifier, List<ItemModel>>((ref) => ItemsListNotifier());
+
+  void addItem({required final ItemModel item}) {
+    state = [...state, item];
+  }
+
+  void addItem2() {
+    final item = PasswordModel(
+      id: "id2",
+      iv: "iv2",
+      name: "Amazon AWS",
+      userName: "user@example.com",
+      sharedItem: true,
+    );
+
+    state = [...state, item];
+  }
+}
 
 final selectedItemProvider = Provider<ItemModel?>((ref) => null);
 
@@ -34,7 +52,7 @@ final searchQueryProvider = Provider<String>((ref) => '');
 
 final searchResultsProvider = Provider<List<ItemModel>>((ref) {
   final query = ref.watch(searchQueryProvider);
-  final items = ref.watch(itemsProvider);
+  final items = ref.watch(ItemsListNotifier.provider);
 
   // Perform search logic here and return the filtered list of items
   return [];

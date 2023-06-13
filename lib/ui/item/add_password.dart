@@ -4,12 +4,13 @@ import 'package:Stashword/ui/util/mixin.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 
 class MyFormNotifier extends StateNotifier<List<(String, String)>> {
-  MyFormNotifier() : super([
-    ('Name', 'Example Site'),
-    ('Website', 'www.example.com'),
-    ('Username', 'user@eaxample.com'),
-    ('Password', '\$password'),
-  ]);
+  MyFormNotifier()
+      : super([
+          ('Name', 'Example Site'),
+          ('Website', 'www.example.com'),
+          ('Username', 'user@eaxample.com'),
+          ('Password', '\$password'),
+        ]);
 
   void addField() {
     final newFieldIndex = state.length + 1;
@@ -44,6 +45,7 @@ class AddPasswordWidget extends HookConsumerWidget with CustomDialogMixin {
       actions: [
         TextButton(
           onPressed: () {
+            ref.read(ItemsListNotifier.provider.notifier).addItem2();
             ref.read(itemViewStateProvider.notifier).state = ItemViewState.view;
             Navigator.of(context).pop();
           },
@@ -55,7 +57,6 @@ class AddPasswordWidget extends HookConsumerWidget with CustomDialogMixin {
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
-
     final fieldNamesNotifier = ref.watch(fieldsProvider.notifier);
     final fieldNames = ref.watch(fieldsProvider);
 

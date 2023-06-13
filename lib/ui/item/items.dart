@@ -26,7 +26,7 @@ class ItemsWidget extends HookConsumerWidget with CustomDialogMixin {
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
-    final items = ref.watch(itemsProvider);
+    final items = ref.watch(ItemsListNotifier.provider);
     final itemViewState = ref.watch(itemViewStateProvider);
 
     final addItemWidget = AddPasswordWidget();
