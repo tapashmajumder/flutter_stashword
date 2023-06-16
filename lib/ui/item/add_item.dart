@@ -17,7 +17,7 @@ class AddItemWidget extends HookConsumerWidget {
       leading: IconButton(
         icon: const Icon(Icons.cancel),
         onPressed: () {
-          ref.read(itemViewStateProvider.notifier).state = ItemViewState.view;
+          ref.read(providers.itemViewStateProvider.notifier).state = ItemViewState.view;
           Navigator.of(context).pop();
         },
       ),
@@ -25,7 +25,7 @@ class AddItemWidget extends HookConsumerWidget {
       actions: [
         TextButton(
           onPressed: () {
-            ref.read(itemViewStateProvider.notifier).state = ItemViewState.view;
+            ref.read(providers.itemViewStateProvider.notifier).state = ItemViewState.view;
             Navigator.of(context).pop();
           },
           child: const Text("Add", style: TextStyle(color: Colors.white)),

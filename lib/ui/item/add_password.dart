@@ -1,3 +1,4 @@
+import 'package:Stashword/model/item_models.dart';
 import 'package:Stashword/state/providers.dart';
 import 'package:flutter/material.dart';
 import 'package:Stashword/ui/util/mixin.dart';
@@ -37,7 +38,7 @@ class AddPasswordWidget extends HookConsumerWidget with CustomDialogMixin {
       leading: IconButton(
         icon: const Icon(Icons.cancel),
         onPressed: () {
-          ref.read(itemViewStateProvider.notifier).state = ItemViewState.view;
+          ref.read(providers.itemViewStateProvider.notifier).state = ItemViewState.view;
           Navigator.of(context).pop();
         },
       ),
@@ -45,8 +46,16 @@ class AddPasswordWidget extends HookConsumerWidget with CustomDialogMixin {
       actions: [
         TextButton(
           onPressed: () {
-            ref.read(ItemsListNotifier.provider.notifier).addItem2();
-            ref.read(itemViewStateProvider.notifier).state = ItemViewState.view;
+            final item = PasswordModel(
+              id: "id2",
+              iv: "iv2",
+              name: "Amazon AWS 33",
+              userName: "user@example.com",
+              sharedItem: true,
+            );
+
+            ref.read(providers.itemsProvider.notifier).addItem(item: item);
+            ref.read(providers.itemViewStateProvider.notifier).state = ItemViewState.view;
             Navigator.of(context).pop();
           },
           child: const Text("Save", style: TextStyle(color: Colors.white)),

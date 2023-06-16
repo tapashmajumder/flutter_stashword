@@ -26,8 +26,8 @@ class ItemsWidget extends HookConsumerWidget with CustomDialogMixin {
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
-    final items = ref.watch(ItemsListNotifier.provider);
-    final itemViewState = ref.watch(itemViewStateProvider);
+    final items = ref.watch(providers.itemsProvider);
+    final itemViewState = ref.watch(providers.itemViewStateProvider);
 
     final addItemWidget = AddPasswordWidget();
 
@@ -49,7 +49,7 @@ class ItemsWidget extends HookConsumerWidget with CustomDialogMixin {
       ),
       floatingActionButton: FloatingActionButton(
         onPressed: () {
-          ref.read(itemViewStateProvider.notifier).state = ItemViewState.add;
+          ref.read(providers.itemViewStateProvider.notifier).state = ItemViewState.add;
         },
         child: const Icon(Icons.add),
       ),

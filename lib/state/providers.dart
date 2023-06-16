@@ -1,44 +1,24 @@
 import 'package:Stashword/model/item_models.dart';
+import 'package:Stashword/state/dev_providers.dart';
+import 'package:Stashword/state/prod_providers.dart';
+import 'package:flutter/foundation.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 
-class ItemsListNotifier extends StateNotifier<List<ItemModel>> {
-  ItemsListNotifier() : super([
-    PasswordModel(
-      id: "id1",
-      iv: "iv1",
-      name: "iCloud",
-      userName: "user@example.com",
-      shared: true,
-    ),
-    PasswordModel(
-      id: "id2",
-      iv: "iv2",
-      name: "Amazon AWS",
-      userName: "user@example.com",
-      sharedItem: true,
-    ),
-  ]);
+abstract class IProviders {
+  StateNotifierProvider<ItemsListNotifier, List<ItemModel>> get itemsProvider;
+  StateProvider<ItemViewState> get itemViewStateProvider;
+  Provider<ItemModel?> get selectedItemProvider;
+}
 
-  static final provider = StateNotifierProvider<ItemsListNotifier, List<ItemModel>>((ref) => ItemsListNotifier());
+final providers = (kReleaseMode) ? ProdProviders() : DevProviders();
+
+class ItemsListNotifier extends StateNotifier<List<ItemModel>> {
+  ItemsListNotifier({List<ItemModel> values = const []}) : super(values);
 
   void addItem({required final ItemModel item}) {
     state = [...state, item];
   }
-
-  void addItem2() {
-    final item = PasswordModel(
-      id: "id2",
-      iv: "iv2",
-      name: "Amazon AWS",
-      userName: "user@example.com",
-      sharedItem: true,
-    );
-
-    state = [...state, item];
-  }
 }
-
-final selectedItemProvider = Provider<ItemModel?>((ref) => null);
 
 enum ItemViewState {
   add,
@@ -46,13 +26,11 @@ enum ItemViewState {
   view,
 }
 
-final itemViewStateProvider = StateProvider<ItemViewState>((ref) => ItemViewState.view);
-
 final searchQueryProvider = Provider<String>((ref) => '');
 
 final searchResultsProvider = Provider<List<ItemModel>>((ref) {
   final query = ref.watch(searchQueryProvider);
-  final items = ref.watch(ItemsListNotifier.provider);
+  final items = ref.watch(providers.itemsProvider);
 
   // Perform search logic here and return the filtered list of items
   return [];
