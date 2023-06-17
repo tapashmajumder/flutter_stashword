@@ -1,5 +1,6 @@
 import 'package:Stashword/model/item_models.dart';
 import 'package:Stashword/state/providers.dart';
+import 'package:Stashword/util/ace_util.dart';
 import 'package:flutter/material.dart';
 import 'package:Stashword/ui/util/mixin.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
@@ -47,7 +48,7 @@ class AddPasswordWidget extends HookConsumerWidget with CustomDialogMixin {
         TextButton(
           onPressed: () {
             final item = PasswordModel(
-              id: "id2",
+              id: AceUtil.newUuid(),
               iv: "iv2",
               name: "Amazon AWS 33",
               userName: "user@example.com",

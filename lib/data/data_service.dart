@@ -4,7 +4,15 @@ import 'package:Stashword/data/item_delete_info.dart';
 import 'package:Stashword/data/pending_share_info.dart';
 import 'package:Stashword/data/shared_item.dart';
 
+/// This is an abstraction over raw database access.
+/// The transfer objects (Item, SharedItem etc.) are correlated with database tables.
 abstract interface class IDataService {
+  /// Initializes and opens the service
+  Future<void> init();
+
+  /// Call this at the end
+  Future<void> close();
+
   List<Item> findAllItems({bool Function(Item)? predicate});
 
   Item? findItemById({required String id});
@@ -37,17 +45,32 @@ abstract interface class IDataService {
 }
 
 class DataService implements IDataService {
+  final String? subdir;
+  final ISecureStorage secureStorage;
   final ItemCrud itemCrud;
   final ItemDeleteInfoCrud itemDeleteInfoCrud;
   final SharedItemCrud sharedItemCrud;
   final PendingShareInfoCrud pendingShareInfoCrud;
 
   const DataService({
+    this.subdir,
+    this.secureStorage = const ProdSecureStorage(),
     this.itemCrud = Database.itemCrud,
     this.itemDeleteInfoCrud = Database.itemDeleteInfoCrud,
     this.sharedItemCrud = Database.sharedItemCrud,
     this.pendingShareInfoCrud = Database.pendingShareInfoCrud,
   });
+
+  @override
+  Future<void> close() async {
+    await Database.close();
+  }
+
+  @override
+  Future<void> init() async {
+    await Database.init(subdir: subdir);
+    await Database.open(secureStorage: secureStorage);
+  }
 
   @override
   List<Item> findAllItems({bool Function(Item item)? predicate}) {

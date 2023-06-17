@@ -5,9 +5,9 @@ import 'package:Stashword/data/pending_share_info.dart';
 import 'package:Stashword/data/shared_item.dart';
 import 'package:Stashword/model/item_models.dart';
 import 'package:Stashword/model/pending_share_info_model.dart';
-import 'package:Stashword/sync/sync_server_jsons.dart';
 import 'package:Stashword/sync/sync_incoming.dart';
 import 'package:Stashword/sync/sync_outgoing.dart';
+import 'package:Stashword/sync/sync_server_jsons.dart';
 import 'package:collection/collection.dart';
 import 'package:test/test.dart';
 
@@ -348,6 +348,14 @@ class MockSyncIncomingDataService implements IDataService {
   final List<SharedItem> sharedItems = [];
 
   @override
+  Future<void> close() async {
+  }
+
+  @override
+  Future<void> init() async {
+  }
+
+  @override
   Future<void> createItem({required Item item}) async {
     items.add(item);
   }
@@ -375,16 +383,6 @@ class MockSyncIncomingDataService implements IDataService {
   @override
   Future<void> createSharedItem({required SharedItem sharedItem}) async {
     sharedItems.add(sharedItem);
-  }
-
-  @override
-  Future<void> deletePendingShareInfo({required String id}) async {
-    pendingShareInfos.removeWhere((element) => element.id == id);
-  }
-
-  @override
-  Future<void> deleteSharedItem({required String id}) async {
-    sharedItems.removeWhere((element) => element.id == id);
   }
 
   @override
