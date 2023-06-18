@@ -1,6 +1,6 @@
 import 'package:collection/collection.dart';
-import 'package:json_annotation/json_annotation.dart';
 import 'package:equatable/equatable.dart';
+import 'package:json_annotation/json_annotation.dart';
 
 part 'item_models.g.dart';
 
@@ -207,7 +207,7 @@ class CustomFieldInfo extends Equatable {
   List<Object?> get props => [name, value, type];
 }
 
-sealed class ItemModel {
+sealed class ItemModel implements Comparable<ItemModel> {
   ItemType itemType;
   final String id;
   final String iv;
@@ -245,6 +245,32 @@ sealed class ItemModel {
     this.sharedSecret,
     this.sharer,
   });
+
+  @override
+  bool operator ==(Object other) {
+    if (identical(this, other)) return true;
+
+    return other is ItemModel &&
+        other.id == id;
+  }
+
+  @override
+  int get hashCode => id.hashCode;
+
+
+  @override
+  int compareTo(ItemModel other) {
+    if (name == null && other.name == null) {
+      return 0;
+    }
+    if (name == null) {
+      return -1;
+    }
+    if (other.name == null) {
+      return 1;
+    }
+    return name!.toLowerCase().compareTo(other.name!.toLowerCase());
+  }
 }
 
 class PasswordModel extends ItemModel {

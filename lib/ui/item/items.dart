@@ -76,6 +76,7 @@ class ItemCell extends StatelessWidget {
         child: ListTile(
           leading: const CircleAvatar(
             backgroundColor: Colors.lightBlue,
+            child: Text("AB"),
           ),
           title: Column(
             crossAxisAlignment: CrossAxisAlignment.start,

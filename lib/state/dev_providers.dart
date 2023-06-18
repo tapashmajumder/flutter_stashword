@@ -1,5 +1,6 @@
 import 'package:Stashword/model/item_models.dart';
 import 'package:Stashword/state/providers.dart';
+import 'package:Stashword/util/ace_util.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 
 class DevProviders implements IProviders {
@@ -19,7 +20,7 @@ class DevProviders implements IProviders {
       name: "Amazon AWS",
       userName: "user@example.com",
       sharedItem: true,
-    ),
+    ), ..._create1000values(),
   ]);
 
   @override
@@ -27,8 +28,23 @@ class DevProviders implements IProviders {
       StateNotifierProvider<ItemsListNotifier, List<ItemModel>>((ref) => _itemsListNotifier);
 
   @override
-  final itemViewStateProvider = StateProvider<ItemViewState>((ref) => ItemViewState.add);
+  final itemViewStateProvider = StateProvider<ItemViewState>((ref) => ItemViewState.view);
 
   @override
   final selectedItemProvider = Provider<ItemModel?>((ref) => null);
+
+  static List<ItemModel> _create1000values() {
+    final List<ItemModel> list = [];
+    for (var i = 0; i < 1000; ++i) {
+      list.add(PasswordModel(
+        id: AceUtil.newUuid(),
+        iv: AceUtil.newIv(),
+        name: "Item $i",
+        userName: "userName$i",
+        password: "password$i",
+        sharedItem: AceUtil.nextRandom(max: 1) == 0 ? false : true,
+      ));
+    }
+    return list;
+  }
 }

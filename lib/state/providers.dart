@@ -16,7 +16,11 @@ class ItemsListNotifier extends StateNotifier<List<ItemModel>> {
   ItemsListNotifier({List<ItemModel> values = const []}) : super(values);
 
   void addItem({required final ItemModel item}) {
-    state = [...state, item];
+    state = [...state, item]..sort();
+  }
+
+  void removeItem({required final ItemModel item}) {
+    state = state.where((element) => element.id != item.id).toList();
   }
 }
 

@@ -33,8 +33,8 @@ final class AceUtil {
     return random.nextInt(max);
   }
 
-  static generateRandomString({required int bytes}) {
-    base64.encode(_randomBytes(n: bytes));
+  static String generateRandomString({required int bytes}) {
+    return base64.encode(_randomBytes(n: bytes));
   }
 
   static Uint8List _randomBytes({required int n}) {
