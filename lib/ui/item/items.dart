@@ -29,14 +29,13 @@ class ItemsWidget extends HookConsumerWidget with CustomDialogMixin {
     final items = ref.watch(providers.itemsProvider);
     final itemViewState = ref.watch(providers.itemViewStateProvider);
 
-    final addItemWidget = AddPasswordWidget();
-
     if (itemViewState == ItemViewState.add) {
+      final addItemWidget = AddPasswordWidget();
+
       WidgetsBinding.instance.addPostFrameCallback((_) {
         showCustomDialog(
           context: context,
           contentWidget: addItemWidget,
-          appBar: addItemWidget.createAppBar(context, ref),
         );
       });
     }

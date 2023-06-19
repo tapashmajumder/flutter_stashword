@@ -5,12 +5,6 @@ import 'dart:typed_data';
 import 'package:dartz/dartz.dart';
 import 'package:uuid/uuid.dart';
 
-void main() {
-  for (var i = 0; i <10; ++i) {
-    print(AceUtil.newUuid());
-  }
-}
-
 final class AceUtil {
   static int? nullableDateTimeToMilliseconds(DateTime? dateTime) => dateTime?.millisecondsSinceEpoch;
 
@@ -50,4 +44,10 @@ final class AceUtil {
 extension EitherExtension<L, R> on Either<L, R> {
   R? getRight() => fold<R?>((_) => null, (r) => r);
   L? getLeft() => fold<L?>((l) => l, (_) => null);
+}
+
+extension StringExtension on String {
+  String? nullIfEmpty() {
+    return isEmpty ? null : this;
+  }
 }
