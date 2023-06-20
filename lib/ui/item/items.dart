@@ -11,17 +11,9 @@ class ItemsWidget extends HookConsumerWidget with CustomDialogMixin {
     super.key,
   });
 
-  static ItemCell _fromModelToCell({required ItemModel item}) {
+  static PasswordCell _fromModelToCell({required ItemModel item}) {
     PasswordModel passwordModel = item as PasswordModel;
-    return ItemCell(
-      title: passwordModel.name ?? "",
-      subtitle: passwordModel.userName ?? "",
-      icon: item.sharedItem
-          ? CupertinoIcons.square_arrow_down
-          : item.shared
-              ? CupertinoIcons.square_arrow_up
-              : null,
-    );
+    return PasswordCell(model: passwordModel, key: Key(passwordModel.id));
   }
 
   @override
@@ -30,7 +22,7 @@ class ItemsWidget extends HookConsumerWidget with CustomDialogMixin {
     final itemViewState = ref.watch(providers.itemViewStateProvider);
 
     if (itemViewState == ItemViewState.add) {
-      final addItemWidget = AddPasswordWidget();
+      const addItemWidget = AddPasswordWidget();
 
       WidgetsBinding.instance.addPostFrameCallback((_) {
         showCustomDialog(
@@ -56,22 +48,54 @@ class ItemsWidget extends HookConsumerWidget with CustomDialogMixin {
   }
 }
 
-class ItemCell extends StatelessWidget {
-  final String title;
-  final String subtitle;
-  final IconData? icon;
+class PasswordCell extends HookConsumerWidget {
+  final PasswordModel model;
 
-  const ItemCell({
-    super.key,
-    required this.title,
-    required this.subtitle,
-    required this.icon,
-  });
+  const PasswordCell({Key? key, required this.model}) : super(key: key);
 
   @override
-  Widget build(BuildContext context) {
+  Widget build(BuildContext context, WidgetRef ref) {
     return Container(
-        padding: const EdgeInsets.all(8),
+      padding: const EdgeInsets.all(8),
+      child: Dismissible(
+        key: Key(model.id),
+        direction: DismissDirection.endToStart,
+        background: Container(
+          color: Colors.red,
+          padding: const EdgeInsets.symmetric(horizontal: 16.0),
+          alignment: Alignment.centerLeft,
+          child: const Icon(Icons.delete, color: Colors.white),
+        ),
+        confirmDismiss: (DismissDirection direction) async {
+          return await showDialog(
+            context: context,
+            builder: (BuildContext context) {
+              return AlertDialog(
+                title: const Text('Confirm Delete'),
+                content: const Text('Are you sure you want to delete this item?'),
+                actions: [
+                  TextButton(
+                    onPressed: () => Navigator.of(context).pop(false),
+                    child: const Text('Cancel'),
+                  ),
+                  TextButton(
+                    onPressed: () => Navigator.of(context).pop(true),
+                    child: const Text('Delete'),
+                  ),
+                ],
+              );
+            },
+          );
+        },
+        onDismissed: (direction) {
+          ref.read(providers.itemsProvider.notifier).removeItem(item: model);
+          ScaffoldMessenger.of(context).showSnackBar(
+            const SnackBar(
+              content: Text('Item deleted'),
+              duration: Duration(seconds: 2),
+            ),
+          );
+        },
         child: ListTile(
           leading: const CircleAvatar(
             backgroundColor: Colors.lightBlue,
@@ -81,19 +105,25 @@ class ItemCell extends StatelessWidget {
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
               Text(
-                title,
+                model.name ?? "",
                 style: Theme.of(context).textTheme.labelLarge,
               ),
-              Text(subtitle, style: const TextStyle(fontSize: 12, color: Colors.grey)),
+              Text(model.userName ?? "", style: const TextStyle(fontSize: 12, color: Colors.grey)),
             ],
           ),
           trailing: Row(
             mainAxisSize: MainAxisSize.min,
             children: [
-              Icon(icon),
+              Icon(model.sharedItem
+                  ? CupertinoIcons.square_arrow_down
+                  : model.shared
+                      ? CupertinoIcons.square_arrow_up
+                      : null),
               const SizedBox(width: 2.0),
             ],
           ),
-        ));
+        ),
+      ),
+    );
   }
 }
