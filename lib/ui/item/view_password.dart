@@ -3,6 +3,7 @@ import 'package:flutter/material.dart';
 
 class ViewPasswordWidget extends StatelessWidget {
   final PasswordModel model;
+
   const ViewPasswordWidget({Key? key, required this.model}) : super(key: key);
 
   @override
@@ -10,7 +11,9 @@ class ViewPasswordWidget extends StatelessWidget {
     return Padding(
       padding: const EdgeInsets.all(8.0),
       child: Column(crossAxisAlignment: CrossAxisAlignment.start, children: [
-        ViewTopWidget(),
+        ViewTopWidget(
+          model: model,
+        ),
         const SizedBox(height: 20),
         Container(height: 1, color: Colors.grey),
         ViewRowWidget(),
@@ -20,12 +23,19 @@ class ViewPasswordWidget extends StatelessWidget {
   }
 }
 
-
 class ViewTopWidget extends StatelessWidget {
-  const ViewTopWidget({Key? key}) : super(key: key);
+  final PasswordModel model;
+
+  const ViewTopWidget({Key? key, required this.model}) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
+    final sharedByText = model.sharedItem ? "Shared by ${model.sharer}" : "";
+    final shareText = model.sharedItem
+        ? ""
+        : model.shared
+            ? "Shared"
+            : "Share";
     return Padding(
       padding: const EdgeInsets.all(8.0),
       child: Row(children: [
@@ -35,21 +45,22 @@ class ViewTopWidget extends StatelessWidget {
         ),
         const SizedBox(width: 10),
         Column(crossAxisAlignment: CrossAxisAlignment.start, mainAxisAlignment: MainAxisAlignment.center, children: [
-          Text("Instagram", style: Theme.of(context).textTheme.titleMedium),
+          Text(model.name ?? "", style: Theme.of(context).textTheme.titleMedium),
           const SizedBox(height: 10),
-          Text("shared by user2@example.com", style: Theme.of(context).textTheme.titleSmall),
+          Text(sharedByText, style: Theme.of(context).textTheme.titleSmall),
         ]),
         Expanded(child: Container()),
-        Column(mainAxisAlignment: MainAxisAlignment.center, children: [
-          Text("Share", style: Theme.of(context).textTheme.titleSmall),
-        ]),
-        Column(mainAxisAlignment: MainAxisAlignment.center, children: [
-          IconButton(
-            onPressed: () {
-            },
-            icon: const Icon(Icons.chevron_right),
-          )
-        ])
+        if (model.sharedItem)
+          const Spacer()
+        else
+          Column(mainAxisAlignment: MainAxisAlignment.center, children: [
+            Row(children: [
+              Text(shareText, style: Theme.of(context).textTheme.titleSmall),
+              const Icon(
+                Icons.chevron_right,
+              )
+            ])
+          ]),
       ]),
     );
   }
@@ -70,8 +81,7 @@ class ViewRowWidget extends StatelessWidget {
         Expanded(child: Container()),
         Column(mainAxisAlignment: MainAxisAlignment.center, children: [
           IconButton(
-            onPressed: () {
-            },
+            onPressed: () {},
             icon: const Icon(Icons.open_in_new),
           )
         ])
