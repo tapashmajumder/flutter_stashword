@@ -8,6 +8,10 @@ class ViewPasswordWidget extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    const openWebsiteButton = IconButton(onPressed: null, icon: Icon(Icons.open_in_new));
+    const copyUsernameButton = IconButton(onPressed: null, icon: Icon(Icons.copy));
+    const copyPasswordButton = IconButton(onPressed: null, icon: Icon(Icons.copy));
+
     return Padding(
       padding: const EdgeInsets.all(8.0),
       child: Column(crossAxisAlignment: CrossAxisAlignment.start, children: [
@@ -16,7 +20,11 @@ class ViewPasswordWidget extends StatelessWidget {
         ),
         const SizedBox(height: 20),
         Container(height: 1, color: Colors.grey),
-        ViewRowWidget(),
+        ViewRowWidget(name: "Website", value: model.url ?? "", iconButton: openWebsiteButton,),
+        Container(height: 1, color: Colors.grey),
+        ViewRowWidget(name: "Username", value: model.userName ?? "", iconButton: copyUsernameButton,),
+        Container(height: 1, color: Colors.grey),
+        ViewRowWidget(name: "Password", value: model.password ?? "", iconButton: copyPasswordButton,),
         Container(height: 1, color: Colors.grey),
       ]),
     );
@@ -67,7 +75,15 @@ class ViewTopWidget extends StatelessWidget {
 }
 
 class ViewRowWidget extends StatelessWidget {
-  const ViewRowWidget({Key? key}) : super(key: key);
+  final String name;
+  final String value;
+  final IconButton iconButton;
+  const ViewRowWidget({
+    Key? key,
+    required this.name,
+    required this.value,
+    required this.iconButton,
+  }) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
@@ -75,15 +91,12 @@ class ViewRowWidget extends StatelessWidget {
       padding: const EdgeInsets.all(8.0),
       child: Row(children: [
         Column(crossAxisAlignment: CrossAxisAlignment.start, mainAxisAlignment: MainAxisAlignment.center, children: [
-          Text("URL", style: Theme.of(context).textTheme.titleMedium),
-          Text("https://somewhere.com1", style: Theme.of(context).textTheme.titleSmall),
+          Text(name, style: Theme.of(context).textTheme.titleMedium),
+          Text(value, style: Theme.of(context).textTheme.titleSmall),
         ]),
         Expanded(child: Container()),
         Column(mainAxisAlignment: MainAxisAlignment.center, children: [
-          IconButton(
-            onPressed: () {},
-            icon: const Icon(Icons.open_in_new),
-          )
+          iconButton,
         ])
       ]),
     );
