@@ -6,7 +6,9 @@ import 'package:hooks_riverpod/hooks_riverpod.dart';
 
 abstract class IProviders {
   StateNotifierProvider<ItemsListNotifier, List<ItemModel>> get itemsProvider;
-  StateProvider<ItemViewState> get itemViewStateProvider;
+
+  StateProvider<AddItemState> get addItemStateProvider;
+
   Provider<ItemModel?> get selectedItemProvider;
 }
 
@@ -22,6 +24,13 @@ class ItemsListNotifier extends StateNotifier<List<ItemModel>> {
   void removeItem({required final ItemModel item}) {
     state = state.where((element) => element.id != item.id).toList();
   }
+}
+
+enum AddItemState {
+  none,
+  item,
+  card,
+  doc,
 }
 
 enum ItemViewState {

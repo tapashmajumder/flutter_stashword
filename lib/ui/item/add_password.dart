@@ -71,7 +71,7 @@ class AddPasswordWidget extends HookConsumerWidget {
       );
 
       ref.read(providers.itemsProvider.notifier).addItem(item: item);
-      ref.read(providers.itemViewStateProvider.notifier).state = ItemViewState.view;
+      ref.read(providers.addItemStateProvider.notifier).state = AddItemState.none;
       Navigator.of(context).pop();
     }
 
@@ -152,7 +152,7 @@ class AddPasswordWidget extends HookConsumerWidget {
       leading: IconButton(
         icon: const Icon(Icons.cancel),
         onPressed: () {
-          ref.read(providers.itemViewStateProvider.notifier).state = ItemViewState.view;
+          ref.read(providers.addItemStateProvider.notifier).state = AddItemState.none;
           Navigator.of(context).pop();
         },
       ),

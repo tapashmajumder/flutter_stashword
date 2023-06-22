@@ -1,6 +1,7 @@
 import 'package:Stashword/model/item_models.dart';
 import 'package:Stashword/state/providers.dart';
 import 'package:Stashword/ui/item/add_password.dart';
+import 'package:Stashword/ui/item/view_password.dart';
 import 'package:Stashword/ui/util/mixin.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
@@ -11,17 +12,27 @@ class ItemsWidget extends HookConsumerWidget with CustomDialogMixin {
     super.key,
   });
 
-  static PasswordCell _fromModelToCell({required ItemModel item}) {
+  static Widget _fromModelToCell({required BuildContext context, required ItemModel item}) {
     PasswordModel passwordModel = item as PasswordModel;
-    return PasswordCell(model: passwordModel, key: Key(passwordModel.id));
+    return GestureDetector(
+      onTap: () {
+        Navigator.push(
+          context,
+          MaterialPageRoute(
+            builder: (context) => Scaffold(appBar: AppBar(),body: ViewPasswordWidget(model: passwordModel)),
+          ),
+        );
+      },
+      child: PasswordCell(model: passwordModel, key: Key(passwordModel.id)),
+    );
   }
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
     final items = ref.watch(providers.itemsProvider);
-    final itemViewState = ref.watch(providers.itemViewStateProvider);
+    final addItemState = ref.watch(providers.addItemStateProvider);
 
-    if (itemViewState == ItemViewState.add) {
+    if (addItemState == AddItemState.item) {
       const addItemWidget = AddPasswordWidget();
 
       WidgetsBinding.instance.addPostFrameCallback((_) {
@@ -35,12 +46,12 @@ class ItemsWidget extends HookConsumerWidget with CustomDialogMixin {
     return Scaffold(
       body: ListView(
         children: [
-          for (var item in items) _fromModelToCell(item: item),
+          for (var item in items) _fromModelToCell(context: context, item: item),
         ],
       ),
       floatingActionButton: FloatingActionButton(
         onPressed: () {
-          ref.read(providers.itemViewStateProvider.notifier).state = ItemViewState.add;
+          ref.read(providers.addItemStateProvider.notifier).state = AddItemState.item;
         },
         child: const Icon(Icons.add),
       ),

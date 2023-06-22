@@ -28,7 +28,7 @@ class DevProviders implements IProviders {
       StateNotifierProvider<ItemsListNotifier, List<ItemModel>>((ref) => _itemsListNotifier);
 
   @override
-  final itemViewStateProvider = StateProvider<ItemViewState>((ref) => ItemViewState.view);
+  final addItemStateProvider = StateProvider<AddItemState>((ref) => AddItemState.none);
 
   @override
   final selectedItemProvider = Provider<ItemModel?>((ref) => null);

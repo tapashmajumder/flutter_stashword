@@ -1,3 +1,4 @@
+import 'package:Stashword/model/item_models.dart';
 import 'package:Stashword/ui/card/cards.dart';
 import 'package:Stashword/ui/doc/docs.dart';
 import 'package:Stashword/ui/item/items.dart';
@@ -41,12 +42,22 @@ class MyApp extends ConsumerWidget {
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
+    final PasswordModel model = PasswordModel(
+      id: "id",
+      iv: "iv",
+      name: "Instagram",
+      url: "https://www.instagram.com",
+      sharedItem: false,
+      sharer: "user2@example.com",
+      userName: "zee username",
+      password: "zee password",
+    );
     return MaterialApp(
       debugShowCheckedModeBanner: false,
       theme: ThemeData(
         primarySwatch: Colors.blue,
       ),
-      home: const Center(child: SizedBox(width: 500, height: 100, child: Scaffold(body: ViewRowWidget()))),
+      home: Center(child: SizedBox(width: 500, height: 500, child: Scaffold(body: ViewPasswordWidget(model: model)))),
     );
   }
 }
