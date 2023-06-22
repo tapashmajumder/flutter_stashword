@@ -31,7 +31,10 @@ class DevProviders implements IProviders {
   final addItemStateProvider = StateProvider<AddItemState>((ref) => AddItemState.none);
 
   @override
-  final selectedItemProvider = Provider<ItemModel?>((ref) => null);
+  final selectedItemProvider = StateProvider<ItemModel?>((ref) => null);
+
+  @override
+  final displayTypeProvider = StateProvider<DisplayType>((ref) => DisplayType.mobile);
 
   static List<ItemModel> _create1000values() {
     final List<ItemModel> list = [];

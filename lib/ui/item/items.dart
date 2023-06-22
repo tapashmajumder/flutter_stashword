@@ -12,16 +12,11 @@ class ItemsWidget extends HookConsumerWidget with CustomDialogMixin {
     super.key,
   });
 
-  static Widget _fromModelToCell({required BuildContext context, required ItemModel item}) {
+  static Widget _fromModelToCell({required BuildContext context, required WidgetRef ref, required ItemModel item}) {
     PasswordModel passwordModel = item as PasswordModel;
     return GestureDetector(
       onTap: () {
-        Navigator.push(
-          context,
-          MaterialPageRoute(
-            builder: (context) => Scaffold(appBar: AppBar(),body: ViewPasswordWidget(model: passwordModel)),
-          ),
-        );
+        ref.read(providers.selectedItemProvider.notifier).state = passwordModel;
       },
       child: PasswordCell(model: passwordModel, key: Key(passwordModel.id)),
     );
@@ -31,6 +26,29 @@ class ItemsWidget extends HookConsumerWidget with CustomDialogMixin {
   Widget build(BuildContext context, WidgetRef ref) {
     final items = ref.watch(providers.itemsProvider);
     final addItemState = ref.watch(providers.addItemStateProvider);
+    final selectedItem = ref.watch(providers.selectedItemProvider);
+    final displayType = ref.watch(providers.displayTypeProvider);
+
+    if (selectedItem != null && displayType == DisplayType.mobile) {
+      WidgetsBinding.instance.addPostFrameCallback((_) {
+        Navigator.push(
+          context,
+          MaterialPageRoute(
+            builder: (context) => WillPopScope(
+              onWillPop: () async {
+                ref.read(providers.selectedItemProvider.notifier).state = null;
+                // Return true to allow the navigation to proceed, or false to prevent it
+                return true;
+              },
+              child: Scaffold(
+                appBar: AppBar(),
+                body: ViewPasswordWidget(model: selectedItem as PasswordModel),
+              ),
+            ),
+          ),
+        );
+      });
+    }
 
     if (addItemState == AddItemState.item) {
       const addItemWidget = AddPasswordWidget();
@@ -46,7 +64,7 @@ class ItemsWidget extends HookConsumerWidget with CustomDialogMixin {
     return Scaffold(
       body: ListView(
         children: [
-          for (var item in items) _fromModelToCell(context: context, item: item),
+          for (var item in items) _fromModelToCell(context: context,  ref: ref, item: item),
         ],
       ),
       floatingActionButton: FloatingActionButton(

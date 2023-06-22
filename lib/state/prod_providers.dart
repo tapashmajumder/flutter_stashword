@@ -15,7 +15,10 @@ class ProdProviders implements IProviders {
   final addItemStateProvider = StateProvider<AddItemState>((ref) => AddItemState.none);
 
   @override
-  final selectedItemProvider = Provider<ItemModel?>((ref) => null);
+  final selectedItemProvider = StateProvider<ItemModel?>((ref) => null);
+
+  @override
+  final displayTypeProvider = StateProvider<DisplayType>((ref) => DisplayType.mobile);
 }
 
 class ProdItemsListNotifier extends ItemsListNotifier {

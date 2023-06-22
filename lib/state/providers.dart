@@ -9,7 +9,9 @@ abstract class IProviders {
 
   StateProvider<AddItemState> get addItemStateProvider;
 
-  Provider<ItemModel?> get selectedItemProvider;
+  StateProvider<ItemModel?> get selectedItemProvider;
+
+  StateProvider<DisplayType> get displayTypeProvider;
 }
 
 final providers = (kReleaseMode) ? ProdProviders() : DevProviders();
@@ -37,6 +39,11 @@ enum ItemViewState {
   add,
   edit,
   view,
+}
+
+enum DisplayType {
+  mobile,
+  desktop,
 }
 
 final searchQueryProvider = Provider<String>((ref) => '');
