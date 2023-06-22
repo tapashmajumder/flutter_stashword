@@ -12,13 +12,13 @@ class ItemsWidget extends HookConsumerWidget with CustomDialogMixin {
     super.key,
   });
 
-  static Widget _fromModelToCell({required BuildContext context, required WidgetRef ref, required ItemModel item}) {
+  static Widget _fromModelToCell({required BuildContext context, required WidgetRef ref, required ItemModel item, bool isSelected = false}) {
     PasswordModel passwordModel = item as PasswordModel;
     return GestureDetector(
       onTap: () {
         ref.read(providers.selectedItemProvider.notifier).state = passwordModel;
       },
-      child: PasswordCell(model: passwordModel, key: Key(passwordModel.id)),
+      child: PasswordCell(model: passwordModel, isSelected: isSelected, key: Key(passwordModel.id)),
     );
   }
 
@@ -64,7 +64,7 @@ class ItemsWidget extends HookConsumerWidget with CustomDialogMixin {
     return Scaffold(
       body: ListView(
         children: [
-          for (var item in items) _fromModelToCell(context: context,  ref: ref, item: item),
+          for (var item in items) _fromModelToCell(context: context,  ref: ref, item: item, isSelected: item == selectedItem),
         ],
       ),
       floatingActionButton: FloatingActionButton(
@@ -79,8 +79,9 @@ class ItemsWidget extends HookConsumerWidget with CustomDialogMixin {
 
 class PasswordCell extends HookConsumerWidget {
   final PasswordModel model;
+  final bool isSelected;
 
-  const PasswordCell({Key? key, required this.model}) : super(key: key);
+  const PasswordCell({Key? key, required this.model, this.isSelected = false}) : super(key: key);
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
@@ -125,31 +126,34 @@ class PasswordCell extends HookConsumerWidget {
             ),
           );
         },
-        child: ListTile(
-          leading: const CircleAvatar(
-            backgroundColor: Colors.lightBlue,
-            child: Text("AB"),
-          ),
-          title: Column(
-            crossAxisAlignment: CrossAxisAlignment.start,
-            children: [
-              Text(
-                model.name ?? "",
-                style: Theme.of(context).textTheme.labelLarge,
-              ),
-              Text(model.userName ?? "", style: const TextStyle(fontSize: 12, color: Colors.grey)),
-            ],
-          ),
-          trailing: Row(
-            mainAxisSize: MainAxisSize.min,
-            children: [
-              Icon(model.sharedItem
-                  ? CupertinoIcons.square_arrow_down
-                  : model.shared
-                      ? CupertinoIcons.square_arrow_up
-                      : null),
-              const SizedBox(width: 2.0),
-            ],
+        child: Container(
+          color: isSelected ? Colors.grey[300] : null,
+          child: ListTile(
+            leading: const CircleAvatar(
+              backgroundColor: Colors.lightBlue,
+              child: Text("AB"),
+            ),
+            title: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                Text(
+                  model.name ?? "",
+                  style: Theme.of(context).textTheme.labelLarge,
+                ),
+                Text(model.userName ?? "", style: const TextStyle(fontSize: 12, color: Colors.grey)),
+              ],
+            ),
+            trailing: Row(
+              mainAxisSize: MainAxisSize.min,
+              children: [
+                Icon(model.sharedItem
+                    ? CupertinoIcons.square_arrow_down
+                    : model.shared
+                        ? CupertinoIcons.square_arrow_up
+                        : null),
+                const SizedBox(width: 2.0),
+              ],
+            ),
           ),
         ),
       ),
