@@ -42,7 +42,9 @@ class ItemsWidget extends HookConsumerWidget with CustomDialogMixin {
                 return true;
               },
               child: Scaffold(
-                appBar: AppBar(title: title,),
+                appBar: AppBar(
+                  title: title,
+                ),
                 body: ViewPasswordWidget(model: selectedItem as PasswordModel),
               ),
             ),
@@ -65,7 +67,7 @@ class ItemsWidget extends HookConsumerWidget with CustomDialogMixin {
     return Scaffold(
       body: ListView(
         children: [
-          for (var item in items) _fromModelToCell(context: context,  ref: ref, item: item, isSelected: item == selectedItem),
+          for (var item in items) _fromModelToCell(context: context, ref: ref, item: item, isSelected: item == selectedItem),
         ],
       ),
       floatingActionButton: FloatingActionButton(
