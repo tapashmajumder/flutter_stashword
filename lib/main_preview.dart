@@ -57,7 +57,7 @@ class MyApp extends ConsumerWidget {
       theme: ThemeData(
         primarySwatch: Colors.blue,
       ),
-      home: Center(child: SizedBox(width: 500, height: 500, child: Scaffold(body: ViewPasswordWidget(model: model)))),
+      home: Center(child: SizedBox(width: 500, height: 500, child: Scaffold(body: ViewPasswordWidget(model: model, showAppbar: false,)))),
     );
   }
 }

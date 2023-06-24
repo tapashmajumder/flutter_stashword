@@ -30,7 +30,6 @@ class ItemsWidget extends HookConsumerWidget with CustomDialogMixin {
     final displayType = ref.watch(providers.displayTypeProvider);
 
     if (selectedItem != null && displayType == DisplayType.mobile) {
-      final title = Text(selectedItem.name ?? "");
       WidgetsBinding.instance.addPostFrameCallback((_) {
         Navigator.push(
           context,
@@ -41,12 +40,7 @@ class ItemsWidget extends HookConsumerWidget with CustomDialogMixin {
                 // Return true to allow the navigation to proceed, or false to prevent it
                 return true;
               },
-              child: Scaffold(
-                appBar: AppBar(
-                  title: title,
-                ),
-                body: ViewPasswordWidget(model: selectedItem as PasswordModel),
-              ),
+              child: ViewPasswordWidget(model: selectedItem as PasswordModel, showAppbar: true),
             ),
           ),
         );

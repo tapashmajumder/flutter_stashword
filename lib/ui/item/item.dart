@@ -61,7 +61,7 @@ class ItemWidget extends HookConsumerWidget {
               : Container(
                   key: const ValueKey<bool>(false),
                   child: Center(
-                    child: (item == null) ? const NothingSelectedWidget() : ViewPasswordWidget(model: item as PasswordModel),
+                    child: (item == null) ? const NothingSelectedWidget() : ViewPasswordWidget(model: item as PasswordModel, showAppbar: false,),
                   ),
                 ),
         ),

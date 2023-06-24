@@ -3,11 +3,23 @@ import 'package:flutter/material.dart';
 
 class ViewPasswordWidget extends StatelessWidget {
   final PasswordModel model;
+  final bool showAppbar;
 
-  const ViewPasswordWidget({Key? key, required this.model}) : super(key: key);
+  const ViewPasswordWidget({Key? key, required this.model, required this.showAppbar}) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
+    AppBar? appbar;
+    if (showAppbar) {
+      appbar = AppBar(title: Text(model.name ?? ""));
+    } else {
+      appbar = null;
+    }
+
+    return Scaffold(appBar: appbar, body: _build(context));
+  }
+
+  Widget _build(BuildContext context) {
     const openWebsiteButton = IconButton(onPressed: null, icon: Icon(Icons.open_in_new));
     const copyUsernameButton = IconButton(onPressed: null, icon: Icon(Icons.copy));
     const copyPasswordButton = IconButton(onPressed: null, icon: Icon(Icons.copy));
