@@ -48,7 +48,7 @@ class ItemsWidget extends HookConsumerWidget with CustomDialogMixin {
     }
 
     if (addItemState == AddItemState.item) {
-      const addItemWidget = AddPasswordWidget();
+      final addItemWidget = AddPasswordWidget(showAppBar: true,);
 
       WidgetsBinding.instance.addPostFrameCallback((_) {
         showCustomDialog(

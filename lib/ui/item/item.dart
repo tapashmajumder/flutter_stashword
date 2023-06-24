@@ -54,8 +54,8 @@ class ItemWidget extends HookConsumerWidget {
           child: isEditMode
               ? Container(
                   key: const ValueKey<bool>(true),
-                  child: const Center(
-                    child: AddPasswordWidget(),
+                  child: Center(
+                    child: AddPasswordWidget(showAppBar: false,),
                   ),
                 )
               : Container(

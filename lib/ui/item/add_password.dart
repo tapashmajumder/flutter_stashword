@@ -3,81 +3,24 @@ import 'package:Stashword/state/providers.dart';
 import 'package:Stashword/util/ace_util.dart';
 import 'package:flutter/material.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
-import 'package:flutter_hooks/flutter_hooks.dart';
 
-class AddPasswordWidget extends HookConsumerWidget {
-  const AddPasswordWidget({
+class AddPasswordWidget extends ConsumerWidget {
+  final bool showAppBar;
+  final nameEditingController = TextEditingController();
+  final websiteEditingController = TextEditingController();
+  final userNameEditingController = TextEditingController();
+  final notesEditingController = TextEditingController();
+  final passwordWidget = PasswordFormFieldWidget();
+
+  AddPasswordWidget({
+    required this.showAppBar,
     Key? key,
   }) : super(key: key);
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
-    final nameEditingController = useTextEditingController();
-    final websiteEditingController = useTextEditingController();
-    final userNameEditingController = useTextEditingController();
-    final notesEditingController = useTextEditingController();
-    final passwordWidget = PasswordFormFieldWidget();
-
-    (bool, String?) validate({
-      final String? name,
-      final String? website,
-      final String? userName,
-      final String? password,
-    }) {
-      if (name == null) {
-        return (false, "Name can't be empty");
-      } else {
-        return (true, null);
-      }
-    }
-
-    void onAddTapped() {
-      final name = nameEditingController.text.nullIfEmpty();
-      final website = websiteEditingController.text.nullIfEmpty();
-      final userName = userNameEditingController.text.nullIfEmpty();
-      final password = passwordWidget.password.nullIfEmpty();
-      final notes = notesEditingController.text.nullIfEmpty();
-
-      final (valid, errorMessage) = validate(name: name, website: website, userName: userName, password: password);
-      if (!valid) {
-        showDialog(
-          context: context,
-          builder: (BuildContext context) {
-            return AlertDialog(
-              title: const Text('Error saving item'),
-              content: Text(errorMessage ?? "Invalid input"),
-              actions: [
-                TextButton(
-                  child: const Text('OK'),
-                  onPressed: () {
-                    Navigator.of(context).pop(); // Closes the dialog
-                  },
-                ),
-              ],
-            );
-          },
-        );
-        return;
-      }
-
-      final item = PasswordModel(
-        id: AceUtil.newUuid(),
-        iv: AceUtil.newIv(),
-        name: name,
-        url: website,
-        userName: userName,
-        password: password,
-        notes: notes,
-      );
-
-      ref.read(providers.itemsProvider.notifier).addItem(item: item);
-      ref.read(providers.addItemStateProvider.notifier).state = AddItemState.none;
-      Navigator.of(context).pop();
-    }
-
-
     return Scaffold(
-      appBar: createAppBar(context, ref, onAddTapped),
+      appBar: showAppBar ? createAppBar(context, ref) : null,
       body: Padding(
         padding: const EdgeInsets.all(16.0),
         child: Column(
@@ -146,7 +89,64 @@ class AddPasswordWidget extends HookConsumerWidget {
     );
   }
 
-  AppBar createAppBar(BuildContext context, WidgetRef ref, VoidCallback onAddTapped) {
+  (bool, String?) validate({
+    final String? name,
+    final String? website,
+    final String? userName,
+    final String? password,
+  }) {
+    if (name == null) {
+      return (false, "Name can't be empty");
+    } else {
+      return (true, null);
+    }
+  }
+
+  void onAddTapped(BuildContext context, WidgetRef ref) {
+    final name = nameEditingController.text.nullIfEmpty();
+    final website = websiteEditingController.text.nullIfEmpty();
+    final userName = userNameEditingController.text.nullIfEmpty();
+    final password = passwordWidget.password.nullIfEmpty();
+    final notes = notesEditingController.text.nullIfEmpty();
+
+    final (valid, errorMessage) = validate(name: name, website: website, userName: userName, password: password);
+    if (!valid) {
+      showDialog(
+        context: context,
+        builder: (BuildContext context) {
+          return AlertDialog(
+            title: const Text('Error saving item'),
+            content: Text(errorMessage ?? "Invalid input"),
+            actions: [
+              TextButton(
+                child: const Text('OK'),
+                onPressed: () {
+                  Navigator.of(context).pop(); // Closes the dialog
+                },
+              ),
+            ],
+          );
+        },
+      );
+      return;
+    }
+
+    final item = PasswordModel(
+      id: AceUtil.newUuid(),
+      iv: AceUtil.newIv(),
+      name: name,
+      url: website,
+      userName: userName,
+      password: password,
+      notes: notes,
+    );
+
+    ref.read(providers.itemsProvider.notifier).addItem(item: item);
+    ref.read(providers.addItemStateProvider.notifier).state = AddItemState.none;
+    Navigator.of(context).pop();
+  }
+
+  AppBar createAppBar(BuildContext context, WidgetRef ref) {
     return AppBar(
       automaticallyImplyLeading: false,
       leading: IconButton(
@@ -159,7 +159,7 @@ class AddPasswordWidget extends HookConsumerWidget {
       title: const Text("Add Password"),
       actions: [
         TextButton(
-          onPressed: onAddTapped,
+          onPressed: () => onAddTapped(context, ref),
           child: const Text("Add", style: TextStyle(color: Colors.white)),
         ),
       ],
