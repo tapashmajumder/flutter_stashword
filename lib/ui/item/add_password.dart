@@ -6,21 +6,29 @@ import 'package:hooks_riverpod/hooks_riverpod.dart';
 
 class AddPasswordWidget extends ConsumerWidget {
   final bool showAppBar;
+  final PasswordModel model;
   final nameEditingController = TextEditingController();
   final websiteEditingController = TextEditingController();
   final userNameEditingController = TextEditingController();
   final notesEditingController = TextEditingController();
-  final passwordWidget = PasswordFormFieldWidget();
+  late final PasswordFormFieldWidget passwordWidget;
 
   AddPasswordWidget({
     required this.showAppBar,
+    required this.model,
     Key? key,
-  }) : super(key: key);
+  }) : super(key: key) {
+    nameEditingController.text = model.name ?? "";
+    websiteEditingController.text = model.url ?? "";
+    userNameEditingController.text = model.userName ?? "";
+    notesEditingController.text = model.notes ?? "";
+    passwordWidget = PasswordFormFieldWidget(inputPassword: model.password ?? "");
+  }
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
     return Scaffold(
-      appBar: showAppBar ? createAppBar(context, ref) : null,
+      appBar: showAppBar ? _createAppBar(context, ref) : null,
       body: Padding(
         padding: const EdgeInsets.all(16.0),
         child: Column(
@@ -89,7 +97,7 @@ class AddPasswordWidget extends ConsumerWidget {
     );
   }
 
-  (bool, String?) validate({
+  (bool, String?) _validate({
     final String? name,
     final String? website,
     final String? userName,
@@ -102,14 +110,14 @@ class AddPasswordWidget extends ConsumerWidget {
     }
   }
 
-  void onAddTapped(BuildContext context, WidgetRef ref) {
+  void _onAddTapped(BuildContext context, WidgetRef ref) {
     final name = nameEditingController.text.nullIfEmpty();
     final website = websiteEditingController.text.nullIfEmpty();
     final userName = userNameEditingController.text.nullIfEmpty();
     final password = passwordWidget.password.nullIfEmpty();
     final notes = notesEditingController.text.nullIfEmpty();
 
-    final (valid, errorMessage) = validate(name: name, website: website, userName: userName, password: password);
+    final (valid, errorMessage) = _validate(name: name, website: website, userName: userName, password: password);
     if (!valid) {
       showDialog(
         context: context,
@@ -146,7 +154,7 @@ class AddPasswordWidget extends ConsumerWidget {
     Navigator.of(context).pop();
   }
 
-  AppBar createAppBar(BuildContext context, WidgetRef ref) {
+  AppBar _createAppBar(BuildContext context, WidgetRef ref) {
     return AppBar(
       automaticallyImplyLeading: false,
       leading: IconButton(
@@ -159,7 +167,7 @@ class AddPasswordWidget extends ConsumerWidget {
       title: const Text("Add Password"),
       actions: [
         TextButton(
-          onPressed: () => onAddTapped(context, ref),
+          onPressed: () => _onAddTapped(context, ref),
           child: const Text("Add", style: TextStyle(color: Colors.white)),
         ),
       ],
@@ -168,8 +176,12 @@ class AddPasswordWidget extends ConsumerWidget {
 }
 
 class PasswordFormFieldWidget extends StatefulWidget {
-  PasswordFormFieldWidget({Key? key}) : super(key: key);
+  final String? inputPassword;
   final textEditingController = TextEditingController();
+
+  PasswordFormFieldWidget({Key? key, required this.inputPassword}) : super(key: key) {
+    textEditingController.text = inputPassword ?? "";
+  }
 
   @override
   State<StatefulWidget> createState() => _PasswordFormFieldState();
@@ -180,6 +192,12 @@ class PasswordFormFieldWidget extends StatefulWidget {
 class _PasswordFormFieldState extends State<PasswordFormFieldWidget> {
   double progressValue = 0.0;
   String strengthText = "Weak!";
+
+  @override
+  void initState() {
+    super.initState();
+    _onPasswordChanged(widget.inputPassword);
+  }
 
   void _onPasswordChanged(String? value) {
     setState(() {

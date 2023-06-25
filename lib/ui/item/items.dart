@@ -3,6 +3,7 @@ import 'package:Stashword/state/providers.dart';
 import 'package:Stashword/ui/item/add_password.dart';
 import 'package:Stashword/ui/item/view_password.dart';
 import 'package:Stashword/ui/util/mixin.dart';
+import 'package:Stashword/util/ace_util.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
@@ -48,7 +49,7 @@ class ItemsWidget extends HookConsumerWidget with CustomDialogMixin {
     }
 
     if (addItemState == AddItemState.item) {
-      final addItemWidget = AddPasswordWidget(showAppBar: true,);
+      final addItemWidget = AddPasswordWidget(showAppBar: true, model: PasswordModel(id: AceUtil.newUuid(), iv: AceUtil.newIv()),);
 
       WidgetsBinding.instance.addPostFrameCallback((_) {
         showCustomDialog(

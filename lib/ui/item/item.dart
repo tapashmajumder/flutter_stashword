@@ -55,7 +55,7 @@ class ItemWidget extends HookConsumerWidget {
               ? Container(
                   key: const ValueKey<bool>(true),
                   child: Center(
-                    child: AddPasswordWidget(showAppBar: false,),
+                    child: AddPasswordWidget(showAppBar: false, model: item as PasswordModel),
                   ),
                 )
               : Container(
