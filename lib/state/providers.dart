@@ -23,6 +23,15 @@ class ItemsListNotifier extends StateNotifier<List<ItemModel>> {
     state = [...state, item]..sort();
   }
 
+  void updateItem({required final ItemModel updatedItem}) {
+    final index = state.indexWhere((element) => element.id == updatedItem.id);
+    if (index != -1) {
+      state = [...state]
+        ..replaceRange(index, index + 1, [updatedItem])
+        ..sort();
+    }
+  }
+
   void removeItem({required final ItemModel item}) {
     state = state.where((element) => element.id != item.id).toList();
   }

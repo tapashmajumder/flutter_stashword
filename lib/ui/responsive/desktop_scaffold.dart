@@ -18,7 +18,7 @@ class DesktopScaffold extends HookConsumerWidget {
             child: const TabBarWidget(),
           ),
           Container(width: 0.5, color: Colors.black),
-          const Expanded(
+          Expanded(
             child: ItemWidget(),
           ),
         ],

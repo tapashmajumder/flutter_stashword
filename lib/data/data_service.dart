@@ -27,6 +27,8 @@ abstract interface class IDataService {
 
   Future<void> createItem({required Item item});
 
+  Future<void> updateItem({required Item item});
+
   List<SharedItem> findAllSharedItems();
 
   Future<void> createSharedItem({required SharedItem sharedItem});
@@ -80,6 +82,11 @@ class DataService implements IDataService {
   @override
   Future<void> createItem({required Item item}) async {
     await itemCrud.create(item);
+  }
+
+  @override
+  Future<void> updateItem({required Item item}) async {
+    await itemCrud.update(item);
   }
 
   @override

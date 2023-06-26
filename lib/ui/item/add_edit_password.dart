@@ -1,21 +1,26 @@
 import 'package:Stashword/model/item_models.dart';
 import 'package:Stashword/state/providers.dart';
+import 'package:Stashword/ui/item/item.dart';
 import 'package:Stashword/util/ace_util.dart';
 import 'package:flutter/material.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 
-class AddPasswordWidget extends ConsumerWidget {
+class AddEditPasswordWidget extends HookConsumerWidget {
+  final bool isAddMode;
   final bool showAppBar;
   final PasswordModel model;
+  final MyCallbacker? callbacker;
   final nameEditingController = TextEditingController();
   final websiteEditingController = TextEditingController();
   final userNameEditingController = TextEditingController();
   final notesEditingController = TextEditingController();
   late final PasswordFormFieldWidget passwordWidget;
 
-  AddPasswordWidget({
+  AddEditPasswordWidget({
+    required this.isAddMode,
     required this.showAppBar,
     required this.model,
+    this.callbacker,
     Key? key,
   }) : super(key: key) {
     nameEditingController.text = model.name ?? "";
@@ -27,6 +32,8 @@ class AddPasswordWidget extends ConsumerWidget {
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
+    callbacker?.callback = () => _onActionTapped(context, ref);
+
     return Scaffold(
       appBar: showAppBar ? _createAppBar(context, ref) : null,
       body: Padding(
@@ -90,7 +97,18 @@ class AddPasswordWidget extends ConsumerWidget {
               decoration: const InputDecoration(
                 hintText: 'Enter notes',
               ),
-            )
+            ),
+            // Hidden button
+            ElevatedButton(
+              onPressed: () {},
+              style: ButtonStyle(
+                // Make the button transparent and take no space
+                backgroundColor: MaterialStateProperty.all<Color>(Colors.transparent),
+                padding: MaterialStateProperty.all<EdgeInsetsGeometry>(EdgeInsets.zero),
+                minimumSize: MaterialStateProperty.all<Size>(Size.zero),
+              ),
+              child: null,
+            ),
           ],
         ),
       ),
@@ -98,60 +116,64 @@ class AddPasswordWidget extends ConsumerWidget {
   }
 
   (bool, String?) _validate({
-    final String? name,
-    final String? website,
-    final String? userName,
-    final String? password,
+    required final PasswordModel input,
   }) {
-    if (name == null) {
+    if (input.name == null || input.name!.isEmpty) {
       return (false, "Name can't be empty");
     } else {
       return (true, null);
     }
   }
 
-  void _onAddTapped(BuildContext context, WidgetRef ref) {
-    final name = nameEditingController.text.nullIfEmpty();
-    final website = websiteEditingController.text.nullIfEmpty();
-    final userName = userNameEditingController.text.nullIfEmpty();
-    final password = passwordWidget.password.nullIfEmpty();
-    final notes = notesEditingController.text.nullIfEmpty();
+  bool _onActionTapped(BuildContext context, WidgetRef ref) {
+    final input = _getInputValues();
 
-    final (valid, errorMessage) = _validate(name: name, website: website, userName: userName, password: password);
+    final (valid, errorMessage) = _validate(input: input);
     if (!valid) {
-      showDialog(
-        context: context,
-        builder: (BuildContext context) {
-          return AlertDialog(
-            title: const Text('Error saving item'),
-            content: Text(errorMessage ?? "Invalid input"),
-            actions: [
-              TextButton(
-                child: const Text('OK'),
-                onPressed: () {
-                  Navigator.of(context).pop(); // Closes the dialog
-                },
-              ),
-            ],
-          );
-        },
-      );
-      return;
+      _showErrorDialog(context, errorMessage);
+      return false;
     }
 
-    final item = PasswordModel(
-      id: AceUtil.newUuid(),
-      iv: AceUtil.newIv(),
-      name: name,
-      url: website,
-      userName: userName,
-      password: password,
-      notes: notes,
-    );
+    if (isAddMode) {
+      ref.read(providers.itemsProvider.notifier).addItem(item: input);
+      ref.read(providers.addItemStateProvider.notifier).state = AddItemState.none;
+    } else {
+      ref.read(providers.itemsProvider.notifier).updateItem(updatedItem: input);
+      ref.read(providers.selectedItemProvider.notifier).state = input;
+    }
+    return true;
+  }
 
-    ref.read(providers.itemsProvider.notifier).addItem(item: item);
-    ref.read(providers.addItemStateProvider.notifier).state = AddItemState.none;
-    Navigator.of(context).pop();
+  PasswordModel _getInputValues() {
+    return PasswordModel(
+      id: isAddMode ? AceUtil.newUuid() : model.id,
+      iv: isAddMode ? AceUtil.newIv() : model.iv,
+      name: nameEditingController.text.nullIfEmpty(),
+      url: websiteEditingController.text.nullIfEmpty(),
+      userName: userNameEditingController.text.nullIfEmpty(),
+      password: passwordWidget.password.nullIfEmpty(),
+      notes: notesEditingController.text.nullIfEmpty(),
+    );
+  }
+
+  void _showErrorDialog(BuildContext context, String? errorMessage) {
+    showDialog(
+      context: context,
+      builder: (BuildContext context) {
+        return AlertDialog(
+          title: const Text('Error saving item'),
+          content: Text(errorMessage ?? "Invalid input"),
+          actions: [
+            TextButton(
+              child: const Text('OK'),
+              onPressed: () {
+                Navigator.of(context).pop(); // Closes the dialog
+              },
+            ),
+          ],
+        );
+      },
+    );
   }
 
   AppBar _createAppBar(BuildContext context, WidgetRef ref) {
@@ -164,11 +186,11 @@ class AddPasswordWidget extends ConsumerWidget {
           Navigator.of(context).pop();
         },
       ),
-      title: const Text("Add Password"),
+      title: Text(isAddMode ? "Add Password" : model.name ?? ""),
       actions: [
         TextButton(
-          onPressed: () => _onAddTapped(context, ref),
-          child: const Text("Add", style: TextStyle(color: Colors.white)),
+          onPressed: () => _onActionTapped(context, ref),
+          child: Text(isAddMode ? "Add" : "Save", style: const TextStyle(color: Colors.white)),
         ),
       ],
     );

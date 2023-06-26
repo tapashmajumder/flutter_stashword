@@ -32,11 +32,29 @@ class ViewPasswordWidget extends StatelessWidget {
         ),
         const SizedBox(height: 20),
         Container(height: 1, color: Colors.grey),
-        ViewRowWidget(name: "Website", value: model.url ?? "", iconButton: openWebsiteButton,),
+        ViewRowWidget(
+          name: "Website",
+          value: model.url ?? "",
+          iconButton: openWebsiteButton,
+        ),
         Container(height: 1, color: Colors.grey),
-        ViewRowWidget(name: "Username", value: model.userName ?? "", iconButton: copyUsernameButton,),
+        ViewRowWidget(
+          name: "Username",
+          value: model.userName ?? "",
+          iconButton: copyUsernameButton,
+        ),
         Container(height: 1, color: Colors.grey),
-        ViewRowWidget(name: "Password", value: model.password ?? "", iconButton: copyPasswordButton,),
+        ViewRowWidget(
+          name: "Password",
+          value: model.password ?? "",
+          iconButton: copyPasswordButton,
+        ),
+        Container(height: 1, color: Colors.grey),
+        ViewRowWidget(
+          name: "Notes",
+          value: model.notes ?? "",
+          iconButton: model.notes == null ? null : copyPasswordButton,
+        ),
         Container(height: 1, color: Colors.grey),
       ]),
     );
@@ -89,7 +107,8 @@ class ViewTopWidget extends StatelessWidget {
 class ViewRowWidget extends StatelessWidget {
   final String name;
   final String value;
-  final IconButton iconButton;
+  final IconButton? iconButton;
+
   const ViewRowWidget({
     Key? key,
     required this.name,
@@ -104,11 +123,16 @@ class ViewRowWidget extends StatelessWidget {
       child: Row(children: [
         Column(crossAxisAlignment: CrossAxisAlignment.start, mainAxisAlignment: MainAxisAlignment.center, children: [
           Text(name, style: Theme.of(context).textTheme.titleMedium),
-          Text(value, style: Theme.of(context).textTheme.titleSmall),
+          Wrap(
+            direction: Axis.horizontal,
+            children: <Widget>[
+              Text(value, style: Theme.of(context).textTheme.titleSmall),
+            ],
+          ),
         ]),
         Expanded(child: Container()),
         Column(mainAxisAlignment: MainAxisAlignment.center, children: [
-          iconButton,
+          if (iconButton != null) iconButton!,
         ])
       ]),
     );

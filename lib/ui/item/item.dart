@@ -1,32 +1,57 @@
 import 'package:Stashword/model/item_models.dart';
 import 'package:Stashword/state/providers.dart';
-import 'package:Stashword/ui/item/add_password.dart';
+import 'package:Stashword/ui/item/add_edit_password.dart';
 import 'package:Stashword/ui/item/view_password.dart';
 import 'package:flutter/material.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'dart:math' as math;
 
-final isEditModeProvider = StateProvider<bool>((ref) => false);
+// This class is used to call a child widget method.
+class MyCallbacker {
+  bool Function()? callback;
+}
 
 class ItemWidget extends HookConsumerWidget {
-  const ItemWidget({super.key});
+  final isEditModeProvider = StateProvider<bool>((ref) => false);
+  final callbacker = MyCallbacker();
+
+  ItemWidget({super.key});
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
     final item = ref.watch(providers.selectedItemProvider);
     final isEditMode = ref.watch(isEditModeProvider);
 
-    void toggleEditMode() {
-      ref.read(isEditModeProvider.notifier).state = !isEditMode;
-    }
-
     return Scaffold(
       appBar: AppBar(
+        leadingWidth: 75,
+        leading: isEditMode
+            ? TextButton(
+                child: const Text("Cancel", style: TextStyle(color: Colors.white)),
+                onPressed: () {
+                  ref.read(isEditModeProvider.notifier).state = false;
+                },
+              )
+            : null,
         title: Text(item == null ? "" : "${item.name}"),
         actions: [
-          IconButton(
-            icon: Icon(isEditMode ? Icons.visibility : Icons.edit),
-            onPressed: toggleEditMode,
+          TextButton(
+            child: Text(isEditMode ? "Save" : "Edit", style: const TextStyle(color: Colors.white)),
+            onPressed: () {
+              if (isEditMode) {
+                if (callbacker.callback != null) {
+                  if (callbacker.callback!()) {
+                    ref.read(isEditModeProvider.notifier).state = false;
+                  } else {
+                   // remain in edit mode
+                  }
+                } else {
+                  ref.read(isEditModeProvider.notifier).state = false;
+                }
+              } else {
+                ref.read(isEditModeProvider.notifier).state = true;
+              }
+            },
           ),
         ],
       ),
@@ -55,13 +80,23 @@ class ItemWidget extends HookConsumerWidget {
               ? Container(
                   key: const ValueKey<bool>(true),
                   child: Center(
-                    child: AddPasswordWidget(showAppBar: false, model: item as PasswordModel),
+                    child: AddEditPasswordWidget(
+                      isAddMode: false,
+                      showAppBar: false,
+                      model: item as PasswordModel,
+                      callbacker: callbacker,
+                    ),
                   ),
                 )
               : Container(
                   key: const ValueKey<bool>(false),
                   child: Center(
-                    child: (item == null) ? const NothingSelectedWidget() : ViewPasswordWidget(model: item as PasswordModel, showAppbar: false,),
+                    child: (item == null)
+                        ? const NothingSelectedWidget()
+                        : ViewPasswordWidget(
+                            model: item as PasswordModel,
+                            showAppbar: false,
+                          ),
                   ),
                 ),
         ),

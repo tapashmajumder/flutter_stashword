@@ -8,8 +8,10 @@ class ImageData {
   String id;
   Uint8List data;
 
-  ImageData(this.id,
-      this.data,);
+  ImageData(
+    this.id,
+    this.data,
+  );
 }
 
 abstract interface class IAceStorage {
@@ -19,8 +21,9 @@ abstract interface class IAceStorage {
 
   List<ItemModel> findAllItems();
 
-  Future<void> add(
-      {required ItemModel itemModel, List<ImageData> images = const []});
+  Future<void> add({required ItemModel itemModel, List<ImageData> images = const []});
+
+  Future<void> update({required ItemModel itemModel, List<ImageData> images = const []});
 }
 
 class AceStorage implements IAceStorage {
@@ -44,10 +47,14 @@ class AceStorage implements IAceStorage {
   }
 
   @override
-  Future<void> add(
-      {required ItemModel itemModel, List<ImageData> images = const []}) async {
+  Future<void> add({required ItemModel itemModel, List<ImageData> images = const []}) async {
     final item = ModelToDbConverter.fromModelToItem(model: itemModel);
     await _dataService.createItem(item: item);
   }
-}
 
+  @override
+  Future<void> update({required ItemModel itemModel, List<ImageData> images = const []}) async {
+    final item = ModelToDbConverter.fromModelToItem(model: itemModel);
+    await _dataService.updateItem(item: item);
+  }
+}
