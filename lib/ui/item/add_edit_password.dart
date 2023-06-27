@@ -138,7 +138,7 @@ class AddEditPasswordWidget extends HookConsumerWidget {
 
     if (isAddMode) {
       ref.read(providers.itemsProvider.notifier).addItem(item: input);
-      ref.read(providers.addItemStateProvider.notifier).state = AddItemState.none;
+      Navigator.of(context).pop();
     } else {
       ref.read(providers.itemsProvider.notifier).updateItem(updatedItem: input);
       if (displayType != DisplayType.mobile) {
@@ -186,7 +186,6 @@ class AddEditPasswordWidget extends HookConsumerWidget {
       leading: IconButton(
         icon: const Icon(Icons.cancel),
         onPressed: () {
-          ref.read(providers.addItemStateProvider.notifier).state = AddItemState.none;
           Navigator.of(context).pop();
         },
       ),

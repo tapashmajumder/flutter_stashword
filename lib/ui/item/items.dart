@@ -44,30 +44,27 @@ class ItemsWidget extends HookConsumerWidget with CustomDialogMixin {
   @override
   Widget build(BuildContext context, WidgetRef ref) {
     final items = ref.watch(providers.itemsProvider);
-    final addItemState = ref.watch(providers.addItemStateProvider);
     final selectedItem = ref.watch(providers.selectedItemProvider);
     final displayType = ref.watch(providers.displayTypeProvider);
-
-    if (addItemState == AddItemState.item) {
-      final addItemWidget = AddEditPasswordWidget(isAddMode: true, showAppBar: true, model: PasswordModel(id: AceUtil.newUuid(), iv: AceUtil.newIv()),);
-
-      WidgetsBinding.instance.addPostFrameCallback((_) {
-        showCustomDialog(
-          context: context,
-          contentWidget: addItemWidget,
-        );
-      });
-    }
 
     return Scaffold(
       body: ListView(
         children: [
-          for (var item in items) _fromModelToCell(context: context, ref: ref, item: item, isSelected: item == selectedItem && displayType != DisplayType.mobile),
+          for (var item in items)
+            _fromModelToCell(context: context, ref: ref, item: item, isSelected: item == selectedItem && displayType != DisplayType.mobile),
         ],
       ),
       floatingActionButton: FloatingActionButton(
         onPressed: () {
-          ref.read(providers.addItemStateProvider.notifier).state = AddItemState.item;
+          final addItemWidget = AddEditPasswordWidget(
+            isAddMode: true,
+            showAppBar: true,
+            model: PasswordModel(id: AceUtil.newUuid(), iv: AceUtil.newIv()),
+          );
+          showCustomDialog(
+            context: context,
+            contentWidget: addItemWidget,
+          );
         },
         child: const Icon(Icons.add),
       ),
