@@ -41,4 +41,10 @@ class ProdItemsListNotifier extends ItemsListNotifier {
     await _storage.update(itemModel: updatedItem);
     super.updateItem(updatedItem: updatedItem);
   }
+
+  @override
+  void removeItem({required final ItemModel item}) async {
+    await _storage.delete(itemModel: item);
+    super.removeItem(item: item);
+  }
 }

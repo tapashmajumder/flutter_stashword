@@ -24,6 +24,8 @@ abstract interface class IAceStorage {
   Future<void> add({required ItemModel itemModel, List<ImageData> images = const []});
 
   Future<void> update({required ItemModel itemModel, List<ImageData> images = const []});
+
+  Future<void> delete({required ItemModel itemModel});
 }
 
 class AceStorage implements IAceStorage {
@@ -56,5 +58,10 @@ class AceStorage implements IAceStorage {
   Future<void> update({required ItemModel itemModel, List<ImageData> images = const []}) async {
     final item = ModelToDbConverter.fromModelToItem(model: itemModel);
     await _dataService.updateItem(item: item);
+  }
+
+  @override
+  Future<void> delete({required ItemModel itemModel}) async {
+    await _dataService.deleteItemById(id: itemModel.id);
   }
 }

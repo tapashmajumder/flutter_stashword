@@ -118,6 +118,9 @@ class PasswordCell extends HookConsumerWidget {
         },
         onDismissed: (direction) {
           ref.read(providers.itemsProvider.notifier).removeItem(item: model);
+          WidgetsBinding.instance.addPostFrameCallback((_) {
+            ref.read(providers.selectedItemProvider.notifier).state = null;
+          });
           ScaffoldMessenger.of(context).showSnackBar(
             const SnackBar(
               content: Text('Item deleted'),
