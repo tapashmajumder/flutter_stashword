@@ -126,6 +126,8 @@ class AddEditPasswordWidget extends HookConsumerWidget {
   }
 
   bool _onActionTapped(BuildContext context, WidgetRef ref) {
+    final displayType = ref.watch(providers.displayTypeProvider);
+
     final input = _getInputValues();
 
     final (valid, errorMessage) = _validate(input: input);
@@ -139,7 +141,9 @@ class AddEditPasswordWidget extends HookConsumerWidget {
       ref.read(providers.addItemStateProvider.notifier).state = AddItemState.none;
     } else {
       ref.read(providers.itemsProvider.notifier).updateItem(updatedItem: input);
-      ref.read(providers.selectedItemProvider.notifier).state = input;
+      if (displayType != DisplayType.mobile) {
+        ref.read(providers.selectedItemProvider.notifier).state = input;
+      }
     }
     return true;
   }

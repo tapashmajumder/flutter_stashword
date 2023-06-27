@@ -1,7 +1,7 @@
 import 'package:Stashword/model/item_models.dart';
 import 'package:Stashword/state/providers.dart';
 import 'package:Stashword/ui/item/add_edit_password.dart';
-import 'package:Stashword/ui/item/view_password.dart';
+import 'package:Stashword/ui/item/item.dart';
 import 'package:Stashword/ui/util/mixin.dart';
 import 'package:Stashword/util/ace_util.dart';
 import 'package:flutter/cupertino.dart';
@@ -15,9 +15,27 @@ class ItemsWidget extends HookConsumerWidget with CustomDialogMixin {
 
   static Widget _fromModelToCell({required BuildContext context, required WidgetRef ref, required ItemModel item, bool isSelected = false}) {
     PasswordModel passwordModel = item as PasswordModel;
+    final displayType = ref.watch(providers.displayTypeProvider);
+
     return GestureDetector(
       onTap: () {
         ref.read(providers.selectedItemProvider.notifier).state = passwordModel;
+
+        if (displayType == DisplayType.mobile) {
+          Navigator.push(
+            context,
+            MaterialPageRoute(
+              builder: (context) => WillPopScope(
+                onWillPop: () async {
+                  ref.read(providers.selectedItemProvider.notifier).state = null;
+                  // Return true to allow the navigation to proceed, or false to prevent it
+                  return true;
+                },
+                child: ItemWidget(),
+              ),
+            ),
+          );
+        }
       },
       child: PasswordCell(model: passwordModel, isSelected: isSelected, key: Key(passwordModel.id)),
     );
@@ -29,24 +47,6 @@ class ItemsWidget extends HookConsumerWidget with CustomDialogMixin {
     final addItemState = ref.watch(providers.addItemStateProvider);
     final selectedItem = ref.watch(providers.selectedItemProvider);
     final displayType = ref.watch(providers.displayTypeProvider);
-
-    if (selectedItem != null && displayType == DisplayType.mobile) {
-      WidgetsBinding.instance.addPostFrameCallback((_) {
-        Navigator.push(
-          context,
-          MaterialPageRoute(
-            builder: (context) => WillPopScope(
-              onWillPop: () async {
-                ref.read(providers.selectedItemProvider.notifier).state = null;
-                // Return true to allow the navigation to proceed, or false to prevent it
-                return true;
-              },
-              child: ViewPasswordWidget(model: selectedItem as PasswordModel, showAppbar: true),
-            ),
-          ),
-        );
-      });
-    }
 
     if (addItemState == AddItemState.item) {
       final addItemWidget = AddEditPasswordWidget(isAddMode: true, showAppBar: true, model: PasswordModel(id: AceUtil.newUuid(), iv: AceUtil.newIv()),);
@@ -62,7 +62,7 @@ class ItemsWidget extends HookConsumerWidget with CustomDialogMixin {
     return Scaffold(
       body: ListView(
         children: [
-          for (var item in items) _fromModelToCell(context: context, ref: ref, item: item, isSelected: item == selectedItem),
+          for (var item in items) _fromModelToCell(context: context, ref: ref, item: item, isSelected: item == selectedItem && displayType != DisplayType.mobile),
         ],
       ),
       floatingActionButton: FloatingActionButton(

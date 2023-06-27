@@ -21,6 +21,7 @@ class ItemWidget extends HookConsumerWidget {
   Widget build(BuildContext context, WidgetRef ref) {
     final item = ref.watch(providers.selectedItemProvider);
     final isEditMode = ref.watch(isEditModeProvider);
+    final displayType = ref.watch(providers.displayTypeProvider);
 
     return Scaffold(
       appBar: AppBar(
@@ -38,17 +39,13 @@ class ItemWidget extends HookConsumerWidget {
           TextButton(
             child: Text(isEditMode ? "Save" : "Edit", style: const TextStyle(color: Colors.white)),
             onPressed: () {
-              if (isEditMode) {
-                if (callbacker.callback != null) {
-                  if (callbacker.callback!()) {
-                    ref.read(isEditModeProvider.notifier).state = false;
-                  } else {
-                   // remain in edit mode
-                  }
+              if (isEditMode && callbacker.callback != null && callbacker.callback!()) {
+                if (displayType == DisplayType.mobile) {
+                  Navigator.of(context).pop();
                 } else {
                   ref.read(isEditModeProvider.notifier).state = false;
                 }
-              } else {
+              } else if (!isEditMode) {
                 ref.read(isEditModeProvider.notifier).state = true;
               }
             },
