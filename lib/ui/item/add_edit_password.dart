@@ -171,8 +171,9 @@ class AddEditPasswordWidget extends HookConsumerWidget {
   AppBar _createAppBar(BuildContext context, WidgetRef ref) {
     return AppBar(
       automaticallyImplyLeading: false,
-      leading: IconButton(
-        icon: const Icon(Icons.cancel),
+      leadingWidth: 75,
+      leading: TextButton(
+        child: const Text("Cancel", style: TextStyle(color: Colors.white)),
         onPressed: () {
           Navigator.of(context).pop();
         },

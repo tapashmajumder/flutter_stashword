@@ -61,10 +61,14 @@ class ItemsWidget extends HookConsumerWidget with CustomDialogMixin {
             showAppBar: true,
             model: PasswordModel(id: AceUtil.newUuid(), iv: AceUtil.newIv()),
           );
-          showCustomDialog(
-            context: context,
-            contentWidget: addItemWidget,
-          );
+          if (displayType == DisplayType.mobile) {
+            Navigator.push(context, MaterialPageRoute(builder: (context) => addItemWidget));
+          } else {
+            showCustomDialog(
+              context: context,
+              contentWidget: addItemWidget,
+            );
+          }
         },
         child: const Icon(Icons.add),
       ),
