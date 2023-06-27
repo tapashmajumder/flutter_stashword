@@ -127,6 +127,9 @@ class AddEditPasswordWidget extends HookConsumerWidget {
     if (isAddMode) {
       ref.read(providers.itemsProvider.notifier).addItem(item: input);
       Navigator.of(context).pop();
+      if (displayType != DisplayType.mobile) {
+        ref.read(providers.selectedItemProvider.notifier).state = input;
+      }
     } else {
       ref.read(providers.itemsProvider.notifier).updateItem(updatedItem: input);
       if (displayType != DisplayType.mobile) {
