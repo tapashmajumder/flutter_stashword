@@ -30,7 +30,7 @@ class ProdItemsListNotifier extends ItemsListNotifier {
 
   void _init() async {
     await _storage.init();
-    state = _storage.findAllItems();
+    state = _storage.findAllItems()..sort();
   }
 
   @override
