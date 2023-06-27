@@ -38,8 +38,7 @@ class AddEditPasswordWidget extends HookConsumerWidget {
       appBar: showAppBar ? _createAppBar(context, ref) : null,
       body: Padding(
         padding: const EdgeInsets.all(16.0),
-        child: Column(
-          crossAxisAlignment: CrossAxisAlignment.start,
+        child: ListView(
           children: [
             const SizedBox(height: 8),
             Column(
@@ -97,17 +96,6 @@ class AddEditPasswordWidget extends HookConsumerWidget {
               decoration: const InputDecoration(
                 hintText: 'Enter notes',
               ),
-            ),
-            // Hidden button
-            ElevatedButton(
-              onPressed: () {},
-              style: ButtonStyle(
-                // Make the button transparent and take no space
-                backgroundColor: MaterialStateProperty.all<Color>(Colors.transparent),
-                padding: MaterialStateProperty.all<EdgeInsetsGeometry>(EdgeInsets.zero),
-                minimumSize: MaterialStateProperty.all<Size>(Size.zero),
-              ),
-              child: null,
             ),
           ],
         ),
