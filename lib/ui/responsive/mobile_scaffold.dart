@@ -1,4 +1,4 @@
-import 'package:Stashword/main.dart';
+import 'package:Stashword/state/providers.dart';
 import 'package:Stashword/ui/responsive/page_list_tile.dart';
 import 'package:flutter/material.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
