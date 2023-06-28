@@ -16,6 +16,9 @@ class ProdProviders implements IProviders {
 
   @override
   final displayTypeProvider = StateProvider<DisplayType>((ref) => DisplayType.mobile);
+
+  @override
+  final showDialogProvider = StateProvider<bool>((ref) => false);
 }
 
 class ProdItemsListNotifier extends ItemsListNotifier {

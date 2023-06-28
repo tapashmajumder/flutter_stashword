@@ -41,6 +41,8 @@ abstract class IProviders {
   StateProvider<ItemModel?> get selectedItemProvider;
 
   StateProvider<DisplayType> get displayTypeProvider;
+
+  StateProvider<bool> get showDialogProvider;
 }
 
 final providers = (kReleaseMode) ? ProdProviders() : DevProviders();
