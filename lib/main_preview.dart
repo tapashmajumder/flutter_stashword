@@ -1,5 +1,6 @@
 import 'package:Stashword/model/item_models.dart';
 import 'package:Stashword/ui/item/view_password.dart';
+import 'package:Stashword/ui/onboarding/register.dart';
 import 'package:flutter/material.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 
@@ -27,7 +28,7 @@ class MyApp extends ConsumerWidget {
       theme: ThemeData(
         primarySwatch: Colors.blue,
       ),
-      home: Center(child: SizedBox(width: 500, height: 500, child: Scaffold(body: ViewPasswordWidget(model: model, showAppbar: false,)))),
+      home: Center(child: SizedBox(width: 375, height: 500, child: Scaffold(body: RegisterWidget()))),
     );
   }
 }
