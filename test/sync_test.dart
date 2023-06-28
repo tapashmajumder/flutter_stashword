@@ -435,4 +435,9 @@ class MockSyncIncomingDataService implements IDataService {
       return items.where(predicate).toList(growable: false);
     }
   }
+
+  @override
+  Future<void> updateItem({required Item item}) async {
+    throw UnimplementedError();
+  }
 }
