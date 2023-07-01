@@ -42,7 +42,7 @@ abstract class IProviders {
 
   StateProvider<DisplayType> get displayTypeProvider;
 
-  StateProvider<bool> get showDialogProvider;
+  StateProvider<DialogType> get showDialogProvider;
 }
 
 final providers = (kReleaseMode) ? ProdProviders() : DevProviders();
@@ -68,15 +68,15 @@ class ItemsListNotifier extends StateNotifier<List<ItemModel>> {
   }
 }
 
-enum ItemViewState {
-  add,
-  edit,
-  view,
-}
-
 enum DisplayType {
   mobile,
   desktop,
+}
+
+enum DialogType {
+  register,
+  confirm,
+  none,
 }
 
 final searchQueryProvider = Provider<String>((ref) => '');

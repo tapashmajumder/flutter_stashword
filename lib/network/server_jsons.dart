@@ -4,6 +4,22 @@ import 'package:json_annotation/json_annotation.dart';
 part 'server_jsons.g.dart';
 
 @JsonSerializable(includeIfNull: false)
+class LoginResult {
+  final bool exists;
+
+  LoginResult({required this.exists});
+
+  factory LoginResult.fromJson(Map<String, dynamic> json) => _$LoginResultFromJson(json);
+
+  Map<String, dynamic> toJson() => _$LoginResultToJson(this);
+
+  @override
+  String toString() {
+    return toJson().toString();
+  }
+}
+
+@JsonSerializable(includeIfNull: false)
 class SyncConfirmCodeResult {
   final ConfirmCodeResult confirmCodeResult;
   final ValidateAccountResult validateAccountResult;

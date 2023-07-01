@@ -1,5 +1,4 @@
 import 'package:Stashword/model/item_models.dart';
-import 'package:Stashword/ui/item/view_password.dart';
 import 'package:Stashword/ui/onboarding/register.dart';
 import 'package:flutter/material.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';

@@ -6,6 +6,15 @@ part of 'server_jsons.dart';
 // JsonSerializableGenerator
 // **************************************************************************
 
+LoginResult _$LoginResultFromJson(Map<String, dynamic> json) => LoginResult(
+      exists: json['exists'] as bool,
+    );
+
+Map<String, dynamic> _$LoginResultToJson(LoginResult instance) =>
+    <String, dynamic>{
+      'exists': instance.exists,
+    };
+
 SyncConfirmCodeResult _$SyncConfirmCodeResultFromJson(
         Map<String, dynamic> json) =>
     SyncConfirmCodeResult(

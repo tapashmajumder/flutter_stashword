@@ -34,7 +34,7 @@ class DevProviders implements IProviders {
   final displayTypeProvider = StateProvider<DisplayType>((ref) => DisplayType.mobile);
 
   @override
-  final showDialogProvider = StateProvider<bool>((ref) => false);
+  final showDialogProvider = StateProvider<DialogType>((ref) => DialogType.none);
 
   static List<ItemModel> _create1000values() {
     final List<ItemModel> list = [];
